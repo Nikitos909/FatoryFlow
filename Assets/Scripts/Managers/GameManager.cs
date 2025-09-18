@@ -6,8 +6,14 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    public GameConfig Config;
+    public GameData Data;
+
+    public ProductionManager ProductionManager;
+    public LogisticsManager LogisticsManager;
     public EconomyManager EconomyManager;
     public UIManager UIManager;
+    public DifficultyService DifficultyService;
 
     private void Awake()
     {
@@ -15,12 +21,13 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            InitializeManagers();
         }
         else
         {
             Destroy(gameObject);
         }
-    }
+    }    
 
     private void Update()
     {
