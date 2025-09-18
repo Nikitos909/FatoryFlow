@@ -50,6 +50,13 @@ public class GameManager : MonoBehaviour
         StartGame();
     }
 
+    private void StartGame()
+    {
+        EconomyManager.Initialize(Config.StartMoney);
+        UIManager.UpdateMoneyDisplay(EconomyManager.CurrentMoney);
+        Debug.Log("Game started!");
+    }
+
     private void Update()
     {
         ProductionManager.UpdateProduction(Time.deltaTime);
