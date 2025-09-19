@@ -17,15 +17,6 @@ public class GameManager : MonoBehaviour
     public UIManager UIManager;
     public DifficultyService DifficultyService;
 
-
-        // Инициализация других менеджеров
-        SaveManager.Instance.LoadGame();
-        EconomyManager.Instance.Initialize(Config);
-        ProductionManager.Instance.Initialize();
-        LogisticsManager.Instance.Initialize(Config.BaseLogistSpeed);
-        DifficultyService.Instance.Initialize(Config);
-   
-
     private void Awake()
     {
         if (Instance != null) { Destroy(gameObject); }
