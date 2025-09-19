@@ -27,49 +27,49 @@ public class LogisticManager : MonoBehaviour
             logist.Initialize(baseSpeed);
     }
 
-    public void RegisterLogist(Logist logist)
+    public void OnUpdate(float deltaTime)
     {
-        AllLogists.Add(logist);
-    }
-
-    public void AddTransportTask(Product product, Machine sourceMachine)
-    {
-        TransportTask newTask = new TransportTask
+        foreach (var logist in AllLogists)
         {
-            Product = product,
-            SourceMachine = sourceMachine,
-            Status = TaskStatus.Pending
-        };
-        
-        PendingTasks.Enqueue(newTask);
-        AssignTasks();
+            if (logist.IsSick) continue;
+            
+            logist.UpdateLogic(deltaTime);
+            
+            if (logist.CurrentTask == null && PendingTasks.Count > 0)
+                AssignTaskToLogist(logist, PendingTasks[0]);
+        }
     }
-
-    public void UpdateLogistics(float deltaTime)
+   public void OnProductsReady(List<MachineSlot> outputSlots)
     {
-        foreach (Logist logist in AllLogists)
+        foreach (var slot in outputSlots)
         {
-            if (logist.IsAvailable)
+            if (slot.CurrentProduct != null)
             {
-                AssignTasks();
-            }
-            else
-            {
-                logist.UpdateMovement(deltaTime);
+                // Создаем задание на перемещение
+                var task = new TransportTask(
+                    product: slot.CurrentProduct,
+                    fromMachine: slot.Machine,
+                    toMachine: FindDestinationMachine(slot.CurrentProduct.Type)
+                );
+                PendingTasks.Add(task);
             }
         }
     }
 
-    private void AssignTasks()
+    private void AssignTaskToLogist(Logist logist, TransportTask task)
     {
-        foreach (Logist logist in AllLogists)
+        logist.AssignTask(task);
+        PendingTasks.Remove(task);
+    }
+
+    private Machine FindDestinationMachine(ProductType productType)
+    {
+        // Ищем станок, которому нужен этот продукт
+        foreach (var machine in ProductionManager.Instance.AllMachines)
         {
-            if (logist.IsAvailable && PendingTasks.Count > 0)
-            {
-                TransportTask task = PendingTasks.Dequeue();
-                logist.AssignTask(task);
-                task.Status = TaskStatus.InProgress;
-            }
+            if (machine.InputSlots.Any(slot => slot.RequiredType == productType))
+                return machine;
         }
+        return null; // Или склад
     }
 }
