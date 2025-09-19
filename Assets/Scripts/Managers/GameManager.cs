@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    public GameState State { get; private set; } = GameState.Playing; // Playing, Paused, GameOver
+    
     public GameConfig Config;
     public GameData Data;
 
@@ -15,18 +17,22 @@ public class GameManager : MonoBehaviour
     public UIManager UIManager;
     public DifficultyService DifficultyService;
 
+
+        // Инициализация других менеджеров
+        SaveManager.Instance.LoadGame();
+        EconomyManager.Instance.Initialize(Config);
+        ProductionManager.Instance.Initialize();
+        LogisticsManager.Instance.Initialize(Config.BaseLogistSpeed);
+        DifficultyService.Instance.Initialize(Config);
+   
+
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-            InitializeManagers();
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        if (Instance != null) { Destroy(gameObject); }
+        
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+        InitializeManagers();       
     }
 
     private void InitializeManagers()
@@ -37,17 +43,12 @@ public class GameManager : MonoBehaviour
         // Создаем данные игры
         Data = new GameData();
         
-        // Инициализируем сервисы
-        DifficultyService = new DifficultyService();
-        
-        // Получаем ссылки на менеджеры
-        ProductionManager = GetComponent<ProductionManager>();
-        LogisticsManager = GetComponent<LogisticsManager>();
-        EconomyManager = GetComponent<EconomyManager>();
-        UIManager = GetComponent<UIManager>();
-        
-        // Запускаем игру
-        StartGame();
+        // Инициализация других менеджеров
+        SaveManager.Instance.LoadGame();
+        EconomyManager.Instance.Initialize(Config);
+        ProductionManager.Instance.Initialize();
+        LogisticsManager.Instance.Initialize(Config.BaseLogistSpeed);
+        DifficultyService.Instance.Initialize(Config);
     }
 
     private void StartGame()
