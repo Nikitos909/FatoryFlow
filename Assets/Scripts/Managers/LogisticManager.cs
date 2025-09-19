@@ -6,7 +6,8 @@ public class LogisticManager : MonoBehaviour
     public static LogisticManager Instance;
 
     public List<Logist> AllLogists = new List<Logist>();
-    public Queue<TransportTask> PendingTasks = new Queue<TransportTask>();
+    public List<TransportTask> PendingTasks = new List<TransportTask>();
+
 
     private void Awake()
     {
@@ -18,6 +19,12 @@ public class LogisticManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    public void Initialize(float baseSpeed)
+    {
+        foreach (var logist in AllLogists)
+            logist.Initialize(baseSpeed);
     }
 
     public void RegisterLogist(Logist logist)
