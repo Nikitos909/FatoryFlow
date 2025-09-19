@@ -19,28 +19,17 @@ public class SaveManager : MonoBehaviour
         Debug.Log($"Save file path: {_saveFilePath}");
     }
 
-    // Ñîõðàíÿåì òåêóùèå äàííûå èãðû â ôàéë
     public void SaveGame()
     {
-        if (_currentGameData == null)
+        SaveData data = new SaveData
         {
-            Debug.LogWarning("No game data to save!");
-            return;
-        }
+            Money = EconomyManager.Instance.CurrentMoney,
+            Machines = ProductionManager.Instance.AllMachines.Select(m => m.GetData()).ToList(),
+            Logists = LogisticsManager.Instance.AllLogists.Select(l => l.GetData()).ToList()
+        };
 
-        try
-        {
-            // Êîíâåðòèðóåì îáúåêò â JSON ñòðîêó
-            string jsonData = JsonUtility.ToJson(_currentGameData, prettyPrint: true);
-            // Çàïèñûâàåì â ôàéë
-            File.WriteAllText(_saveFilePath, jsonData);
-
-            Debug.Log("Game saved successfully!");
-        }
-        catch (System.Exception e)
-        {
-            Debug.LogError($"Save failed: {e.Message}");
-        }
+        string json = JsonUtility.ToJson(data);
+        File.WriteAllText(savePath, json);
     }
 
     // Çàãðóæàåì äàííûå èç ôàéëà
