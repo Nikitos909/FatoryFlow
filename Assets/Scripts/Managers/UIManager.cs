@@ -5,29 +5,25 @@ using TMPro;
 
 public class UIManager : MonoBehaviour
 {
-    [SerializeField] private TMP_Text moneyText;
-    private int count;
+    public static UIManager Instance;
 
-    private void OnEnable()
+    public Text moneyText;
+    public Text profitText;
+    public GameObject selectionPanel;
+    public GameObject gameOverPanel;
+
+    public void UpdateMoneyUI(int money) => moneyText.text = $"Р”РµРЅСЊРіРё: {money}в‚Ѕ";
+
+    public void ShowMachineInfo(Machine machine)
     {
-        // Подписываемся на событие из EconomyManager
-        EconomyManager.OnMoneyChanged += UpdateMoneyText;
+        selectionPanel.SetActive(true);
+        // Р—Р°РїРѕР»РЅСЏРµРј РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ СЃС‚Р°РЅРєРµ
     }
 
-    private void OnDisable()
+    public void UpdateProductionProgress(float progress)
     {
-        // Обязательно отписываемся
-        EconomyManager.OnMoneyChanged -= UpdateMoneyText;
+        // РћР±РЅРѕРІР»СЏРµРј progress bar
     }
 
-    private void Start()
-    {
-        // Обновляем текст при старте
-        UpdateMoneyText(EconomyManager.Instance.CurrentMoney);
-    }
-
-    private void UpdateMoneyText(int newMoneyValue)
-    {
-        moneyText.text = $"$: {newMoneyValue}";
-    }
+    public void ShowGameOver() => gameOverPanel.SetActive(true);
 }
