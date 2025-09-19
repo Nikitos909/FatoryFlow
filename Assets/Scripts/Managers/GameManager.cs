@@ -50,4 +50,8 @@ public class GameManager : MonoBehaviour
         LogisticsManager.Instance.OnUpdate(Time.deltaTime);
         EconomyManager.Instance.OnUpdate(Time.deltaTime);
     }
+
+    public void PauseGame() => State = GameState.Paused;
+    public void ResumeGame() => State = GameState.Playing;
+    public void CompleteLevel() { /* Сохранить прогресс, показать экран победы */ }
 }
