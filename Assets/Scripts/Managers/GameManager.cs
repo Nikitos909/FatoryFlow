@@ -42,9 +42,12 @@ public class GameManager : MonoBehaviour
         DifficultyService.Instance.Initialize(Config);
     }
 
-    private void Update()
+    void Update()
     {
-        ProductionManager.UpdateProduction(Time.deltaTime);
-        LogisticsManager.UpdateLogistics(Time.deltaTime);
+        if (State != GameState.Playing) return;
+        // Основной игровой цикл
+        ProductionManager.Instance.OnUpdate(Time.deltaTime);
+        LogisticsManager.Instance.OnUpdate(Time.deltaTime);
+        EconomyManager.Instance.OnUpdate(Time.deltaTime);
     }
 }
