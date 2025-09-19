@@ -42,31 +42,9 @@ public class GameManager : MonoBehaviour
         DifficultyService.Instance.Initialize(Config);
     }
 
-    private void StartGame()
-    {
-        EconomyManager.Initialize(Config.StartMoney);
-        UIManager.UpdateMoneyDisplay(EconomyManager.CurrentMoney);
-        Debug.Log("Game started!");
-    }
-
     private void Update()
     {
         ProductionManager.UpdateProduction(Time.deltaTime);
         LogisticsManager.UpdateLogistics(Time.deltaTime);
-    }
-
-    public void SaveGame()
-    {
-        string json = JsonUtility.ToJson(Data);
-        System.IO.File.WriteAllText(Application.persistentDataPath + "/save.json", json);
-    }
-
-    public void LoadGame()
-    {
-        if (System.IO.File.Exists(Application.persistentDataPath + "/save.json"))
-        {
-            string json = System.IO.File.ReadAllText(Application.persistentDataPath + "/save.json");
-            Data = JsonUtility.FromJson<GameData>(json);
-        }
     }
 }
