@@ -32,31 +32,19 @@ public class SaveManager : MonoBehaviour
         File.WriteAllText(savePath, json);
     }
 
-    // Çàãðóæàåì äàííûå èç ôàéëà
-    public bool LoadGame()
+    public void LoadGame()
     {
-        if (!File.Exists(_saveFilePath))
+        if (File.Exists(savePath))
         {
-            Debug.Log("No save file found. Starting new game.");
-            return false;
-        }
-
-        try
-        {
-            string jsonData = File.ReadAllText(_saveFilePath);
-            _currentGameData = JsonUtility.FromJson<GameData>(jsonData);
-
-            Debug.Log("Game loaded successfully!");
-            return true;
-        }
-        catch (System.Exception e)
-        {
-            Debug.LogError($"Load failed: {e.Message}");
-            // Ñîçäàåì íîâûå äàííûå åñëè çàãðóçêà íå óäàëàñü
-            CreateNewGame();
-            return false;
+            string json = File.ReadAllText(savePath);
+            SaveData data = JsonUtility.FromJson<SaveData>(json);
+            
+            // Восстанавливаем состояние игры
+            EconomyManager.Instance.SetMoney(data.Money);
+            // ... восстановление станков и логистов
         }
     }
+
 
     // Ñîçäàåì íîâûå äàííûå äëÿ íà÷àëà èãðû
     public void CreateNewGame()
