@@ -19,6 +19,8 @@ public class ProductionManager : MonoBehaviour
         }
     }
 
+    public void Initialize() { /* Загрузка данных о машинах из SaveManager */ }
+
     public void RegisterMachine(Machine machine)
     {
         AllMachines.Add(machine);
@@ -29,19 +31,23 @@ public class ProductionManager : MonoBehaviour
         AllMachines.Remove(machine);
     }
 
-    public void UpdateProduction(float deltaTime)
+    public void OnUpdate(float deltaTime)
     {
-        foreach (Machine machine in AllMachines)
+        foreach (var machine in AllMachines)
         {
-            if (machine.IsWorking)
+            if (machine.IsBroken) continue;
+
+            // Обновление таймеров производства
+            if (machine.IsProducing)
             {
                 machine.ProductionTimer -= deltaTime;
-                
                 if (machine.ProductionTimer <= 0)
-                {
-                    CompleteProduction(machine);
-                }
+                    OnProductionFinished(machine);
             }
+
+            // Проверка возможности начать производство
+            if (!machine.IsProducing && HasInputResources(machine))
+                StartProduction(machine);
         }
     }
 
