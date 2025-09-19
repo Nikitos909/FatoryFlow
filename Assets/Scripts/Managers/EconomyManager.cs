@@ -7,9 +7,9 @@ public class EconomyManager : MonoBehaviour
 {
     public static EconomyManager Instance;
 
-    public int CurrentMoney { get; private set; } = 100; // ��������� �������
+    public int CurrentMoney { get; private set; } = 100; // Ñòàðòîâûé êàïèòàë
 
-    // ������� ��� ���������� UI
+    // Ñîáûòèå äëÿ îáíîâëåíèÿ UI
     public static event Action<int> OnMoneyChanged;
 
     private void Awake()
@@ -24,11 +24,28 @@ public class EconomyManager : MonoBehaviour
         }
     }
 
+    public void Initialize(GameConfig config)
+    {
+        CurrentMoney = config.StartMoney;
+        ExpenseTimer = config.ExpenseInterval;
+        CalculateDailyExpenses();
+    }
+
+    public void OnUpdate(float deltaTime)
+    {
+        // Списание периодических расходов
+        ExpenseTimer -= deltaTime;
+        if (ExpenseTimer <= 0)
+        {
+            SpendMoney(DailyExpenses);
+            ExpenseTimer = Config.ExpenseInterval;
+        }
+    }
+
     public void AddMoney(int amount)
     {
         CurrentMoney += amount;
-        OnMoneyChanged?.Invoke(CurrentMoney); // ��������� UI
-        Debug.Log($"Money: {CurrentMoney} (+{amount})");
+        UIManager.Instance.UpdateMoneyUI(CurrentMoney);
     }
 
     public bool SpendMoney(int amount)
@@ -36,11 +53,30 @@ public class EconomyManager : MonoBehaviour
         if (CurrentMoney >= amount)
         {
             CurrentMoney -= amount;
-            OnMoneyChanged?.Invoke(CurrentMoney);
-            Debug.Log($"Money: {CurrentMoney} (-{amount})");
+            UIManager.Instance.UpdateMoneyUI(CurrentMoney);
             return true;
         }
-        Debug.Log("Not enough money!");
         return false;
+    }
+
+    private void CalculateDailyExpenses()
+    {
+        int expenses = 0;
+        
+        // Зарплаты логистов
+        foreach (var logist in LogisticsManager.Instance.AllLogists)
+            expenses += logist.Salary;
+        
+        // Аренда станков
+        foreach (var machine in ProductionManager.Instance.AllMachines)
+            expenses += machine.RentCost;
+        
+        DailyExpenses = expenses;
+    }
+
+    public void OnMachineBought(Machine machine)
+    {
+        SpendMoney(machine.Price);
+        CalculateDailyExpenses(); // Пересчитываем расходы
     }
 }
