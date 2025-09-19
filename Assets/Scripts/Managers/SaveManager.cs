@@ -10,20 +10,7 @@ public class SaveManager : MonoBehaviour
 
     private const string SAVE_FILE_NAME = "factory_save.json";
 
-    private void Awake()
-    {
-        // Ðåàëèçàöèÿ ñèíãëòîíà
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject); // ×òîáû íå óíè÷òîæàëñÿ ïðè çàãðóçêå íîâûõ ñöåí
-            Initialize();
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
+    private void Awake() => savePath = Application.persistentDataPath + "/save.json";
 
     private void Initialize()
     {
