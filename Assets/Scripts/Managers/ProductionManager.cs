@@ -51,38 +51,41 @@ public class ProductionManager : MonoBehaviour
         }
     }
 
-    private void CompleteProduction(Machine machine)
+    private bool HasInputResources(Machine machine)
     {
-        // Проверяем брак
-        bool isDefective = GameManager.Instance.DifficultyService
-            .CheckForDefect(machine.DefectChance);
+        // Проверяет, есть ли на входных слотах станка нужные ресурсы
+        foreach (var inputSlot in machine.InputSlots)
+            if (inputSlot.CurrentProduct == null) return false;
+        return true;
+    }
+
+    private void StartProduction(Machine machine)
+    {
+        machine.IsProducing = true;
+        machine.ProductionTimer = machine.Data.ProductionTime;
         
-        if (!isDefective)
+        // Убираем ресурсы со входов
+        foreach (var inputSlot in machine.InputSlots)
+            Destroy(inputSlot.CurrentProduct.gameObject);
+    }
+
+    private void OnProductionFinished(Machine machine)
+    {
+        // Проверка на брак через DifficultyService
+        bool isDefective = DifficultyService.Instance.CheckForDefect(machine);
+        
+        if (isDefective)
         {
-            // Создаем продукт
-            Product newProduct = Instantiate(machine.OutputProductPrefab, 
-                machine.OutputSlot.position, Quaternion.identity);
-            
-            // Сообщаем логистам о новом продукте
-            GameManager.Instance.LogisticsManager
-                .AddTransportTask(newProduct, machine);
+            // Создать бракованный продукт
+            CreateProduct(machine.OutputSlots, machine.Data.DefectiveProductType);
         }
         else
         {
-            Debug.Log($"Брак на станке {machine.name}!");
-            // Можно создать визуал брака или просто уничтожить ресурс
+            // Создать нормальный продукт
+            CreateProduct(machine.OutputSlots, machine.Data.OutputProductType);
         }
-        
-        machine.ResetProduction();
-    }
 
-    public bool TryStartProduction(Machine machine)
-    {
-        if (machine.CanStartProduction())
-        {
-            machine.StartProduction(GameManager.Instance.Config.BaseProductionTime);
-            return true;
-        }
-        return false;
+        machine.IsProducing = false;
+        LogisticsManager.Instance.OnProductsReady(machine.OutputSlots);
     }
 }
