@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
     public GameData Data;
 
     public ProductionManager ProductionManager;
-    public LogisticsManager LogisticsManager;
+    public LogisticManager LogisticManager;
     public EconomyManager EconomyManager;
     public UIManager UIManager;
     public DifficultyService DifficultyService;
@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour
         SaveManager.Instance.LoadGame();
         EconomyManager.Instance.Initialize(Config);
         ProductionManager.Instance.Initialize();
-        LogisticsManager.Instance.Initialize(Config.BaseLogistSpeed);
+        LogisticManager.Instance.Initialize(Config.BaseLogistSpeed);
         DifficultyService.Instance.Initialize(Config);
     }
 
@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour
         if (State != GameState.Playing) return;
         // Основной игровой цикл
         ProductionManager.Instance.OnUpdate(Time.deltaTime);
-        LogisticsManager.Instance.OnUpdate(Time.deltaTime);
+        LogisticManager.Instance.OnUpdate(Time.deltaTime);
         EconomyManager.Instance.OnUpdate(Time.deltaTime);
     }
 
