@@ -1,14 +1,14 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "GameData", menuName = "GameConfig/SettingsMachine")]
-public class MachineType : ScriptableObject
+[CreateAssetMenu(fileName = "GameData", menuName = "GameConfig/MachineType")]
+public class MachineTypeSO : ScriptableObject
 {
     [Header("Идентификация")]
     public MachineType enumType; // Используем перечисление из Enums.cs
-    public string machineName;
+    public string displayName;
     public GameObject prefab;
 
-    [Header("Входы/Выходы")]
+    [Header(Производство")]
     public ProductType inputProductType;
     public ProductType outputProductType;
     public ProductType defectiveProductType;
