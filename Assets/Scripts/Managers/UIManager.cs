@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
@@ -7,8 +5,8 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
 
-    public Text moneyText;
-    public Text profitText;
+    public TMP_Text moneyText;
+    public TMP_Text profitText;
     public GameObject selectionPanel;
     public GameObject gameOverPanel;
 

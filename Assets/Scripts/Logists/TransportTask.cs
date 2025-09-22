@@ -5,11 +5,3 @@ public class TransportTask
     public Machine TargetMachine;
     public TaskStatus Status;
 }
-
-public enum TaskStatus
-{
-    Pending,
-    InProgress,
-    Completed,
-    Failed
-}
