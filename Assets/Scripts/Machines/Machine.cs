@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Machine : MonoBehaviour
 {
-    public MachineType machineType;
+    public MachineTypeSO machineType;
     public Transform inputSlot;
     public Transform outputSlot;
     public ProgressBar progressBar;
