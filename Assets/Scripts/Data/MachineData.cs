@@ -1,8 +1,11 @@
+using UnityEngine;
+using System;
+
 [Serializable]
 public struct MachineData
 {
     public string machineTypeId;
-    public Vector2 position;
+    public Vector3 position;
     public Quaternion rotation;
     public float age;
     public int upgradeLevel;

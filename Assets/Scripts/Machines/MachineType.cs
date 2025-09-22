@@ -8,7 +8,7 @@ public class MachineTypeSO : ScriptableObject
     public string displayName;
     public GameObject prefab;
 
-    [Header(Производство")]
+    [Header("Производство")]
     public ProductType inputProductType;
     public ProductType outputProductType;
     public ProductType defectiveProductType;
