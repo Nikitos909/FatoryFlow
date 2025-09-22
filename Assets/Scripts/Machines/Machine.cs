@@ -25,6 +25,113 @@ public class Machine : MonoBehaviour
         defectChance = machineType.baseDefectChance;
     }
 
+    //=======
+    
+
+    void Update()
+    {
+        if (isWorking)
+        {
+            workTimer -= Time.deltaTime;
+            
+            if (workTimer <= 0f)
+            {
+                FinishProduction();
+            }
+        }
+        else if (currentInput != null && currentOutput == null)
+        {
+            StartProduction();
+        }
+    }
+
+    private void StartProduction()
+    {
+        isWorking = true;
+        workTimer = productionTime;
+        Debug.Log($"{machineType.displayName} начал производство");
+    }
+
+    private void FinishProduction()
+    {
+        isWorking = false;
+        
+        // Определяем тип продукта (брак или норма)
+        bool isDefective = Random.value < machineType.baseDefectChance;
+        ProductType outputType = isDefective ? 
+            machineType.defectiveProductType : machineType.outputProductType;
+        
+        // Создаем продукт
+        CreateOutputProduct(outputType, isDefective);
+        
+        // Уничтожаем входной продукт
+        Destroy(currentInput.gameObject);
+        currentInput = null;
+        
+        // Сообщаем логистике о новом продукте
+        LogisticsManager.Instance.OnProductProduced(this);
+    }
+
+    private void CreateOutputProduct(ProductType type, bool defective)
+    {
+        GameObject productObj = new GameObject($"Product_{type}");
+        productObj.transform.position = outputSlot.position;
+        
+        Product product = productObj.AddComponent<Product>();
+        product.Initialize(type, this, defective);
+        
+        // Добавляем визуал
+        SpriteRenderer sr = productObj.AddComponent<SpriteRenderer>();
+        sr.sprite = GetProductSprite(type);
+        if (defective) sr.color = Color.red;
+        
+        currentOutput = product;
+        Debug.Log($"{machineType.displayName} произвел: {type}" + 
+                 (defective ? " (БРАК)" : ""));
+    }
+
+    private Sprite GetProductSprite(ProductType type)
+    {
+        // Простая заглушка - в реальном проекте брать из ресурсов
+        return Resources.Load<Sprite>("Sprites/" + type.ToString());
+    }
+
+    public bool CanAcceptInput(ProductType type)
+    {
+        return !isWorking && currentInput == null && type == machineType.inputProductType;
+    }
+
+    public void PutInputProduct(Product product)
+    {
+        if (CanAcceptInput(product.type))
+        {
+            currentInput = product;
+            product.transform.SetParent(inputSlot);
+            product.transform.localPosition = Vector3.zero;
+            Debug.Log($"{machineType.displayName} принял продукт: {product.type}");
+        }
+    }
+
+    public Product TakeOutputProduct()
+    {
+        Product product = currentOutput;
+        currentOutput = null;
+        return product;
+    }
+
+    public Vector3 GetOutputSlotPosition()
+    {
+        return outputSlot.position;
+    }
+
+    public Vector3 GetInputSlotPosition()
+    {
+        return inputSlot.position;
+    }
+
+
+    //========
+
     void Update()
     {
         if (isBroken) return;
@@ -69,22 +176,6 @@ public class Machine : MonoBehaviour
         LogisticsManager.Instance.OnProductCreated(this);
     }
 
-    private void CreateOutputProduct(ProductType type, bool defective)
-    {
-        GameObject productObj = new GameObject($"Product_{type}");
-        productObj.transform.position = outputSlot.position;
-        productObj.transform.SetParent(transform);
-
-        Product product = productObj.AddComponent<Product>();
-        product.Initialize(type, this, defective);
-
-        SpriteRenderer sr = productObj.AddComponent<SpriteRenderer>();
-        sr.sprite = GetProductSprite(type);
-        if (defective) sr.color = Color.red;
-
-        currentOutput = product;
-    }
-
     private Sprite GetProductSprite(ProductType type)
     {
         // Заглушка - в реальности брать из конфига
@@ -104,17 +195,5 @@ public class Machine : MonoBehaviour
             product.transform.SetParent(inputSlot);
             product.transform.localPosition = Vector3.zero;
         }
-    }
-
-    public Product TakeOutputProduct()
-    {
-        Product product = currentOutput;
-        currentOutput = null;
-        return product;
-    }
-
-    public Vector3 GetOutputPosition()
-    {
-        return outputSlot.position;
     }
 }
