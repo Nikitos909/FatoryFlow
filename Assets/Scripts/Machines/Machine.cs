@@ -25,8 +25,6 @@ public class Machine : MonoBehaviour
         defectChance = machineType.baseDefectChance;
     }
 
-    //=======    
-
     void Update()
     {
         if (isBroken) return;
@@ -130,24 +128,5 @@ public class Machine : MonoBehaviour
     public Vector3 GetInputSlotPosition()
     {
         return inputSlot.position;
-    }
-
-
-    //========
-
-    private Sprite GetProductSprite(ProductType type)
-    {
-        // Заглушка - в реальности брать из конфига
-        return Resources.Load<Sprite>("Sprites/" + type.ToString());
-    }
-
-    public void SetInputProduct(Product product)
-    {
-        if (CanAcceptInput(product.type))
-        {
-            currentInput = product;
-            product.transform.SetParent(inputSlot);
-            product.transform.localPosition = Vector3.zero;
-        }
     }
 }
