@@ -56,6 +56,7 @@ public class Machine : MonoBehaviour
     private void FinishProduction()
     {
         isWorking = false;
+        progressBar.gameObject.SetActive(false);
         
         // Определяем тип продукта (брак или норма)
         bool isDefective = Random.value < machineType.baseDefectChance;
