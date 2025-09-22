@@ -47,13 +47,14 @@ public class Machine : MonoBehaviour
         }
     }
 
-    private void StartProduction()
+     public void StartProduction()
     {
         isWorking = true;
         workTimer = productionTime;
+        progressBar.gameObject.SetActive(true);
         Debug.Log($"{machineType.displayName} начал производство");
     }
-
+   
     private void FinishProduction()
     {
         isWorking = false;
@@ -134,14 +135,7 @@ public class Machine : MonoBehaviour
 
     //========
 
-    public void StartProduction()
-    {
-        isWorking = true;
-        workTimer = productionTime;
-        progressBar.gameObject.SetActive(true);
-    }
-
-   private Sprite GetProductSprite(ProductType type)
+    private Sprite GetProductSprite(ProductType type)
     {
         // Заглушка - в реальности брать из конфига
         return Resources.Load<Sprite>("Sprites/" + type.ToString());
