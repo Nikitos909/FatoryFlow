@@ -6,7 +6,7 @@ public class SaveManager : MonoBehaviour
     public static SaveManager Instance;
 
     private GameData _currentGameData;
-    private string savePath;
+    private string _saveFilePath;
 
     private const string SAVE_FILE_NAME = "factory_save.json";
 
@@ -64,7 +64,6 @@ public class SaveManager : MonoBehaviour
         }
     }
 
-    // Ïðîâåðÿåì ñóùåñòâîâàíèå ôàéëà ñîõðàíåíèÿ
     public bool SaveFileExists()
     {
         return File.Exists(_saveFilePath);
@@ -74,7 +73,6 @@ public class SaveManager : MonoBehaviour
 
     public GameData GetCurrentGameData()
     {
-        // Åñëè äàííûõ íåò - ñîçäàåì íîâûå
         if (_currentGameData == null)
         {
             CreateNewGame();
@@ -87,7 +85,6 @@ public class SaveManager : MonoBehaviour
         _currentGameData = newData;
     }
 
-    // Áûñòðîå ñîõðàíåíèå (ìîæíî âûçûâàòü îòêóäà óãîäíî)
     public static void QuickSave()
     {
         if (Instance != null)
@@ -96,7 +93,6 @@ public class SaveManager : MonoBehaviour
         }
     }
 
-    // Áûñòðàÿ çàãðóçêà
     public static bool QuickLoad()
     {
         return Instance != null && Instance.LoadGame();
