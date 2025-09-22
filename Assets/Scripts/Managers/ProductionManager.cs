@@ -54,7 +54,7 @@ public class ProductionManager : MonoBehaviour
     private bool HasInputResources(Machine machine)
     {
         // Проверяет, есть ли на входных слотах станка нужные ресурсы
-        foreach (var inputSlot in machine.InputSlots)
+        foreach (var inputSlot in machine.inputSlot)
             if (inputSlot.CurrentProduct == null) return false;
         return true;
     }
@@ -62,10 +62,10 @@ public class ProductionManager : MonoBehaviour
     private void StartProduction(Machine machine)
     {
         machine.IsProducing = true;
-        machine.ProductionTimer = machine.Data.ProductionTime;
+        machine.workTimer = machine.Data.ProductionTime;
         
         // Убираем ресурсы со входов
-        foreach (var inputSlot in machine.InputSlots)
+        foreach (var inputSlot in machine.inputSlot)
             Destroy(inputSlot.CurrentProduct.gameObject);
     }
 
@@ -77,15 +77,15 @@ public class ProductionManager : MonoBehaviour
         if (isDefective)
         {
             // Создать бракованный продукт
-            CreateProduct(machine.OutputSlots, machine.Data.DefectiveProductType);
+            CreateProduct(machine.outputSlot, machine.Data.DefectiveProductType);
         }
         else
         {
             // Создать нормальный продукт
-            CreateProduct(machine.OutputSlots, machine.Data.OutputProductType);
+            CreateProduct(machine.outputSlot, machine.Data.OutputProductType);
         }
 
         machine.IsProducing = false;
-        LogisticsManager.Instance.OnProductsReady(machine.OutputSlots);
+        LogisticsManager.Instance.OnProductsReady(machine.outputSlot);
     }
 }

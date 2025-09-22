@@ -64,7 +64,7 @@ public class EconomyManager : MonoBehaviour
         int expenses = 0;
         
         // Зарплаты логистов
-        foreach (var logist in LogisticsManager.Instance.AllLogists)
+        foreach (var logist in LogisticManager.Instance.AllLogists)
             expenses += logist.Salary;
         
         // Аренда станков
