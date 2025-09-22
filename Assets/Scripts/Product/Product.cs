@@ -2,10 +2,6 @@ using UnityEngine;
 
 public class Product : MonoBehaviour
 {
-    using UnityEngine;
-
-public class Product : MonoBehaviour
-{
     [Header("Идентификация")]
     public ProductType type; // Тип продукта
     public string productName; // Имя для отображения
@@ -83,6 +79,4 @@ public class Product : MonoBehaviour
             rotation = transform.rotation
         };
     }
-}
-
 }
