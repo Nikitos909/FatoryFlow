@@ -12,6 +12,9 @@ public class MachineTypeSO : ScriptableObject
     public ProductType inputProductType;
     public ProductType outputProductType;
     public ProductType defectiveProductType;
+    public float baseProductionTime = 5f;// check gameconfig
+    [Range(0f, 1f)] public float baseDefectChance = 0.1f;
+
 
     [Header("Характеристики")]
     public float baseProductionTime = 5f;
