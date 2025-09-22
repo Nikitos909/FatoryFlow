@@ -10,11 +10,10 @@ public class SaveManager : MonoBehaviour
 
     private const string SAVE_FILE_NAME = "factory_save.json";
 
-    private void Awake() => savePath = Application.persistentDataPath + "/save.json";
+    private void Awake() => _saveFilePath = Application.persistentDataPath + "/save.json";
 
     private void Initialize()
     {
-        // Ôîðìèðóåì ïóòü ê ôàéëó ñîõðàíåíèÿ
         _saveFilePath = Path.Combine(Application.persistentDataPath, SAVE_FILE_NAME);
         Debug.Log($"Save file path: {_saveFilePath}");
     }
@@ -29,14 +28,14 @@ public class SaveManager : MonoBehaviour
         };
 
         string json = JsonUtility.ToJson(data);
-        File.WriteAllText(savePath, json);
+        File.WriteAllText(_saveFilePath, json);
     }
 
     public void LoadGame()
     {
-        if (File.Exists(savePath))
+        if (File.Exists(_saveFilePath))
         {
-            string json = File.ReadAllText(savePath);
+            string json = File.ReadAllText(_saveFilePath);
             SaveData data = JsonUtility.FromJson<SaveData>(json);
             
             // Восстанавливаем состояние игры
@@ -46,14 +45,12 @@ public class SaveManager : MonoBehaviour
     }
 
 
-    // Ñîçäàåì íîâûå äàííûå äëÿ íà÷àëà èãðû
     public void CreateNewGame()
     {
         _currentGameData = new GameData();
         Debug.Log("New game data created!");
     }
 
-    // Óäàëÿåì ôàéë ñîõðàíåíèÿ
     public void DeleteSave()
     {
         if (File.Exists(_saveFilePath))
@@ -69,7 +66,6 @@ public class SaveManager : MonoBehaviour
         return File.Exists(_saveFilePath);
     }
 
-    // === Public ìåòîäû äëÿ äîñòóïà ê äàííûì ===
 
     public GameData GetCurrentGameData()
     {
@@ -93,18 +89,16 @@ public class SaveManager : MonoBehaviour
         }
     }
 
-    public static bool QuickLoad()
-    {
-        return Instance != null && Instance.LoadGame();
-    }
+    //public static bool QuickLoad()
+    //{
+        //return Instance != null && Instance.LoadGame();
+    //}
 
-    // Àâòîñîõðàíåíèå ïðè âûõîäå èç èãðû
     private void OnApplicationQuit()
     {
         SaveGame();
     }
 
-    // Òàêæå õîðîøî áû ñîõðàíÿòüñÿ ïðè ïàóçå (äëÿ ìîáèëüíûõ óñòðîéñòâ)
     private void OnApplicationPause(bool pauseStatus)
     {
         if (pauseStatus)

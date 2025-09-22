@@ -31,7 +31,7 @@ public class LogisticManager : MonoBehaviour
     {
         foreach (var logist in AllLogists)
         {
-            if (logist.IsSick) continue;
+            if (logist.isSick) continue;
             
             logist.UpdateLogic(deltaTime);
             
@@ -67,7 +67,7 @@ public class LogisticManager : MonoBehaviour
         // Ищем станок, которому нужен этот продукт
         foreach (var machine in ProductionManager.Instance.AllMachines)
         {
-            if (machine.InputSlots.Any(slot => slot.RequiredType == productType))
+            if (machine.inputSlots.Any(slot => slot.RequiredType == productType))
                 return machine;
         }
         return null; // Или склад

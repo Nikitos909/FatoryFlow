@@ -35,13 +35,13 @@ public class ProductionManager : MonoBehaviour
     {
         foreach (var machine in AllMachines)
         {
-            if (machine.IsBroken) continue;
+            if (machine.isBroken) continue;
 
             // Обновление таймеров производства
-            if (machine.IsProducing)
+            if (machine.isProducing)
             {
-                machine.ProductionTimer -= deltaTime;
-                if (machine.ProductionTimer <= 0)
+                machine.workTimer -= deltaTime;
+                if (machine.workTimer <= 0)
                     OnProductionFinished(machine);
             }
 
