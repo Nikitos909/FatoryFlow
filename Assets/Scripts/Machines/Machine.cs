@@ -25,14 +25,16 @@ public class Machine : MonoBehaviour
         defectChance = machineType.baseDefectChance;
     }
 
-    //=======
-    
+    //=======    
 
     void Update()
     {
+        if (isBroken) return;
+        
         if (isWorking)
         {
             workTimer -= Time.deltaTime;
+            progressBar.SetProgress(1f - (workTimer / productionTime));
             
             if (workTimer <= 0f)
             {
@@ -132,26 +134,6 @@ public class Machine : MonoBehaviour
 
     //========
 
-    void Update()
-    {
-        if (isBroken) return;
-
-        if (isWorking)
-        {
-            workTimer -= Time.deltaTime;
-            progressBar.SetProgress(1f - (workTimer / productionTime));
-
-            if (workTimer <= 0f)
-            {
-                FinishProduction();
-            }
-        }
-        else if (currentInput != null && currentOutput == null)
-        {
-            StartProduction();
-        }
-    }
-
     public void StartProduction()
     {
         isWorking = true;
@@ -159,24 +141,7 @@ public class Machine : MonoBehaviour
         progressBar.gameObject.SetActive(true);
     }
 
-    private void FinishProduction()
-    {
-        isWorking = false;
-        progressBar.gameObject.SetActive(false);
-
-        // Создаем продукт
-        bool isDefective = Random.value < defectChance;
-        ProductType outputType = isDefective ? machineType.defectiveProductType : machineType.outputProductType;
-
-        CreateOutputProduct(outputType, isDefective);
-        Destroy(currentInput.gameObject);
-        currentInput = null;
-
-        // Сообщаем о новом продукте
-        LogisticsManager.Instance.OnProductCreated(this);
-    }
-
-    private Sprite GetProductSprite(ProductType type)
+   private Sprite GetProductSprite(ProductType type)
     {
         // Заглушка - в реальности брать из конфига
         return Resources.Load<Sprite>("Sprites/" + type.ToString());
