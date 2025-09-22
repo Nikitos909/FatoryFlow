@@ -100,7 +100,7 @@ public class Machine : MonoBehaviour
 
     public bool CanAcceptInput(ProductType type)
     {
-        return !isWorking && currentInput == null && type == machineType.inputProductType;
+        return !isBroken && !isWorking && currentInput == null && type == machineType.inputProductType;
     }
 
     public void PutInputProduct(Product product)
@@ -145,11 +145,6 @@ public class Machine : MonoBehaviour
     {
         // Заглушка - в реальности брать из конфига
         return Resources.Load<Sprite>("Sprites/" + type.ToString());
-    }
-
-    public bool CanAcceptInput(ProductType type)
-    {
-        return !isBroken && !isWorking && currentInput == null && type == machineType.inputProductType;
     }
 
     public void SetInputProduct(Product product)
