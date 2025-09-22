@@ -1,54 +1,71 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class SimpleLogisticsManager : MonoBehaviour
+using UnityEngine;
+using TMPro;
+
+public class SimpleEconomyManager : MonoBehaviour
 {
-    public static SimpleLogisticsManager Instance;
+    public static SimpleEconomyManager Instance;
     
-    public List<SimpleLogist> availableLogists = new List<SimpleLogist>();
-    private Queue<Machine> pendingTasks = new Queue<Machine>();
+    public int currentMoney = 1000;
+    public TextMeshProUGUI moneyText;
+    
+    [Header("Расходы")]
+    public int workerSalary = 50;
+    public float salaryInterval = 30f;
+    private float salaryTimer;
 
     void Awake()
     {
         Instance = this;
+        UpdateMoneyUI();
     }
 
-    public void OnProductCreated(Machine machine)
+    void Update()
     {
-        pendingTasks.Enqueue(machine);
-        TryAssignTask();
-    }
-
-    public void OnTaskCompleted(SimpleLogist logist)
-    {
-        availableLogists.Add(logist);
-        TryAssignTask();
-    }
-
-    private void TryAssignTask()
-    {
-        if (pendingTasks.Count > 0 && availableLogists.Count > 0)
+        salaryTimer -= Time.deltaTime;
+        if (salaryTimer <= 0f)
         {
-            Machine sourceMachine = pendingTasks.Dequeue();
-            Machine destinationMachine = FindDestinationMachine(sourceMachine.machineType.outputProductType);
-            
-            if (destinationMachine != null)
-            {
-                SimpleLogist logist = availableLogists[0];
-                availableLogists.RemoveAt(0);
-                
-                logist.AssignTask(sourceMachine, destinationMachine);
-            }
+            PaySalaries();
+            salaryTimer = salaryInterval;
         }
     }
 
-    private Machine FindDestinationMachine(ProductType productType)
+    public void AddMoney(int amount)
     {
-        foreach (Machine machine in FindObjectsOfType<Machine>())
+        currentMoney += amount;
+        UpdateMoneyUI();
+    }
+
+    public bool SpendMoney(int amount)
+    {
+        if (currentMoney >= amount)
         {
-            if (machine.CanAcceptInput(productType))
-                return machine;
+            currentMoney -= amount;
+            UpdateMoneyUI();
+            return true;
         }
-        return null;
+        return false;
+    }
+
+    private void PaySalaries()
+    {
+        int totalSalary = workerSalary * FindObjectsOfType<SimpleLogist>().Length;
+        SpendMoney(totalSalary);
+        Debug.Log($"Выплачена зарплата: -{totalSalary}₽");
+    }
+
+    private void UpdateMoneyUI()
+    {
+        if (moneyText != null)
+            moneyText.text = $"Деньги: {currentMoney}₽";
+    }
+
+    public void OnProductSold(Product product)
+    {
+        int value = product.isDefective ? product.baseValue / 2 : product.baseValue;
+        AddMoney(value);
+        Debug.Log($"Продукт продан: +{value}₽");
     }
 }
