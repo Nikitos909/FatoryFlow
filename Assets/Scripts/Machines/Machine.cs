@@ -71,7 +71,7 @@ public class Machine : MonoBehaviour
         currentInput = null;
         
         // Сообщаем логистике о новом продукте
-        LogisticsManager.Instance.OnProductProduced(this);
+        LogisticManager.Instance.OnProductProduced(this);
     }
 
     private void CreateOutputProduct(ProductType type, bool defective)
@@ -121,17 +121,6 @@ public class Machine : MonoBehaviour
         return product;
     }
 
-    public void SetInputProduct(Product product)
-    {
-        if (CanAcceptInput(product.type))
-        {
-            currentInput = product;
-            product.transform.SetParent(inputSlot);
-            product.transform.localPosition = Vector3.zero;
-            Debug.Log($"Станок {machineType.machineName} принял продукт");
-        }
-    }
-
    public Vector3 GetOutputSlotPosition()
     {
         return outputSlot.position;
@@ -140,10 +129,5 @@ public class Machine : MonoBehaviour
     public Vector3 GetInputSlotPosition()
     {
         return inputSlot.position;
-    }
-
-    public void PutInputProduct(Product product)
-    {
-        SetInputProduct(product);
     }
 }

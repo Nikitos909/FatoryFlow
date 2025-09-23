@@ -33,7 +33,7 @@ public class SimpleLogist : MonoBehaviour
         isMoving = true;
         isDelivering = false;
         
-        Debug.Log($"Логист получил задание: {sourceMachine.machineType.machineName} -> {targetMachine.machineType.machineName}");
+        Debug.Log($"Логист получил задание: {sourceMachine.machineType.displayName} -> {targetMachine.machineType.displayName}");
     }
 
     private void MoveToTarget()
@@ -57,7 +57,7 @@ public class SimpleLogist : MonoBehaviour
     {
         if (carriedProduct != null && targetMachine != null && targetMachine.CanAcceptInput(carriedProduct.type))
         {
-            targetMachine.SetInputProduct(carriedProduct);
+            targetMachine.PutInputProduct(carriedProduct);
             carriedProduct = null;
             Debug.Log("Логист доставил продукт");
         }
@@ -71,17 +71,6 @@ public class SimpleLogist : MonoBehaviour
         {
             SimpleLogisticsManager.Instance.OnTaskCompleted(this);
         }
-    }
-
-    private void DeliverProduct()
-    {
-        if (carriedProduct != null && targetMachine.CanAcceptInput(carriedProduct.type))
-        {
-            targetMachine.SetInputProduct(carriedProduct);
-            carriedProduct = null;
-        }
-        isMoving = false;
-        LogisticsManager.Instance.OnTaskCompleted(this);
     }
 
     // Упрощенные методы для совместимости

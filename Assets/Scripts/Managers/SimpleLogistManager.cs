@@ -8,7 +8,7 @@ public class SimpleLogisticsManager : MonoBehaviour
     public List<SimpleLogist> availableLogists = new List<SimpleLogist>();
     private Queue<Machine> pendingTasks = new Queue<Machine>();
 
-    vvoid Awake()
+    void Awake()
     {
         if (Instance == null)
         {

@@ -45,7 +45,7 @@ public class GameStarter : MonoBehaviour
         
         if (cutterMachine != null && cutterMachine.CanAcceptInput(ProductType.RawPipe))
         {
-            cutterMachine.SetInputProduct(product);
+            cutterMachine.PutInputProduct(product);
             Debug.Log("Создана сырая труба");
         }
         else

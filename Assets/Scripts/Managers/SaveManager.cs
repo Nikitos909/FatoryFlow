@@ -22,9 +22,9 @@ public class SaveManager : MonoBehaviour
     {
         SaveData data = new SaveData
         {
-            Money = EconomyManager.Instance.CurrentMoney,
+            Money = SimpleEconomyManager.Instance.currentMoney,
             Machines = ProductionManager.Instance.AllMachines.Select(m => m.GetData()).ToList(),
-            Logists = LogisticsManager.Instance.AllLogists.Select(l => l.GetData()).ToList()
+            Logists = LogisticManager.Instance.AllLogists.Select(l => l.GetData()).ToList()
         };
 
         string json = JsonUtility.ToJson(data);
