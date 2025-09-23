@@ -1,18 +1,19 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class EconomyManager : MonoBehaviour
 {
     public static EconomyManager Instance;
 
-    public int CurrentMoney { get; private set; } = 100; // Ñòàðòîâûé êàïèòàë
+    public int currentMoney = 1000;
+    public TextMeshProUGUI moneyText;
 
-    // Ñîáûòèå äëÿ îáíîâëåíèÿ UI
-    public static event Action<int> OnMoneyChanged;
+    [Header("Расходы")]
+    public int workerSalary = 50;
+    public float salaryInterval = 30f;
+    private float salaryTimer;
 
-    private void Awake()
+    void Awake()
     {
         if (Instance == null)
         {
@@ -22,61 +23,59 @@ public class EconomyManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        UpdateMoneyUI();
     }
 
-    public void Initialize(GameConfig config)
+    void Update()
     {
-        CurrentMoney = config.StartMoney;
-        ExpenseTimer = config.ExpenseInterval;
-        CalculateDailyExpenses();
-    }
-
-    public void OnUpdate(float deltaTime)
-    {
-        // Списание периодических расходов
-        ExpenseTimer -= deltaTime;
-        if (ExpenseTimer <= 0)
+        salaryTimer -= Time.deltaTime;
+        if (salaryTimer <= 0f)
         {
-            SpendMoney(DailyExpenses);
-            ExpenseTimer = Config.ExpenseInterval;
+            PaySalaries();
+            salaryTimer = salaryInterval;
         }
     }
 
     public void AddMoney(int amount)
     {
-        CurrentMoney += amount;
-        UIManager.Instance.UpdateMoneyUI(CurrentMoney);
+        currentMoney += amount;
+        UpdateMoneyUI();
+        Debug.Log($"Получено денег: +{amount}₽");
     }
 
     public bool SpendMoney(int amount)
     {
-        if (CurrentMoney >= amount)
+        if (currentMoney >= amount)
         {
-            CurrentMoney -= amount;
-            UIManager.Instance.UpdateMoneyUI(CurrentMoney);
+            currentMoney -= amount;
+            UpdateMoneyUI();
+            Debug.Log($"Потрачено денег: -{amount}₽");
             return true;
         }
         return false;
     }
 
-    private void CalculateDailyExpenses()
+    private void PaySalaries()
     {
-        int expenses = 0;
-        
-        // Зарплаты логистов
-        foreach (var logist in LogisticManager.Instance.AllLogists)
-            expenses += logist.Salary;
-        
-        // Аренда станков
-        foreach (var machine in ProductionManager.Instance.AllMachines)
-            expenses += machine.RentCost;
-        
-        DailyExpenses = expenses;
+        Logist[] logists = FindObjectsOfType<Logist>();
+        int totalSalary = workerSalary * logists.Length;
+
+        if (SpendMoney(totalSalary))
+        {
+            Debug.Log($"Выплачена зарплата {logists.Length} логистам: -{totalSalary}₽");
+        }
     }
 
-    public void OnMachineBought(Machine machine)
+    private void UpdateMoneyUI()
     {
-        SpendMoney(machine.Price);
-        CalculateDailyExpenses(); // Пересчитываем расходы
+        if (moneyText != null)
+            moneyText.text = $"Деньги: {currentMoney}₽";
+    }
+
+    public void OnProductSold(Product product)
+    {
+        int value = product.isDefective ? product.baseValue / 2 : product.baseValue;
+        AddMoney(value);
+        Debug.Log($"Продукт продан за {value}₽");
     }
 }
