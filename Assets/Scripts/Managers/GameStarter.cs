@@ -11,7 +11,14 @@ public class GameStarter : MonoBehaviour
 
     void Start()
     {
+        if (cutterMachine == null || benderMachine == null)
+        {
+            Debug.LogError("Не назначены станки в GameStarter!");
+            return;
+        }
+
         StartCoroutine(SimulateProduction());
+        Debug.Log("Запущено тестовое производство");
     }
 
     private IEnumerator SimulateProduction()
@@ -42,23 +49,8 @@ public class GameStarter : MonoBehaviour
 
 //======================
 
-public class GameStarter : MonoBehaviour
-{
-    public Machine cutterMachine;
-    public Machine benderMachine;
-    public Transform resourceSpawnPoint;
-    
-    void Start()
-    {
-        if (cutterMachine == null || benderMachine == null)
-        {
-            Debug.LogError("Не назначены станки в GameStarter!");
-            return;
-        }
 
-        StartCoroutine(SimulateProduction());
-        Debug.Log("Запущено тестовое производство");
-    }
+    
 
     private IEnumerator SimulateProduction()
     {
