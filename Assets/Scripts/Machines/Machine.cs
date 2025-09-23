@@ -6,17 +6,29 @@ public class Machine : MonoBehaviour
     public Transform inputSlot;
     public Transform outputSlot;
 
+    [Header("Текущее состояние")]
     public Product currentInput;
     public Product currentOutput;
     public bool isWorking = false;
     public float workTimer = 0f;
+
+    private float productionTime;
+
+    void Start()
+    {
+        productionTime = machineType.baseProductionTime;
+    }
 
     void Update()
     {
         if (isWorking)
         {
             workTimer -= Time.deltaTime;
-            if (workTimer <= 0f) FinishProduction();
+
+            if (workTimer <= 0f)
+            {
+                FinishProduction();
+            }
         }
         else if (currentInput != null && currentOutput == null)
         {
@@ -27,26 +39,35 @@ public class Machine : MonoBehaviour
     public void StartProduction()
     {
         isWorking = true;
-        workTimer = machineType.baseProductionTime;
+        workTimer = productionTime;
+        Debug.Log($"{machineType.displayName} начал производство");
     }
 
     private void FinishProduction()
     {
         isWorking = false;
+
         bool isDefective = Random.value < machineType.baseDefectChance;
-        ProductType outputType = isDefective ? machineType.defectiveProductType : machineType.outputProductType;
+        ProductType outputType = isDefective ?
+            machineType.defectiveProductType : machineType.outputProductType;
 
         CreateOutputProduct(outputType, isDefective);
+
         Destroy(currentInput.gameObject);
         currentInput = null;
 
-        LogisticsManager.Instance.OnProductProduced(this);
+        // Уведомляем менеджер логистики
+        if (LogisticsManager.Instance != null)
+        {
+            LogisticsManager.Instance.OnProductProduced(this);
+        }
     }
 
     private void CreateOutputProduct(ProductType type, bool defective)
     {
         GameObject productObj = new GameObject($"Product_{type}");
         productObj.transform.position = outputSlot.position;
+
         Product product = productObj.AddComponent<Product>();
         product.Initialize(type, this, defective);
 
@@ -56,6 +77,8 @@ public class Machine : MonoBehaviour
         sr.sortingOrder = 1;
 
         currentOutput = product;
+        Debug.Log($"{machineType.displayName} произвел: {type}" +
+                 (defective ? " (БРАК)" : ""));
     }
 
     private Sprite CreateDefaultSprite()
@@ -65,6 +88,7 @@ public class Machine : MonoBehaviour
             for (int y = 0; y < 16; y++)
                 texture.SetPixel(x, y, Color.white);
         texture.Apply();
+
         return Sprite.Create(texture, new Rect(0, 0, 16, 16), Vector2.one * 0.5f);
     }
 
@@ -80,6 +104,7 @@ public class Machine : MonoBehaviour
             currentInput = product;
             product.transform.SetParent(inputSlot);
             product.transform.localPosition = Vector3.zero;
+            Debug.Log($"{machineType.displayName} принял продукт: {product.type}");
         }
     }
 
@@ -90,6 +115,13 @@ public class Machine : MonoBehaviour
         return product;
     }
 
-    public Vector3 GetOutputSlotPosition() => outputSlot.position;
-    public Vector3 GetInputSlotPosition() => inputSlot.position;
+    public Vector3 GetOutputSlotPosition()
+    {
+        return outputSlot.position;
+    }
+
+    public Vector3 GetInputSlotPosition()
+    {
+        return inputSlot.position;
+    }
 }
