@@ -4,52 +4,105 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
-    public GameState State { get; private set; } = GameState.Playing; // Playing, Paused, GameOver
-    
-    public GameConfig Config;
-    public GameData Data;
+    public GameState gameState;
+    public GameConfig config;
 
-    public ProductionManager ProductionManager;
-    public LogisticsManager LogisticManager;
-    public EconomyManager EconomyManager;
-    public UIManager UIManager;
-    public DifficultyService DifficultyService;
+    // Ссылки на менеджеры (перетащи в инспекторе)
+    public EconomyManager economyManager;
+    public LogisticsManager logisticsManager;
+    public Machine cutterMachine;
+    public Machine benderMachine;
+    public Logist logist;
+    public Transform resourceSpawnPoint;
+
+    private float spawnTimer;
+    private bool isGameRunning = true;
 
     private void Awake()
     {
-        if (Instance != null) { Destroy(gameObject); }
-        
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         Instance = this;
-        DontDestroyOnLoad(gameObject);
-        InitializeManagers();       
+        InitializeGame();
     }
 
-    private void InitializeManagers()
+    private void InitializeGame()
     {
-        // Загружаем конфиги
-        Config = Resources.Load<GameConfig>("Configs/GameConfig");
-        
-        // Создаем данные игры
-        Data = new GameData();
-        
-        // Инициализация других менеджеров
-        SaveManager.Instance.LoadGame();
-        EconomyManager.Instance.Initialize(Config);
-        ProductionManager.Instance.Initialize();
-        LogisticsManager.Instance.Initialize(Config.BaseLogistSpeed);
-        DifficultyService.Instance.Initialize(Config);
+        // Создаем состояние игры
+        gameState = new GameState();
+        gameState.currentMoney = config.startMoney;
+
+        // Загружаем конфиг если не назначен
+        if (config == null)
+            config = Resources.Load<GameConfig>("GameConfig");
+
+        // Регистрируем логиста
+        logisticsManager.availableLogists.Add(logist);
+
+        spawnTimer = config.rawPipeSpawnInterval;
+
+        Debug.Log("🎮 Игра инициализирована!");
     }
 
-    void Update()
+    private void Update()
     {
-        if (State != GameState.Playing) return;
-        // Основной игровой цикл
-        ProductionManager.Instance.OnUpdate(Time.deltaTime);
-        LogisticsManager.Instance.OnUpdate(Time.deltaTime);
-        EconomyManager.Instance.OnUpdate(Time.deltaTime);
+        if (!isGameRunning) return;
+
+        // Спавн сырых труб
+        spawnTimer -= Time.deltaTime;
+        if (spawnTimer <= 0f)
+        {
+            SpawnRawPipe();
+            spawnTimer = config.rawPipeSpawnInterval;
+        }
+
+        // Обновляем экономику
+        economyManager.UpdateEconomy(Time.deltaTime);
     }
 
-    public void PauseGame() => State = GameState.Paused;
-    public void ResumeGame() => State = GameState.Playing;
-    public void CompleteLevel() { /* Сохранить прогресс, показать экран победы */ }
+    private void SpawnRawPipe()
+    {
+        if (!cutterMachine.CanAcceptInput(ProductType.RawPipe)) return;
+
+        GameObject pipeObj = new GameObject("RawPipe");
+        pipeObj.transform.position = resourceSpawnPoint.position;
+
+        Product product = pipeObj.AddComponent<Product>();
+        product.Initialize(ProductType.RawPipe, null);
+
+        SpriteRenderer sr = pipeObj.AddComponent<SpriteRenderer>();
+        sr.sprite = CreateDefaultSprite();
+        sr.color = Color.gray;
+        sr.sortingOrder = 1;
+
+        cutterMachine.PutInputProduct(product);
+        gameState.productsManufactured++;
+
+        Debug.Log("📦 Создана сырая труба");
+    }
+
+    private Sprite CreateDefaultSprite()
+    {
+        Texture2D texture = new Texture2D(16, 16);
+        for (int x = 0; x < 16; x++)
+            for (int y = 0; y < 16; y++)
+                texture.SetPixel(x, y, Color.white);
+        texture.Apply();
+        return Sprite.Create(texture, new Rect(0, 0, 16, 16), Vector2.one * 0.5f);
+    }
+
+    public void OnProductSold(Product product)
+    {
+        economyManager.SellProduct(product);
+        gameState.totalRevenue += product.baseValue;
+        gameState.ordersCompleted++;
+        gameState.UpdateEfficiencyMetrics();
+    }
+
+    public void PauseGame() => isGameRunning = false;
+    public void ResumeGame() => isGameRunning = true;
 }

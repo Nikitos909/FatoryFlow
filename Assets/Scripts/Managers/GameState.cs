@@ -11,57 +11,35 @@ public class GameState
     public int totalExpenses;
 
     // Производство
-    public List<MachineData> machinesData = new List<MachineData>();
-    public List<ProductData> productsData = new List<ProductData>();
-
-    // Персонал
-    public List<LogistData> logistsData = new List<LogistData>();
-
-    // Прогресс уровня
-    public int currentLevel;
-    public int ordersCompleted;
     public int productsManufactured;
     public int defectiveProducts;
+    public int ordersCompleted;
 
-    // Время игры
-    public float playTime;
-    public DateTime lastSaveTime;
-
-    // Статистика эффективности
+    // Статистика
     public float overallEfficiency;
     public float productionEfficiency;
     public float logisticsEfficiency;
+    public float playTime;
 
     public GameState()
     {
-        lastSaveTime = DateTime.Now;
+        currentMoney = 1000;
     }
 
     public void UpdateEfficiencyMetrics()
     {
-        // Расчет общей эффективности
         if (productsManufactured > 0)
         {
             productionEfficiency = 1f - ((float)defectiveProducts / productsManufactured);
+            logisticsEfficiency = Mathf.Clamp01(1f - (float)defectiveProducts / (productsManufactured + 1));
+            overallEfficiency = (productionEfficiency + logisticsEfficiency) / 2f;
         }
-
-        // Логистическая эффективность (упрощенная формула)
-        logisticsEfficiency = Mathf.Clamp01(1f - (float)defectiveProducts / (productsManufactured + 1));
-
-        overallEfficiency = (productionEfficiency + logisticsEfficiency) / 2f;
     }
 
-    public void AddProduct(Product product, bool isDefective = false)
+    public void AddProduct(bool isDefective = false)
     {
         productsManufactured++;
         if (isDefective) defectiveProducts++;
-
         UpdateEfficiencyMetrics();
-    }
-
-    public void CompleteOrder(int reward)
-    {
-        ordersCompleted++;
-        totalRevenue += reward;
     }
 }

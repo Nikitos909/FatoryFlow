@@ -3,15 +3,8 @@ using System.Collections.Generic;
 
 public class LogisticsManager : MonoBehaviour
 {
-    public static LogisticsManager Instance;
-
     public List<Logist> availableLogists = new List<Logist>();
     private Queue<Machine> machinesWithProducts = new Queue<Machine>();
-
-    void Awake()
-    {
-        Instance = this;
-    }
 
     public void OnProductProduced(Machine machine)
     {
@@ -36,9 +29,7 @@ public class LogisticsManager : MonoBehaviour
             {
                 Logist logist = availableLogists[0];
                 availableLogists.RemoveAt(0);
-
                 logist.AssignTask(sourceMachine, destinationMachine);
-                Debug.Log("Назначена задача логисту");
             }
         }
     }

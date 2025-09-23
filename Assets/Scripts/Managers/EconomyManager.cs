@@ -3,42 +3,41 @@ using TMPro;
 
 public class EconomyManager : MonoBehaviour
 {
-    public static EconomyManager Instance;
-
-    public int currentMoney = 1000;
     public TextMeshProUGUI moneyText;
-    public int workerSalary = 30;
-    public float salaryInterval = 20f;
-    private float salaryTimer;
 
-    void Awake()
+    private float salaryTimer;
+    private GameConfig config;
+
+    public void Initialize(GameConfig gameConfig)
     {
-        Instance = this;
+        config = gameConfig;
+        salaryTimer = config.salaryInterval;
         UpdateMoneyUI();
     }
 
-    void Update()
+    public void UpdateEconomy(float deltaTime)
     {
-        salaryTimer -= Time.deltaTime;
+        salaryTimer -= deltaTime;
         if (salaryTimer <= 0f)
         {
             PaySalaries();
-            salaryTimer = salaryInterval;
+            salaryTimer = config.salaryInterval;
         }
     }
 
     public void AddMoney(int amount)
     {
-        currentMoney += amount;
+        GameManager.Instance.gameState.currentMoney += amount;
         UpdateMoneyUI();
         Debug.Log($"💰 +{amount}₽");
     }
 
     public bool SpendMoney(int amount)
     {
-        if (currentMoney >= amount)
+        if (GameManager.Instance.gameState.currentMoney >= amount)
         {
-            currentMoney -= amount;
+            GameManager.Instance.gameState.currentMoney -= amount;
+            GameManager.Instance.gameState.totalExpenses += amount;
             UpdateMoneyUI();
             Debug.Log($"💸 -{amount}₽");
             return true;
@@ -49,7 +48,7 @@ public class EconomyManager : MonoBehaviour
     private void PaySalaries()
     {
         int logistCount = FindObjectsOfType<Logist>().Length;
-        int totalSalary = workerSalary * logistCount;
+        int totalSalary = config.workerSalary * logistCount;
 
         if (SpendMoney(totalSalary))
         {
@@ -60,7 +59,7 @@ public class EconomyManager : MonoBehaviour
     private void UpdateMoneyUI()
     {
         if (moneyText != null)
-            moneyText.text = $"Деньги: {currentMoney}₽";
+            moneyText.text = $"Деньги: {GameManager.Instance.gameState.currentMoney}₽";
     }
 
     public void SellProduct(Product product)
