@@ -7,22 +7,13 @@ public class EconomyManager : MonoBehaviour
 
     public int currentMoney = 1000;
     public TextMeshProUGUI moneyText;
-
-    [Header("Расходы")]
-    public int workerSalary = 50;
-    public float salaryInterval = 30f;
+    public int workerSalary = 30;
+    public float salaryInterval = 20f;
     private float salaryTimer;
 
     void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        Instance = this;
         UpdateMoneyUI();
     }
 
@@ -40,7 +31,7 @@ public class EconomyManager : MonoBehaviour
     {
         currentMoney += amount;
         UpdateMoneyUI();
-        Debug.Log($"Получено денег: +{amount}₽");
+        Debug.Log($"💰 +{amount}₽");
     }
 
     public bool SpendMoney(int amount)
@@ -49,7 +40,7 @@ public class EconomyManager : MonoBehaviour
         {
             currentMoney -= amount;
             UpdateMoneyUI();
-            Debug.Log($"Потрачено денег: -{amount}₽");
+            Debug.Log($"💸 -{amount}₽");
             return true;
         }
         return false;
@@ -57,12 +48,12 @@ public class EconomyManager : MonoBehaviour
 
     private void PaySalaries()
     {
-        Logist[] logists = FindObjectsOfType<Logist>();
-        int totalSalary = workerSalary * logists.Length;
+        int logistCount = FindObjectsOfType<Logist>().Length;
+        int totalSalary = workerSalary * logistCount;
 
         if (SpendMoney(totalSalary))
         {
-            Debug.Log($"Выплачена зарплата {logists.Length} логистам: -{totalSalary}₽");
+            Debug.Log($"Выплачена зарплата {logistCount} логистам: {totalSalary}₽");
         }
     }
 
@@ -72,10 +63,10 @@ public class EconomyManager : MonoBehaviour
             moneyText.text = $"Деньги: {currentMoney}₽";
     }
 
-    public void OnProductSold(Product product)
+    public void SellProduct(Product product)
     {
-        int value = product.isDefective ? product.baseValue / 2 : product.baseValue;
+        int value = product.isDefective ? product.baseValue / 3 : product.baseValue;
         AddMoney(value);
-        Debug.Log($"Продукт продан за {value}₽");
+        Debug.Log($"Продажа: {product.type} за {value}₽");
     }
 }

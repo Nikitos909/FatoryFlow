@@ -7,38 +7,31 @@ public class GameStarter : MonoBehaviour
     public Machine benderMachine;
     public Logist logist;
     public Transform resourceSpawnPoint;
-
-    public float spawnInterval = 10f;
+    public float spawnInterval = 8f;
 
     void Start()
     {
-        if (cutterMachine == null || benderMachine == null || logist == null)
-        {
-            Debug.LogError("Не назначены объекты в GameStarter!");
-            return;
-        }
+        // Регистрируем логиста
+        LogisticsManager.Instance.availableLogists.Add(logist);
 
-        // Регистрируем логиста в менеджере
-        if (LogisticsManager.Instance != null)
-        {
-            LogisticsManager.Instance.availableLogists.Add(logist);
-        }
-
-        StartCoroutine(SimulateProduction());
-        Debug.Log("Запущено тестовое производство");
+        // Запускаем производство
+        StartCoroutine(SpawnRawPipes());
+        Debug.Log("🎮 Игра запущена!");
     }
 
-    private IEnumerator SimulateProduction()
+    private IEnumerator SpawnRawPipes()
     {
         while (true)
         {
-            CreateRawPipe();
             yield return new WaitForSeconds(spawnInterval);
+            CreateRawPipe();
         }
     }
 
     private void CreateRawPipe()
     {
+        if (!cutterMachine.CanAcceptInput(ProductType.RawPipe)) return;
+
         GameObject pipeObj = new GameObject("RawPipe");
         pipeObj.transform.position = resourceSpawnPoint.position;
 
@@ -50,26 +43,17 @@ public class GameStarter : MonoBehaviour
         sr.color = Color.gray;
         sr.sortingOrder = 1;
 
-        if (cutterMachine != null && cutterMachine.CanAcceptInput(ProductType.RawPipe))
-        {
-            cutterMachine.PutInputProduct(product);
-            Debug.Log("Создана сырая труба");
-        }
-        else
-        {
-            Debug.Log("Резак не готов принять сырую трубу");
-            Destroy(pipeObj);
-        }
+        cutterMachine.PutInputProduct(product);
+        Debug.Log("📦 Создана сырая труба");
     }
 
     private Sprite CreateDefaultSprite()
     {
-        Texture2D texture = new Texture2D(32, 32);
-        for (int x = 0; x < 32; x++)
-            for (int y = 0; y < 32; y++)
+        Texture2D texture = new Texture2D(16, 16);
+        for (int x = 0; x < 16; x++)
+            for (int y = 0; y < 16; y++)
                 texture.SetPixel(x, y, Color.white);
         texture.Apply();
-
-        return Sprite.Create(texture, new Rect(0, 0, 32, 32), Vector2.one * 0.5f);
+        return Sprite.Create(texture, new Rect(0, 0, 16, 16), Vector2.one * 0.5f);
     }
 }

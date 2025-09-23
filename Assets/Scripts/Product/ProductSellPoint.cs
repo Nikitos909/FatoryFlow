@@ -7,12 +7,9 @@ public class ProductSellPoint : MonoBehaviour
         Product product = other.GetComponent<Product>();
         if (product != null && product.type == ProductType.FinalProduct)
         {
-            if (EconomyManager.Instance != null)
-            {
-                EconomyManager.Instance.OnProductSold(product);
-            }
+            EconomyManager.Instance.SellProduct(product);
             Destroy(other.gameObject);
-            Debug.Log("Финальный продукт продан!");
+            Debug.Log("✅ Продукт продан!");
         }
     }
 }

@@ -6,7 +6,8 @@ public class Logist : MonoBehaviour
     public Product carriedProduct;
 
     private Vector3 targetPosition;
-    private TransportTask currentTask;
+    private Machine fromMachine;
+    private Machine toMachine;
     private bool isMoving = false;
     private bool isDelivering = false;
 
@@ -14,48 +15,35 @@ public class Logist : MonoBehaviour
     {
         if (isMoving)
         {
-            MoveToTarget();
+            transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
+
+            if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
+            {
+                if (!isDelivering) PickUpProduct();
+                else DeliverProduct();
+            }
         }
     }
 
-    public void AssignTask(TransportTask task)
+    public void AssignTask(Machine from, Machine to)
     {
-        currentTask = task;
-        targetPosition = task.fromMachine.GetOutputSlotPosition();
+        fromMachine = from;
+        toMachine = to;
+        targetPosition = fromMachine.GetOutputSlotPosition();
         isMoving = true;
         isDelivering = false;
-        Debug.Log("Логист получил задание");
-    }
-
-    private void MoveToTarget()
-    {
-        transform.position = Vector3.MoveTowards(
-            transform.position, targetPosition, speed * Time.deltaTime);
-
-        if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
-        {
-            if (!isDelivering)
-            {
-                PickUpProduct();
-            }
-            else
-            {
-                DeliverProduct();
-            }
-        }
     }
 
     private void PickUpProduct()
     {
-        carriedProduct = currentTask.fromMachine.TakeOutputProduct();
+        carriedProduct = fromMachine.TakeOutputProduct();
         if (carriedProduct != null)
         {
             carriedProduct.transform.SetParent(transform);
             carriedProduct.transform.localPosition = new Vector3(0, 0.5f, 0);
-
-            targetPosition = currentTask.toMachine.GetInputSlotPosition();
+            targetPosition = toMachine.transform.position;
             isDelivering = true;
-            Debug.Log("Логист забрал продукт");
+            Debug.Log("Логист взял продукт");
         }
         else
         {
@@ -66,20 +54,14 @@ public class Logist : MonoBehaviour
 
     private void DeliverProduct()
     {
-        if (carriedProduct != null &&
-            currentTask.toMachine.CanAcceptInput(carriedProduct.type))
+        if (carriedProduct != null && toMachine.CanAcceptInput(carriedProduct.type))
         {
-            currentTask.toMachine.PutInputProduct(carriedProduct);
+            toMachine.PutInputProduct(carriedProduct);
             carriedProduct = null;
             Debug.Log("Логист доставил продукт");
         }
 
         isMoving = false;
-        currentTask = null;
-
-        if (LogisticsManager.Instance != null)
-        {
-            LogisticsManager.Instance.OnTaskCompleted(this);
-        }
+        LogisticsManager.Instance.OnTaskCompleted(this);
     }
 }
