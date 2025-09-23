@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -6,6 +8,8 @@ public class GameManager : MonoBehaviour
 
     public GameState gameState;
     public GameConfig config;
+
+    private List<Machine> allMachines = new List<Machine>();
 
     // Ссылки на менеджеры (перетащи в инспекторе)
     public EconomyManager economyManager;
@@ -42,6 +46,14 @@ public class GameManager : MonoBehaviour
 
         // Регистрируем логиста
         logisticsManager.availableLogists.Add(logist);
+
+        // Автоматически находим все станки на сцене
+        allMachines = new List<Machine>(FindObjectsOfType<Machine>());
+        foreach (var machine in allMachines)
+        {
+            Debug.Log($"Найден станок: {machine.machineType.displayName}");
+        }
+
 
         spawnTimer = config.rawPipeSpawnInterval;
 
@@ -105,4 +117,15 @@ public class GameManager : MonoBehaviour
 
     public void PauseGame() => isGameRunning = false;
     public void ResumeGame() => isGameRunning = true;
+
+    // Можно добавить для статистики
+    public int GetWorkingMachinesCount()
+    {
+        int count = 0;
+        foreach (var machine in allMachines)
+        {
+            if (machine.isWorking) count++;
+        }
+        return count;
+    }
 }
