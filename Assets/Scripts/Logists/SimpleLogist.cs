@@ -19,87 +19,7 @@ public class SimpleLogist : MonoBehaviour
         }
     }
 
-    public void AssignTask(Machine sourceMachine, Machine destinationMachine)
-    {
-        targetMachine = destinationMachine;
-        targetPosition = sourceMachine.GetOutputPosition();
-        isMoving = true;
-        isDelivering = false;
-    }
-
-    private void MoveToTarget()
-    {
-        transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
-        
-        if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
-        {
-            if (!isDelivering)
-            {
-                PickUpProduct();
-            }
-            else
-            {
-                DeliverProduct();
-            }
-        }
-    }
-
-    private void PickUpProduct()
-    {
-        if (sourceMachine == null) return;
-        
-        carriedProduct = sourceMachine.TakeOutputProduct();
-        if (carriedProduct != null)
-        {
-            carriedProduct.transform.SetParent(transform);
-            carriedProduct.transform.localPosition = new Vector3(0, 0.5f, 0);
-            
-            targetPosition = targetMachine.inputSlot.position;
-            isDelivering = true;
-            Debug.Log("Логист подобрал продукт");
-        }
-        else
-        {
-            Debug.Log("Продукт не найден на станке");
-            isMoving = false;
-            SimpleLogisticsManager.Instance.OnTaskCompleted(this);
-        }
-    }
-
-    private void DeliverProduct()
-    {
-        if (carriedProduct != null && targetMachine.CanAcceptInput(carriedProduct.type))
-        {
-            targetMachine.SetInputProduct(carriedProduct);
-            carriedProduct = null;
-        }
-        isMoving = false;
-        LogisticsManager.Instance.OnTaskCompleted(this);
-    }
-
-     private void RecoverFromSickness()
-    {
-        speed *= 2f;
-        Debug.Log("Логист выздоровел");
-    }
-}
-
-
-//===================================
-
-public class SimpleLogist : MonoBehaviour
-{
-    
-
-    void Update()
-    {
-        if (isMoving)
-        {
-            MoveToTarget();
-        }
-    }
-
-    public void AssignTask(Machine source, Machine destination)
+   public void AssignTask(Machine source, Machine destination)
     {
         if (source == null || destination == null)
         {
@@ -133,9 +53,7 @@ public class SimpleLogist : MonoBehaviour
         }
     }
 
-    
-
-    private void DeliverProduct()
+   private void DeliverProduct()
     {
         if (carriedProduct != null && targetMachine != null && targetMachine.CanAcceptInput(carriedProduct.type))
         {
@@ -155,6 +73,17 @@ public class SimpleLogist : MonoBehaviour
         }
     }
 
+    private void DeliverProduct()
+    {
+        if (carriedProduct != null && targetMachine.CanAcceptInput(carriedProduct.type))
+        {
+            targetMachine.SetInputProduct(carriedProduct);
+            carriedProduct = null;
+        }
+        isMoving = false;
+        LogisticsManager.Instance.OnTaskCompleted(this);
+    }
+
     // Упрощенные методы для совместимости
     public void MakeSick(float duration)
     {
@@ -164,8 +93,9 @@ public class SimpleLogist : MonoBehaviour
         Invoke(nameof(RecoverFromSickness), duration);
     }
 
-   
+     private void RecoverFromSickness()
+    {
+        speed *= 2f;
+        Debug.Log("Логист выздоровел");
+    }
 }
-
-
-
