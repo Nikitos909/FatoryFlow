@@ -31,37 +31,7 @@ public class GameStarter : MonoBehaviour
         }
     }
 
-    private void CreateRawPipe()
-    {
-        GameObject pipeObj = new GameObject("RawPipe");
-        pipeObj.transform.position = resourceSpawnPoint.position;
-        
-        Product product = pipeObj.AddComponent<Product>();
-        product.Initialize(ProductType.RawPipe, null);
-        
-        SpriteRenderer sr = pipeObj.AddComponent<SpriteRenderer>();
-        sr.sprite = Resources.Load<Sprite>("Sprites/RawPipe");
-        sr.color = Color.gray;
-        
-        cutterMachine.SetInputProduct(product);
-    }
-}
-
-//======================
-
-
-    
-
-    private IEnumerator SimulateProduction()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(spawnInterval);
-            CreateRawPipe();
-        }
-    }
-
-    private void CreateRawPipe()
+     private void CreateRawPipe()
     {
         GameObject pipeObj = new GameObject("RawPipe");
         pipeObj.transform.position = resourceSpawnPoint.position;
@@ -85,7 +55,7 @@ public class GameStarter : MonoBehaviour
         }
     }
 
-    private Sprite CreateDefaultSprite()
+     private Sprite CreateDefaultSprite()
     {
         // Создаем простой спрайт программно
         Texture2D texture = new Texture2D(32, 32);
@@ -97,4 +67,3 @@ public class GameStarter : MonoBehaviour
         return Sprite.Create(texture, new Rect(0, 0, 32, 32), Vector2.one * 0.5f);
     }
 }
-
