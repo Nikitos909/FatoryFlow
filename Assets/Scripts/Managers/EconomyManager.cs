@@ -3,10 +3,25 @@ using TMPro;
 
 public class EconomyManager : MonoBehaviour
 {
+    public static EconomyManager Instance; // Добавляем статический Instance
+
     public TextMeshProUGUI moneyText;
 
     private float salaryTimer;
     private GameConfig config;
+
+    void Awake()
+    {
+        // Инициализируем Instance
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     public void Initialize(GameConfig gameConfig)
     {

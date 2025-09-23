@@ -3,8 +3,23 @@ using System.Collections.Generic;
 
 public class LogisticsManager : MonoBehaviour
 {
+    public static LogisticsManager Instance; // Добавляем обратно
+
     public List<Logist> availableLogists = new List<Logist>();
     private Queue<Machine> machinesWithProducts = new Queue<Machine>();
+
+    void Awake()
+    {
+        // Правильная инициализация Instance
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     public void OnProductProduced(Machine machine)
     {
