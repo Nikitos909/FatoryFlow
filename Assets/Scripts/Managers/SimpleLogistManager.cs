@@ -83,20 +83,3 @@ public class SimpleLogisticsManager : MonoBehaviour
         return null;
     }
 }
-
-//=======================================
-
-    
-   
-
-    
-
-    
-
-    
-
-   
-
-   
-}
-
