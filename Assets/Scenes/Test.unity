@@ -338,8 +338,8 @@ MonoBehaviour:
     logisticsEfficiency: 0
     playTime: 0
   config: {fileID: 11400000, guid: 8ce7c212688de427b869d6092e9fc54b, type: 2}
-  economyManager: {fileID: 0}
-  logisticsManager: {fileID: 0}
+  economyManager: {fileID: 782530634}
+  logisticsManager: {fileID: 782530633}
   cutterMachine: {fileID: 1065010886}
   benderMachine: {fileID: 108117650}
   logist: {fileID: 842124670}
@@ -403,7 +403,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72109ff34479270469430438468cd2cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moneyText: {fileID: 0}
+  moneyText: {fileID: 1675730384}
 --- !u!4 &782530635
 Transform:
   m_ObjectHideFlags: 0
