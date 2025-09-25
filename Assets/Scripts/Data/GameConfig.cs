@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "GameConfig", menuName = "Factory/Game Config")]
+[CreateAssetMenu(fileName = "GameConfig", menuName = "GameConfig/Setting")]
 public class GameConfig : ScriptableObject
 {
     [Header("Базовые настройки")]
