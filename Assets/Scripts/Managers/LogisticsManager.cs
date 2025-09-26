@@ -3,14 +3,13 @@ using System.Collections.Generic;
 
 public class LogisticsManager : MonoBehaviour
 {
-    public static LogisticsManager Instance; // Добавляем обратно
+    public static LogisticsManager Instance;
 
     public List<Logist> availableLogists = new List<Logist>();
     private Queue<Machine> machinesWithProducts = new Queue<Machine>();
 
     void Awake()
     {
-        // Правильная инициализация Instance
         if (Instance == null)
         {
             Instance = this;
