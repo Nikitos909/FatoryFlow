@@ -12,7 +12,8 @@ public class LogisticsManager : MonoBehaviour
     {
         if (Instance == null)
         {
-            Instance = this;
+            Instance = this;            
+            Debug.Log("Initialize Logistics Manager");
         }
         else
         {
