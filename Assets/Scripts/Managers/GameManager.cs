@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour
         }
 
         Instance = this;
+        Debug.Log("Initialize Game Manager");
         InitializeGame();
     }
 
@@ -44,7 +45,18 @@ public class GameManager : MonoBehaviour
         if (config == null)
             config = Resources.Load<GameConfig>("GameConfig");
 
+        // Инициализируем EconomyManager ПЕРЕД использованием
+        if (economyManager != null)
+            economyManager.Initialize(config);
+        else
+            Debug.LogError("EconomyManager не назначен в инспекторе!");
+
         // Регистрируем логиста
+        if (logisticsManager != null)
+            logisticsManager.availableLogists.Add(logist);
+        else
+            Debug.LogError("LogisticsManager не назначен в инспекторе!");
+
         logisticsManager.availableLogists.Add(logist);
 
         // Автоматически находим все станки на сцене
