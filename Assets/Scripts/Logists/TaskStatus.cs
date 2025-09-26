@@ -1,1 +1,7 @@
-public enum TaskStatus { PickingUp, Delivering }
+public enum TaskStatus
+{
+    Pending,    // Ожидает
+    Assigned,   // Назначена логисту
+    Completed,  // Выполнена
+    Cancelled   // Отменена
+}
