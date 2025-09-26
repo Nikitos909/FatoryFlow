@@ -12,7 +12,6 @@ public class EconomyManager : MonoBehaviour
 
     void Awake()
     {
-        // Инициализируем Instance
         if (Instance == null)
         {
             Instance = this;
