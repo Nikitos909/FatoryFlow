@@ -71,6 +71,9 @@ public class GameManager : MonoBehaviour
     {
         if (!isGameRunning) return;
 
+        // Проверяем инициализацию менеджеров
+        if (economyManager == null || logisticsManager == null) return;
+
         // Спавн сырых труб
         spawnTimer -= Time.deltaTime;
         if (spawnTimer <= 0f)
