@@ -46,17 +46,13 @@ public class GameManager : MonoBehaviour
             config = Resources.Load<GameConfig>("GameConfig");
 
         // Инициализируем EconomyManager ПЕРЕД использованием
-        if (economyManager != null)
-            economyManager.Initialize(config);
-        else
-            Debug.LogError("EconomyManager не назначен в инспекторе!");
+        if (economyManager != null) { economyManager.Initialize(config); }
+        else { Debug.LogError("EconomyManager не назначен в инспекторе!"); }
 
         // Регистрируем логиста
-        if (logisticsManager != null)
-            logisticsManager.availableLogists.Add(logist);
-        else
-            Debug.LogError("LogisticsManager не назначен в инспекторе!");
-
+        if (logisticsManager != null) { logisticsManager.availableLogists.Add(logist); }
+        else { Debug.LogError("LogisticsManager не назначен в инспекторе!"); }
+        
         logisticsManager.availableLogists.Add(logist);
 
         // Автоматически находим все станки на сцене
@@ -65,7 +61,6 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log($"Найден станок: {machine.machineType.displayName}");
         }
-
 
         spawnTimer = config.rawPipeSpawnInterval;
 
