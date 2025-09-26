@@ -32,6 +32,8 @@ public class EconomyManager : MonoBehaviour
 
     public void UpdateEconomy(float deltaTime)
     {
+        if (config == null || GameManager.Instance == null) return;
+        
         salaryTimer -= deltaTime;
         if (salaryTimer <= 0f)
         {
@@ -49,6 +51,8 @@ public class EconomyManager : MonoBehaviour
 
     public bool SpendMoney(int amount)
     {
+        if (GameManager.Instance == null || GameManager.Instance.gameState == null) { return false; }
+    
         if (GameManager.Instance.gameState.currentMoney >= amount)
         {
             GameManager.Instance.gameState.currentMoney -= amount;
@@ -62,6 +66,8 @@ public class EconomyManager : MonoBehaviour
 
     private void PaySalaries()
     {
+        if (config == null || GameManager.Instance == null) return;
+        
         int logistCount = FindObjectsOfType<Logist>().Length;
         int totalSalary = config.workerSalary * logistCount;
 
