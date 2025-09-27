@@ -339,7 +339,7 @@ MonoBehaviour:
     playTime: 0
   config: {fileID: 11400000, guid: 8ce7c212688de427b869d6092e9fc54b, type: 2}
   economyManager: {fileID: 782530634}
-  logisticsManager: {fileID: 782530633}
+  logisticsManager: {fileID: 782530636}
   cutterMachine: {fileID: 1065010886}
   benderMachine: {fileID: 108117650}
   logist: {fileID: 842124670}
@@ -369,7 +369,7 @@ GameObject:
   m_Component:
   - component: {fileID: 782530635}
   - component: {fileID: 782530634}
-  - component: {fileID: 782530633}
+  - component: {fileID: 782530636}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -377,20 +377,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &782530633
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 782530632}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 42883cdebdb7847f799203d5f998454d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  availableLogists:
-  - {fileID: 842124670}
 --- !u!114 &782530634
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -419,6 +405,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &782530636
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782530632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67e53721e337246b88b390b7e25ce1a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  availableLogists:
+  - {fileID: 842124670}
 --- !u!1 &825895614
 GameObject:
   m_ObjectHideFlags: 0
@@ -1086,8 +1086,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1882857554}
   - component: {fileID: 1882857553}
+  - component: {fileID: 1882857555}
   m_Layer: 0
-  m_Name: SpawnPoint
+  m_Name: SellPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1160,6 +1161,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1882857555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1882857552}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59915d7ebfdb942db99e6e5ffc9d2b6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

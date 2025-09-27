@@ -15,7 +15,7 @@ MonoBehaviour:
   machineType: 0
   displayName: Cutter
   inputProductType: 0
-  outputProductType: 0
-  defectiveProductType: 0
+  outputProductType: 1
+  defectiveProductType: 1
   baseProductionTime: 5
   baseDefectChance: 0.1

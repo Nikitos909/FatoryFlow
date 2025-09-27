@@ -1,12 +1,13 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 public class LogisticsManager : MonoBehaviour
 {
     public static LogisticsManager Instance;
 
     public List<Logist> availableLogists = new List<Logist>();
-    private Queue<Machine> machinesWithProducts = new Queue<Machine>();
+    private List<TransportTask> pendingTasks = new List<TransportTask>();
 
     void Awake()
     {
@@ -23,8 +24,14 @@ public class LogisticsManager : MonoBehaviour
 
     public void OnProductProduced(Machine machine)
     {
-        machinesWithProducts.Enqueue(machine);
-        TryAssignTasks();
+        Machine destination = FindDestinationMachine(machine.machineType.outputProductType);
+        if (destination != null)
+        {
+            // Автоматически определяем приоритет
+            int priority = CalculatePriority(machine, destination);
+            TransportTask task = new TransportTask(machine, destination, machine.machineType.outputProductType, priority);
+            AddTask(task);
+        }
     }
 
     public void OnTaskCompleted(Logist logist)
@@ -35,18 +42,39 @@ public class LogisticsManager : MonoBehaviour
 
     private void TryAssignTasks()
     {
-        while (machinesWithProducts.Count > 0 && availableLogists.Count > 0)
+        // Обрабатываем задачи в порядке приоритета
+        for (int i = 0; i < pendingTasks.Count && availableLogists.Count > 0; i++)
         {
-            Machine sourceMachine = machinesWithProducts.Dequeue();
-            Machine destinationMachine = FindDestinationMachine(sourceMachine.machineType.outputProductType);
+            TransportTask task = pendingTasks[i];
 
-            if (destinationMachine != null && destinationMachine.CanAcceptInput(sourceMachine.machineType.outputProductType))
+            // Проверяем актуальность задачи
+            if (task.sourceMachine.currentOutput == null ||
+                !task.destinationMachine.CanAcceptInput(task.productType))
             {
-                Logist logist = availableLogists[0];
-                availableLogists.RemoveAt(0);
-                logist.AssignTask(sourceMachine, destinationMachine);
+                pendingTasks.RemoveAt(i);
+                i--;
+                continue;
             }
+
+            Logist logist = availableLogists[0];
+            availableLogists.RemoveAt(0);
+            pendingTasks.RemoveAt(i);
+            i--;
+
+            logist.AssignTask(task.sourceMachine, task.destinationMachine);
         }
+    }
+
+    private void AddTask(TransportTask task)
+    {
+        pendingTasks.Add(task);
+        // Сортируем по приоритету и времени
+        pendingTasks = pendingTasks
+            .OrderBy(t => t.priority)
+            .ThenBy(t => t.timestamp)
+            .ToList();
+
+        TryAssignTasks();
     }
 
     private Machine FindDestinationMachine(ProductType productType)
@@ -57,5 +85,17 @@ public class LogisticsManager : MonoBehaviour
                 return machine;
         }
         return null;
+    }
+
+    private int CalculatePriority(Machine source, Machine destination)
+    {
+        // Высокий приоритет если приемник простаивает
+        if (!destination.isWorking && destination.currentInput == null) return 1;
+
+        // Средний приоритет если продукт может заблокировать производство
+        if (source.currentOutput != null) return 2;
+
+        // Низкий приоритет для остальных случаев
+        return 3;
     }
 }
