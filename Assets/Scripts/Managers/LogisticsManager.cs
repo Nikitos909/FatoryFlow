@@ -31,13 +31,37 @@ public class LogisticsManager : MonoBehaviour
 
     public void OnProductProduced(Machine machine)
     {
-        Machine destination = FindDestinationMachine(machine.machineType.outputProductType);
-        if (destination != null)
+        // Для ФИНАЛЬНОГО продукта - отправляем на склад
+        if (machine.machineType.outputProductType == ProductType.FinalProduct)
         {
-            // Автоматически определяем приоритет
-            int priority = CalculatePriority(machine, destination);
-            TransportTask task = new TransportTask(machine, destination, machine.machineType.outputProductType, priority);
-            AddTask(task);
+            if (sellPoint != null)
+            {
+                // Создаем задачу на доставку на склад
+                TransportTask task = new TransportTask(
+                    machine, 
+                    null, // destination = null означает склад
+                    machine.machineType.outputProductType, 
+                    1 // Высокий приоритет для продажи
+                );
+                AddTask(task);
+                Debug.Log($"📦 Создана задача на продажу продукта");
+            }
+        }
+        // Для ПРОМЕЖУТОЧНЫХ продуктов - ищем следующий станок
+        else
+        {
+            Machine destination = FindDestinationMachine(machine.machineType.outputProductType);
+            if (destination != null)
+            {
+                int priority = CalculatePriority(machine, destination);
+                TransportTask task = new TransportTask(machine, destination, machine.machineType.outputProductType, priority);
+                AddTask(task);
+                Debug.Log($"🔄 Создана задача на перемещение: {machine.machineType.outputProductType}");
+            }
+            else
+            {
+                Debug.LogWarning($"❌ Не найден станок-приемник для {machine.machineType.outputProductType}");
+            }
         }
     }
 
