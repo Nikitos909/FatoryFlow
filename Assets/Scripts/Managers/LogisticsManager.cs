@@ -134,21 +134,33 @@ public class LogisticsManager : MonoBehaviour
     {
         foreach (Machine machine in FindObjectsOfType<Machine>())
         {
-            if (machine.machineType.inputProductType == productType && machine.CanAcceptInput(productType))
+            // Пропускаем станки того же типа, что и источник (чтобы не создавать циклы)
+            if (machine.machineType.inputProductType == productType && 
+                machine.CanAcceptInput(productType))
                 return machine;
         }
         return null;
     }
 
-    private int CalculatePriority(Machine source, Machine destination)
+        private int CalculatePriority(Machine source, Machine destination)
     {
-        // Высокий приоритет если приемник простаивает
+        // Высокий приоритет если приемник простаивает ИЛИ это продажа
         if (!destination.isWorking && destination.currentInput == null) return 1;
-
+        
         // Средний приоритет если продукт может заблокировать производство
         if (source.currentOutput != null) return 2;
-
+        
         // Низкий приоритет для остальных случаев
         return 3;
+    }
+
+    // Метод для принудительного создания задачи (например, если станок заблокирован)
+    public void CreateEmergencyTask(Machine blockedMachine)
+    {
+        if (blockedMachine.currentOutput != null)
+        {
+            TransportTask task = new TransportTask(blockedMachine, null, blockedMachine.currentOutput.type, 1);
+            AddTask(task);
+        }
     }
 }
