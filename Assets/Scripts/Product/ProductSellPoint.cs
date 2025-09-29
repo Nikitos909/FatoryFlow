@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class ProductSellPoint : MonoBehaviour
 {
     void OnTriggerEnter2D(Collider2D other)

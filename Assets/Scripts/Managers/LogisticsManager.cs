@@ -9,6 +9,9 @@ public class LogisticsManager : MonoBehaviour
     public List<Logist> availableLogists = new List<Logist>();
     private List<TransportTask> pendingTasks = new List<TransportTask>();
 
+    // Добавляем ссылку на точку продажи
+    public ProductSellPoint sellPoint;
+
     void Awake()
     {
         if (Instance == null)
