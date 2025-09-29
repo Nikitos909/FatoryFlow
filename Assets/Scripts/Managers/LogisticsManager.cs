@@ -22,6 +22,13 @@ public class LogisticsManager : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        // Автоматически находим точку продажи если не назначена
+        if (sellPoint == null)
+            sellPoint = FindObjectOfType<ProductSellPoint>();
+    }
+
     public void OnProductProduced(Machine machine)
     {
         Machine destination = FindDestinationMachine(machine.machineType.outputProductType);
