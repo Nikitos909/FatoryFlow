@@ -6,8 +6,7 @@ public class Logist : MonoBehaviour
     public Product carriedProduct;
 
     private Vector3 targetPosition;
-    private Machine fromMachine;
-    private Machine toMachine;
+    private TransportTask currentTask;
     private bool isMoving = false;
     private bool isDelivering = false;
 
@@ -19,8 +18,10 @@ public class Logist : MonoBehaviour
 
             if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
             {
-                if (!isDelivering) PickUpProduct();
-                else DeliverProduct();
+                if (!isDelivering) 
+                    PickUpProduct();
+                else 
+                    DeliverProduct();
             }
         }
     }
