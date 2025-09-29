@@ -50,7 +50,7 @@ public class GameManager : MonoBehaviour
         else { Debug.LogError("EconomyManager не назначен в инспекторе!"); }
 
         // Регистрируем логиста
-        if (logisticsManager != null) { logisticsManager.availableLogists.Add(logist); }
+        if (logisticsManager != null) {  }
         else { Debug.LogError("LogisticsManager не назначен в инспекторе!"); }
 
         // Автоматически находим все станки на сцене
