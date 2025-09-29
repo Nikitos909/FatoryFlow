@@ -103,4 +103,14 @@ public class Logist : MonoBehaviour
         currentTask = null;
         LogisticsManager.Instance.OnTaskCompleted(this);
     }
+
+    // Визуализация для отладки
+    private void OnDrawGizmos()
+    {
+        if (isMoving)
+        {
+            Gizmos.color = isDelivering ? Color.green : Color.yellow;
+            Gizmos.DrawLine(transform.position, targetPosition);
+        }
+    }
 }
