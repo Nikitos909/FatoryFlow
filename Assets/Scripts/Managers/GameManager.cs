@@ -52,8 +52,6 @@ public class GameManager : MonoBehaviour
         // Регистрируем логиста
         if (logisticsManager != null) { logisticsManager.availableLogists.Add(logist); }
         else { Debug.LogError("LogisticsManager не назначен в инспекторе!"); }
-        
-        logisticsManager.availableLogists.Add(logist);
 
         // Автоматически находим все станки на сцене
         allMachines = new List<Machine>(FindObjectsOfType<Machine>());
@@ -63,7 +61,6 @@ public class GameManager : MonoBehaviour
         }
 
         spawnTimer = config.rawPipeSpawnInterval;
-
         Debug.Log("🎮 Игра инициализирована!");
     }
 
