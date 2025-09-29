@@ -65,47 +65,69 @@ public class LogisticsManager : MonoBehaviour
         }
     }
 
-    public void OnTaskCompleted(Logist logist)
+   public void OnTaskCompleted(Logist logist)
     {
-        availableLogists.Add(logist);
+        if (!availableLogists.Contains(logist))
+            availableLogists.Add(logist);
+        
         TryAssignTasks();
     }
 
-    private void TryAssignTasks()
+        private void TryAssignTasks()
     {
-        // Обрабатываем задачи в порядке приоритета
-        for (int i = 0; i < pendingTasks.Count && availableLogists.Count > 0; i++)
+        if (pendingTasks.Count == 0 || availableLogists.Count == 0) return;
+
+        // Создаем копию списка для безопасного удаления
+        List<TransportTask> tasksToProcess = new List<TransportTask>(pendingTasks);
+        
+        foreach (TransportTask task in tasksToProcess)
         {
-            TransportTask task = pendingTasks[i];
+            if (availableLogists.Count == 0) break;
 
             // Проверяем актуальность задачи
-            if (task.sourceMachine.currentOutput == null ||
-                !task.destinationMachine.CanAcceptInput(task.productType))
+            if (!IsTaskValid(task))
             {
-                pendingTasks.RemoveAt(i);
-                i--;
+                pendingTasks.Remove(task);
                 continue;
             }
 
             Logist logist = availableLogists[0];
             availableLogists.RemoveAt(0);
-            pendingTasks.RemoveAt(i);
-            i--;
+            pendingTasks.Remove(task);
 
-            logist.AssignTask(task.sourceMachine, task.destinationMachine);
+            logist.AssignTask(task);
+            Debug.Log($"🎯 Задача назначена логисту: {task.productType}");
         }
+    }
+
+    private bool IsTaskValid(TransportTask task)
+    {
+        // Если задача на продажу - проверяем только наличие продукта
+        if (task.destinationMachine == null)
+        {
+            return task.sourceMachine.currentOutput != null;
+        }
+        
+        // Для обычных задач проверяем оба условия
+        return task.sourceMachine.currentOutput != null && 
+               task.destinationMachine.CanAcceptInput(task.productType);
     }
 
     private void AddTask(TransportTask task)
     {
-        pendingTasks.Add(task);
-        // Сортируем по приоритету и времени
-        pendingTasks = pendingTasks
-            .OrderBy(t => t.priority)
-            .ThenBy(t => t.timestamp)
-            .ToList();
-
-        TryAssignTasks();
+        if (!pendingTasks.Contains(task))
+        {
+            pendingTasks.Add(task);
+            // Сортируем по приоритету и времени
+            pendingTasks = pendingTasks
+                .OrderBy(t => t.priority)
+                .ThenBy(t => t.timestamp)
+                .ToList();
+            
+            Debug.Log($"✅ Добавлена задача: {task.productType} (приоритет: {task.priority})");
+            
+            TryAssignTasks();
+        }
     }
 
     private Machine FindDestinationMachine(ProductType productType)
