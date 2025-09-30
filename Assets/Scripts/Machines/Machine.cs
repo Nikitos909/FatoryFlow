@@ -42,6 +42,16 @@ public class Machine : MonoBehaviour
         Debug.Log($"{machineType.displayName} начал работу");
     }
 
+    // Проверяем есть ли задача для этого станка
+    private bool HasTransportTask()
+    {
+        if (LogisticsManager.Instance == null) return false;
+
+        // Эта проверка требует доступа к pendingTasks, поэтому упрощаем:
+        // Будем считать, что если продукт есть, но логист не едет - задачи нет
+        return false;
+    }
+
     private void FinishProduction()
     {
         isWorking = false;
