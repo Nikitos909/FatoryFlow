@@ -74,6 +74,19 @@ public class Machine : MonoBehaviour
         Debug.Log($"{machineType.displayName} произвел {type}");
     }
 
+    // Цвета для разных типов продуктов
+    private Color GetProductColor(ProductType type)
+    {
+        return type switch
+        {
+            ProductType.RawPipe => Color.gray,
+            ProductType.BentSector => Color.blue,
+            ProductType.FinalProduct => Color.green,
+            ProductType.DefectiveProduct => Color.red,
+            _ => Color.white
+        };
+    }
+
     private Sprite CreateDefaultSprite()
     {
         Texture2D texture = new Texture2D(16, 16);
@@ -96,6 +109,7 @@ public class Machine : MonoBehaviour
             currentInput = product;
             product.transform.SetParent(inputSlot);
             product.transform.localPosition = Vector3.zero;
+            Debug.Log($"{machineType.displayName} принял продукт: {product.type}");
         }
     }
 
