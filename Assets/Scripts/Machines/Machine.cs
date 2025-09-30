@@ -67,7 +67,7 @@ public class Machine : MonoBehaviour
         SpriteRenderer sr = productObj.AddComponent<SpriteRenderer>();
         sr.sprite = CreateDefaultSprite();
         if (defective) sr.color = Color.red;
-        else sr.color = Color.white;
+        else sr.color = GetProductColor(type);
         sr.sortingOrder = 1;
 
         currentOutput = product;
