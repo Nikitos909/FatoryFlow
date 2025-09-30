@@ -170,41 +170,21 @@ public class LogisticsManager : MonoBehaviour
         }
     }
 
-    private bool IsTaskValid(TransportTask task)
+   private bool IsTaskValid(TransportTask task)
     {
-        // Проверяем существование станка-источника
-        if (task.sourceMachine == null)
-        {
-            Debug.LogWarning("❌ Задача невалидна: sourceMachine уничтожен");
+        if (task.sourceMachine == null || task.sourceMachine.currentOutput == null)
             return false;
-        }
 
-        // Проверяем наличие продукта
-        if (task.sourceMachine.currentOutput == null)
-        {
-            Debug.LogWarning("❌ Задача невалидна: продукт исчез");
-            return false;
-        }
-
-        // Для задач на продажу - только наличие продукта
+        // Для задач на продажу проверяем только наличие продукта
         if (task.destinationMachine == null)
-        {
-            return true; // Всегда валидна для продажи
-        }
+            return true;
 
-        // Для обычных задач проверяем приемник
-        if (task.destinationMachine == null)
-        {
-            Debug.LogWarning("❌ Задача невалидна: destinationMachine уничтожен");
-            return false;
-        }
-
+        // Для обычных задач проверяем, что приемник может принять продукт
         return task.destinationMachine.CanAcceptInput(task.productType);
     }
 
     private void AddTask(TransportTask task)
     {
-        // Проверяем дубликаты
         if (pendingTasks.Any(t => t.sourceMachine == task.sourceMachine && t.productType == task.productType))
         {
             Debug.Log($"⚠️ Задача уже существует: {task.productType} от {task.sourceMachine.machineType.displayName}");
@@ -212,48 +192,56 @@ public class LogisticsManager : MonoBehaviour
         }
 
         pendingTasks.Add(task);
-
-        // Сортируем по приоритету и времени
+        
         pendingTasks = pendingTasks
             .OrderBy(t => t.priority)
             .ThenBy(t => t.timestamp)
             .ToList();
-
+        
         Debug.Log($"✅ Добавлена задача: {task.productType} (приоритет: {task.priority}), всего задач: {pendingTasks.Count}");
-
-        // Пытаемся сразу назначить
+        
         TryAssignTasks();
     }
 
-    private Machine FindDestinationMachine(ProductType productType)
+   private Machine FindDestinationMachine(ProductType productType)
     {
-        Machine[] allMachines = FindObjectsOfType<Machine>();
-
-        foreach (Machine machine in allMachines)
+        // Ищем станок, который принимает этот тип продукта
+        foreach (Machine machine in FindObjectsOfType<Machine>())
         {
-            // Ищем станок, который принимает этот тип продукта И может принять прямо сейчас
-            if (machine.machineType.inputProductType == productType &&
-                machine.CanAcceptInput(productType))
+            if (machine.machineType.inputProductType == productType)
             {
                 return machine;
             }
         }
-
+        
         return null;
     }
 
     private int CalculatePriority(Machine source, Machine destination)
     {
         // Высокий приоритет если приемник простаивает
-        if (!destination.isWorking && destination.currentInput == null)
+        if (!destination.isWorking && destination.currentInput == null) 
             return 1;
-
-        // Средний приоритет если продукт может заблокировать производство
-        if (source.currentOutput != null)
+        
+        // Средний приоритет если продукт блокирует производство
+        if (source.currentOutput != null) 
             return 2;
-
-        // Низкий приоритет для остальных случаев
+        
         return 3;
+    }
+
+    // Принудительная проверка всех станков
+    public void CheckAllMachinesForTasks()
+    {
+        Debug.Log("🔍 Принудительная проверка всех станков на задачи...");
+        
+        foreach (Machine machine in FindObjectsOfType<Machine>())
+        {
+            if (machine.currentOutput != null && !HasTaskForMachine(machine))
+            {
+                OnProductProduced(machine);
+            }
+        }
     }
 
     // Метод для отладки - принудительно создает задачу
