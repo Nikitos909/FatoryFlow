@@ -94,6 +94,11 @@ public class LogisticsManager : MonoBehaviour
         }
     }
 
+    private bool HasTaskForMachine(Machine machine)
+    {
+        return pendingTasks.Any(task => task.sourceMachine == machine);
+    }
+
     public void OnTaskCompleted(Logist logist)
     {
         // ВАЖНО: Всегда возвращаем логиста в доступные
