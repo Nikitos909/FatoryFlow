@@ -99,6 +99,33 @@ public class LogisticsManager : MonoBehaviour
         return pendingTasks.Any(task => task.sourceMachine == machine);
     }
 
+    private void TryCreateTaskForBlockedProduct(Machine machine)
+    {
+        ProductType productType = machine.currentOutput.type;
+        
+        if (productType == ProductType.FinalProduct)
+        {
+            // Финальный продукт всегда можно отвезти на склад
+            if (sellPoint != null)
+            {
+                TransportTask task = new TransportTask(machine, null, productType, 1);
+                AddTask(task);
+                Debug.Log($"🔄 Создана задача для ЗАВИСШЕГО продукта: {productType} → СКЛАД");
+            }
+        }
+        else
+        {
+            // Для промежуточного продукта ищем свободный станок
+            Machine destination = FindDestinationMachine(productType);
+            if (destination != null && destination.CanAcceptInput(productType))
+            {
+                TransportTask task = new TransportTask(machine, destination, productType, 1); // Высокий приоритет
+                AddTask(task);
+                Debug.Log($"🔄 Создана задача для ЗАВИСШЕГО продукта: {productType} → {destination.machineType.displayName}");
+            }
+        }
+    }
+
     public void OnTaskCompleted(Logist logist)
     {
         // ВАЖНО: Всегда возвращаем логиста в доступные
@@ -107,9 +134,11 @@ public class LogisticsManager : MonoBehaviour
             availableLogists.Add(logist);
             Debug.Log($"✅ Логист {logist.name} вернулся в доступные");
         }
-
-        // Пытаемся сразу дать новую задачу
+        
+        // После завершения задачи проверяем блокировки
+        CheckForBlockedProduction();
         TryAssignTasks();
+
     }
 
     private void TryAssignTasks()
