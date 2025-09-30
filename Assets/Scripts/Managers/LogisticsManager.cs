@@ -246,10 +246,23 @@ public class LogisticsManager : MonoBehaviour
 
     // В LogisticsManager добавьте метод для тестирования
     void OnGUI()
+{
+    if (GUI.Button(new Rect(10, 10, 250, 30), "Debug: Check All Machines"))
     {
-        if (GUI.Button(new Rect(10, 50, 200, 30), "Debug: Show Status"))
+        CheckAllMachinesForTasks();
+    }
+    
+    if (GUI.Button(new Rect(10, 50, 250, 30), "Debug: Show Status"))
+    {
+        Debug.Log($"Логистов: {availableLogists.Count}, Задач: {pendingTasks.Count}");
+        
+        // Показываем какие продукты ждут доставки
+        foreach (Machine machine in FindObjectsOfType<Machine>())
         {
-            Debug.Log($"Логистов: {availableLogists.Count}, Задач: {pendingTasks.Count}");
+            if (machine.currentOutput != null)
+            {
+                Debug.Log($"📦 {machine.machineType.displayName} ждет: {machine.currentOutput.type}");
+            }
         }
     }
 }
