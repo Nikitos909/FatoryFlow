@@ -11,7 +11,7 @@ public class Machine : MonoBehaviour
     public bool isWorking = false;
     public float workTimer = 0f;
 
-    void Update()
+   void Update()
     {
         if (isWorking)
         {
@@ -21,6 +21,17 @@ public class Machine : MonoBehaviour
         else if (currentInput != null && currentOutput == null)
         {
             StartProduction();
+        }
+        
+        // ЕСЛИ есть готовый продукт И нет активной задачи - сообщаем логистике
+        if (currentOutput != null && !HasTransportTask())
+        {
+            // Проверяем, чтобы не спамить
+            if (Mathf.FloorToInt(Time.time) % 2 == 0) // Каждые 2 секунды
+            {
+                LogisticsManager.Instance.OnProductProduced(this);
+                Debug.Log($"{machineType.displayName} ЕСТЬ ГОТОВЫЙ ПРОДУКТ");
+            }
         }
     }
 
