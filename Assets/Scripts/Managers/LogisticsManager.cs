@@ -254,4 +254,26 @@ public class LogisticsManager : MonoBehaviour
             }
         }
     }
+
+    void OnGUI()
+    {
+        if (GUI.Button(new Rect(10, 10, 250, 30), "Debug: Check All Machines"))
+        {
+            CheckAllMachinesForTasks();
+        }
+
+        if (GUI.Button(new Rect(10, 50, 250, 30), "Debug: Show Status"))
+        {
+            Debug.Log($"Логистов: {availableLogists.Count}, Задач: {pendingTasks.Count}");
+
+            // Показываем какие продукты ждут доставки
+            foreach (Machine machine in FindObjectsOfType<Machine>())
+            {
+                if (machine.currentOutput != null)
+                {
+                    Debug.Log($"📦 {machine.machineType.displayName} ждет: {machine.currentOutput.type}");
+                }
+            }
+        }
+    }
 }
