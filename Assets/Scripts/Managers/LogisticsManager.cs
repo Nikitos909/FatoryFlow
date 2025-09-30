@@ -80,6 +80,20 @@ public class LogisticsManager : MonoBehaviour
         CheckForBlockedProduction();
     }
 
+    // Проверяем блокировки производства
+    private void CheckForBlockedProduction()
+    {
+        // Ищем станки, у которых есть продукт, но нет задачи
+        foreach (Machine machine in FindObjectsOfType<Machine>())
+        {
+            if (machine.currentOutput != null && !HasTaskForMachine(machine))
+            {
+                // Пытаемся создать задачу для "зависшего" продукта
+                TryCreateTaskForBlockedProduct(machine);
+            }
+        }
+    }
+
     public void OnTaskCompleted(Logist logist)
     {
         // ВАЖНО: Всегда возвращаем логиста в доступные
