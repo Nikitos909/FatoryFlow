@@ -244,30 +244,9 @@ public class LogisticsManager : MonoBehaviour
         }
     }
 
-    // Метод для отладки - принудительно создает задачу
-    public void DebugCreateTask()
-    {
-        Machine machineWithProduct = FindObjectsOfType<Machine>()
-            .FirstOrDefault(m => m.currentOutput != null);
-
-        if (machineWithProduct != null)
-        {
-            OnProductProduced(machineWithProduct);
-        }
-        else
-        {
-            Debug.Log("❌ Нет станков с продуктами для отладки");
-        }
-    }
-
     // В LogisticsManager добавьте метод для тестирования
     void OnGUI()
     {
-        if (GUI.Button(new Rect(10, 10, 200, 30), "Debug: Create Task"))
-        {
-            DebugCreateTask();
-        }
-
         if (GUI.Button(new Rect(10, 50, 200, 30), "Debug: Show Status"))
         {
             Debug.Log($"Логистов: {availableLogists.Count}, Задач: {pendingTasks.Count}");
