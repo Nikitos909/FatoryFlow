@@ -93,7 +93,7 @@ public class LogisticsManager : MonoBehaviour
         CheckForBlockedProduction();
     }
 
-    // НОВЫЙ МЕТОД: Проверяем блокировки производства
+    // Проверяем блокировки производства
     private void CheckForBlockedProduction()
     {
         // Ищем станки, у которых есть продукт, но нет задачи
@@ -241,7 +241,7 @@ public class LogisticsManager : MonoBehaviour
         return 3;
     }
 
-    // НОВЫЙ МЕТОД: Принудительная проверка всех станков
+    // Принудительная проверка всех станков
     public void CheckAllMachinesForTasks()
     {
         Debug.Log("🔍 Принудительная проверка всех станков на задачи...");
