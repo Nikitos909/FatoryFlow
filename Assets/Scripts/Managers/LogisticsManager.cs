@@ -143,28 +143,17 @@ public class LogisticsManager : MonoBehaviour
 
     private void TryAssignTasks()
     {
-        if (pendingTasks.Count == 0)
-        {
-            Debug.Log("📭 Нет задач в очереди");
+        if (pendingTasks.Count == 0 || availableLogists.Count == 0) 
             return;
-        }
 
-        if (availableLogists.Count == 0)
-        {
-            Debug.Log("👥 Нет свободных логистов");
-            return;
-        }
+        Debug.Log($"🎯 Распределяю {pendingTasks.Count} задач между {availableLogists.Count} логистами");
 
-        Debug.Log($"🎯 Пытаюсь распределить {pendingTasks.Count} задач между {availableLogists.Count} логистами");
-
-        // Обрабатываем задачи пока есть логисты
         for (int i = pendingTasks.Count - 1; i >= 0; i--)
         {
             if (availableLogists.Count == 0) break;
 
             TransportTask task = pendingTasks[i];
-
-            // Проверяем актуальность задачи
+            
             if (!IsTaskValid(task))
             {
                 Debug.Log($"🗑️ Задача устарела: {task.productType}");
@@ -178,12 +167,6 @@ public class LogisticsManager : MonoBehaviour
 
             logist.AssignTask(task);
             Debug.Log($"🎯 Задача назначена: {task.productType} → {logist.name}");
-        }
-
-        // Отладочная информация
-        if (pendingTasks.Count > 0)
-        {
-            Debug.Log($"📋 Осталось задач в очереди: {pendingTasks.Count}");
         }
     }
 
