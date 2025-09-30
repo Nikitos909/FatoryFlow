@@ -28,33 +28,46 @@ public class LogisticsManager : MonoBehaviour
         if (sellPoint == null)
             sellPoint = FindObjectOfType<ProductSellPoint>();
 
-        // Автоматически находим всех логистов на сцене
         availableLogists = new List<Logist>(FindObjectsOfType<Logist>());
         Debug.Log($"Найдено логистов: {availableLogists.Count}");
     }
 
-    if (productType == ProductType.FinalProduct)
+    public void OnProductProduced(Machine machine)
+    {
+        if (machine.currentOutput == null)
+        {
+            Debug.LogWarning($"Станок {machine.machineType.displayName} сообщил о продукте, но currentOutput = null!");
+            return;
+        }
+
+        Debug.Log($"📦 Станок {machine.machineType.displayName} произвел: {machine.currentOutput.type}");
+
+        // ОПРЕДЕЛЯЕМ ТИП ЗАДАЧИ по типу продукта
+        ProductType productType = machine.currentOutput.type;
+
+        // ТОЛЬКО ФИНАЛЬНЫЙ продукт идет на продажу
+        if (productType == ProductType.FinalProduct)
         {
             if (sellPoint != null)
             {
                 TransportTask task = new TransportTask(
-                    machine, 
-                    null, // null = склад
-                    productType, 
-                    1 // Высокий приоритет
-                );
+                  machine,
+                  null, // null = склад
+                            productType,
+                  1 // Высокий приоритет
+                        );
                 AddTask(task);
                 Debug.Log($"💰 Создана задача на ПРОДАЖУ: {productType}");
             }
         }
-        // ВСЕ промежуточные продукты идут на следующие станки
-        else
+        // ВСЕ промежуточные продукты идут на следующие станки
+        else
         {
             Machine destination = FindDestinationMachine(productType);
             if (destination != null)
             {
-                // ПРОВЕРЯЕМ, может ли станок принять продукт прямо сейчас
-                if (destination.CanAcceptInput(productType))
+                // ПРОВЕРЯЕМ, может ли станок принять продукт прямо сейчас
+                if (destination.CanAcceptInput(productType))
                 {
                     int priority = CalculatePriority(machine, destination);
                     TransportTask task = new TransportTask(machine, destination, productType, priority);
@@ -63,33 +76,33 @@ public class LogisticsManager : MonoBehaviour
                 }
                 else
                 {
-                    // Станок занят - ЖДЕМ его освобождения
-                    Debug.Log($"⏳ Станок {destination.machineType.displayName} занят, ждем освобождения для {productType}");
-                    // Задача НЕ создается - продукт останется на текущем станке
-                    // Логист будет периодически проверять возможность доставки
-                }
+                    // Станок занят - ЖДЕМ его освобождения
+                    Debug.Log($"⏳ Станок {destination.machineType.displayName} занят, ждем освобождения для {productType}");
+                    // Задача НЕ создается - продукт останется на текущем станке
+                    // Логист будет периодически проверять возможность доставки
+                }
             }
             else
             {
                 Debug.LogWarning($"❌ Не найден станок-приемник для {productType}");
-                // НЕ создаем задачу на продажу для промежуточных продуктов!
-            }
+                // НЕ создаем задачу на продажу для промежуточных продуктов!
+            }
         }
-        
+
         // После создания задачи проверяем, нет ли "зависших" продуктов
         CheckForBlockedProduction();
     }
 
-    // Проверяем блокировки производства
-    private void CheckForBlockedProduction()
+    // НОВЫЙ МЕТОД: Проверяем блокировки производства
+    private void CheckForBlockedProduction()
     {
-        // Ищем станки, у которых есть продукт, но нет задачи
-        foreach (Machine machine in FindObjectsOfType<Machine>())
+        // Ищем станки, у которых есть продукт, но нет задачи
+        foreach (Machine machine in FindObjectsOfType<Machine>())
         {
             if (machine.currentOutput != null && !HasTaskForMachine(machine))
             {
-                // Пытаемся создать задачу для "зависшего" продукта
-                TryCreateTaskForBlockedProduct(machine);
+                // Пытаемся создать задачу для "зависшего" продукта
+                TryCreateTaskForBlockedProduct(machine);
             }
         }
     }
@@ -102,11 +115,11 @@ public class LogisticsManager : MonoBehaviour
     private void TryCreateTaskForBlockedProduct(Machine machine)
     {
         ProductType productType = machine.currentOutput.type;
-        
+
         if (productType == ProductType.FinalProduct)
         {
-            // Финальный продукт всегда можно отвезти на склад
-            if (sellPoint != null)
+            // Финальный продукт всегда можно отвезти на склад
+            if (sellPoint != null)
             {
                 TransportTask task = new TransportTask(machine, null, productType, 1);
                 AddTask(task);
@@ -115,12 +128,12 @@ public class LogisticsManager : MonoBehaviour
         }
         else
         {
-            // Для промежуточного продукта ищем свободный станок
-            Machine destination = FindDestinationMachine(productType);
+            // Для промежуточного продукта ищем свободный станок
+            Machine destination = FindDestinationMachine(productType);
             if (destination != null && destination.CanAcceptInput(productType))
             {
                 TransportTask task = new TransportTask(machine, destination, productType, 1); // Высокий приоритет
-                AddTask(task);
+                AddTask(task);
                 Debug.Log($"🔄 Создана задача для ЗАВИСШЕГО продукта: {productType} → {destination.machineType.displayName}");
             }
         }
@@ -128,22 +141,20 @@ public class LogisticsManager : MonoBehaviour
 
     public void OnTaskCompleted(Logist logist)
     {
-        // ВАЖНО: Всегда возвращаем логиста в доступные
         if (!availableLogists.Contains(logist))
         {
             availableLogists.Add(logist);
             Debug.Log($"✅ Логист {logist.name} вернулся в доступные");
         }
-        
+
         // После завершения задачи проверяем блокировки
         CheckForBlockedProduction();
         TryAssignTasks();
-
     }
 
     private void TryAssignTasks()
     {
-        if (pendingTasks.Count == 0 || availableLogists.Count == 0) 
+        if (pendingTasks.Count == 0 || availableLogists.Count == 0)
             return;
 
         Debug.Log($"🎯 Распределяю {pendingTasks.Count} задач между {availableLogists.Count} логистами");
@@ -153,7 +164,7 @@ public class LogisticsManager : MonoBehaviour
             if (availableLogists.Count == 0) break;
 
             TransportTask task = pendingTasks[i];
-            
+
             if (!IsTaskValid(task))
             {
                 Debug.Log($"🗑️ Задача устарела: {task.productType}");
@@ -170,17 +181,17 @@ public class LogisticsManager : MonoBehaviour
         }
     }
 
-   private bool IsTaskValid(TransportTask task)
+    private bool IsTaskValid(TransportTask task)
     {
         if (task.sourceMachine == null || task.sourceMachine.currentOutput == null)
             return false;
 
-        // Для задач на продажу проверяем только наличие продукта
-        if (task.destinationMachine == null)
+        // Для задач на продажу проверяем только наличие продукта
+        if (task.destinationMachine == null)
             return true;
 
-        // Для обычных задач проверяем, что приемник может принять продукт
-        return task.destinationMachine.CanAcceptInput(task.productType);
+        // Для обычных задач проверяем, что приемник может принять продукт
+        return task.destinationMachine.CanAcceptInput(task.productType);
     }
 
     private void AddTask(TransportTask task)
@@ -192,76 +203,54 @@ public class LogisticsManager : MonoBehaviour
         }
 
         pendingTasks.Add(task);
-        
+
         pendingTasks = pendingTasks
-            .OrderBy(t => t.priority)
-            .ThenBy(t => t.timestamp)
-            .ToList();
-        
+          .OrderBy(t => t.priority)
+          .ThenBy(t => t.timestamp)
+          .ToList();
+
         Debug.Log($"✅ Добавлена задача: {task.productType} (приоритет: {task.priority}), всего задач: {pendingTasks.Count}");
-        
+
         TryAssignTasks();
     }
 
-   private Machine FindDestinationMachine(ProductType productType)
+    private Machine FindDestinationMachine(ProductType productType)
     {
-        // Ищем станок, который принимает этот тип продукта
-        foreach (Machine machine in FindObjectsOfType<Machine>())
+        // Ищем станок, который принимает этот тип продукта
+        foreach (Machine machine in FindObjectsOfType<Machine>())
         {
             if (machine.machineType.inputProductType == productType)
             {
                 return machine;
             }
         }
-        
+
         return null;
     }
 
     private int CalculatePriority(Machine source, Machine destination)
     {
-        // Высокий приоритет если приемник простаивает
-        if (!destination.isWorking && destination.currentInput == null) 
+        // Высокий приоритет если приемник простаивает
+        if (!destination.isWorking && destination.currentInput == null)
             return 1;
-        
+
         // Средний приоритет если продукт блокирует производство
-        if (source.currentOutput != null) 
+        if (source.currentOutput != null)
             return 2;
-        
+
         return 3;
     }
 
-    // Принудительная проверка всех станков
-    public void CheckAllMachinesForTasks()
+    // НОВЫЙ МЕТОД: Принудительная проверка всех станков
+    public void CheckAllMachinesForTasks()
     {
         Debug.Log("🔍 Принудительная проверка всех станков на задачи...");
-        
+
         foreach (Machine machine in FindObjectsOfType<Machine>())
         {
             if (machine.currentOutput != null && !HasTaskForMachine(machine))
             {
                 OnProductProduced(machine);
-            }
-        }
-    }
-
-    // В LogisticsManager добавьте метод для тестирования
-    void OnGUI()
-{
-    if (GUI.Button(new Rect(10, 10, 250, 30), "Debug: Check All Machines"))
-    {
-        CheckAllMachinesForTasks();
-    }
-    
-    if (GUI.Button(new Rect(10, 50, 250, 30), "Debug: Show Status"))
-    {
-        Debug.Log($"Логистов: {availableLogists.Count}, Задач: {pendingTasks.Count}");
-        
-        // Показываем какие продукты ждут доставки
-        foreach (Machine machine in FindObjectsOfType<Machine>())
-        {
-            if (machine.currentOutput != null)
-            {
-                Debug.Log($"📦 {machine.machineType.displayName} ждет: {machine.currentOutput.type}");
             }
         }
     }
