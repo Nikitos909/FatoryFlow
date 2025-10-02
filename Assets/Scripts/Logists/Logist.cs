@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class Logist : MonoBehaviour
 {
     public float speed = 2f;
@@ -9,14 +7,16 @@ public class Logist : MonoBehaviour
     private TransportTask currentTask;
     private bool isMoving = false;
     private bool isDelivering = false;
+    private Vector3 spawnPosition;
 
     void Start()
     {
-        // Автоматически регистрируемся в LogisticsManager
-        if (LogisticsManager.Instance != null && !LogisticsManager.Instance.availableLogists.Contains(this))
+        spawnPosition = transform.position;
+        
+        // Регистрируем в LogisticsManager
+        if (LogisticsManager.Instance != null)
         {
-            LogisticsManager.Instance.availableLogists.Add(this);
-            Debug.Log($"🚚 Логист {name} зарегистрирован");
+            LogisticsManager.Instance.OnLogistAvailable(this);
         }
     }
 
@@ -28,9 +28,9 @@ public class Logist : MonoBehaviour
 
             if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
             {
-                if (!isDelivering)
+                if (!isDelivering) 
                     PickUpProduct();
-                else
+                else 
                     DeliverProduct();
             }
         }
@@ -39,64 +39,71 @@ public class Logist : MonoBehaviour
     public void AssignTask(TransportTask task)
     {
         currentTask = task;
-
-        if (task.sourceMachine == null)
+        
+        // Определяем начальную позицию для движения
+        if (task.sourceMachine != null)
         {
-            Debug.LogError("❌ ОШИБКА: sourceMachine is null!");
-            CompleteTask();
-            return;
+            // Едем к станку-источнику
+            targetPosition = task.sourceMachine.GetOutputSlotPosition();
         }
-
-        targetPosition = task.sourceMachine.GetOutputSlotPosition();
+        else
+        {
+            // Едем на склад сырья
+            targetPosition = GameManager.Instance.warehouse.spawnPoint.position;
+        }
+        
         isMoving = true;
         isDelivering = false;
-
-        Debug.Log($"🚚 Логист {name} получил задачу: {task.productType}");
+        
+        Debug.Log($"🚚 Логист {name} начал задачу: {task.productType}");
     }
 
     private void PickUpProduct()
     {
-        if (currentTask == null || currentTask.sourceMachine == null)
+        Product productToPickup = null;
+        
+        // Берем продукт со станка или со склада
+        if (currentTask.sourceMachine != null)
         {
-            Debug.LogError("❌ ОШИБКА: currentTask или sourceMachine is null в PickUpProduct!");
-            CompleteTask();
-            return;
-        }
-
-        carriedProduct = currentTask.sourceMachine.TakeOutputProduct();
-        if (carriedProduct != null)
-        {
-            carriedProduct.transform.SetParent(transform);
-            carriedProduct.transform.localPosition = new Vector3(0, 0.5f, 0);
-
-            // Определяем куда двигаться дальше
-            if (currentTask.destinationMachine != null)
-            {
-                // Обычная задача: на другой станок
-                targetPosition = currentTask.destinationMachine.transform.position;
-                Debug.Log($"📥 Логист {name} взял {carriedProduct.type}, везу на {currentTask.destinationMachine.machineType.displayName}");
-            }
-            else
-            {
-                // Задача на продажу: на точку продажи
-                if (LogisticsManager.Instance.sellPoint != null)
-                {
-                    targetPosition = LogisticsManager.Instance.sellPoint.transform.position;
-                    Debug.Log($"📥 Логист {name} взял {carriedProduct.type}, везу на СКЛАД");
-                }
-                else
-                {
-                    Debug.LogError("❌ Нет точки продажи!");
-                    CompleteTask();
-                    return;
-                }
-            }
-
-            isDelivering = true;
+            productToPickup = currentTask.sourceMachine.TakeOutputProduct();
         }
         else
         {
-            Debug.LogWarning($"⚠️ Логист {name}: продукт исчез, отмена задачи");
+            // Берем продукт со склада сырья (нужно найти ближайший продукт RawPipe)
+            Product[] rawProducts = FindObjectsOfType<Product>();
+            foreach (Product product in rawProducts)
+            {
+                if (product.type == ProductType.RawPipe && product.producedAt == null)
+                {
+                    productToPickup = product;
+                    break;
+                }
+            }
+        }
+
+        if (productToPickup != null)
+        {
+            carriedProduct = productToPickup;
+            carriedProduct.transform.SetParent(transform);
+            carriedProduct.transform.localPosition = new Vector3(0, 0.5f, 0);
+            
+            // Определяем куда везти
+            if (currentTask.destinationMachine != null)
+            {
+                targetPosition = currentTask.destinationMachine.GetWaitingPosition();
+            }
+            else
+            {
+                // Везем на склад продажи
+                targetPosition = LogisticsManager.Instance.sellPoint.transform.position;
+            }
+            
+            isDelivering = true;
+            Debug.Log($"📥 Логист {name} взял {carriedProduct.type}");
+        }
+        else
+        {
+            Debug.LogWarning($"⚠️ Логист {name}: не нашел продукт для забора");
             CompleteTask();
         }
     }
@@ -115,38 +122,40 @@ public class Logist : MonoBehaviour
                     currentTask.destinationMachine.PutInputProduct(carriedProduct);
                     carriedProduct = null;
                     success = true;
-                    Debug.Log($"📤 Логист {name} доставил продукт на {currentTask.destinationMachine.machineType.displayName}");
+                    Debug.Log($"📤 Логист {name} доставил на {currentTask.destinationMachine.machineType.displayName}");
                 }
                 else
                 {
-                    Debug.LogWarning($"❌ Логист {name}: станок {currentTask.destinationMachine.machineType.displayName} не может принять продукт");
-                    // Оставляем продукт у себя и завершаем задачу
-                    carriedProduct.transform.SetParent(null);
+                    Debug.LogWarning($"❌ Станок занят, оставляю продукт у себя");
+                    // Оставляем продукт у логиста - задача не завершена
+                    // Можно добавить логику повторной попытки
                 }
             }
             else
             {
-                // Доставляем на склад (продажа)
-                // Product будет уничтожен в ProductSellPoint.OnTriggerEnter2D
+                // Доставляем на склад продажи
                 carriedProduct.transform.SetParent(null);
-
-                // Позиционируем продукт рядом с точкой продажи
-                if (LogisticsManager.Instance.sellPoint != null)
-                {
-                    carriedProduct.transform.position = LogisticsManager.Instance.sellPoint.transform.position;
-                    Debug.Log($"💰 Логист {name} доставил продукт на СКЛАД");
-                }
-
+                carriedProduct.transform.position = targetPosition;
                 carriedProduct = null;
                 success = true;
+                Debug.Log($"💰 Логист {name} доставил на СКЛАД");
             }
+        }
+
+        if (success)
+        {
+            CompleteTask();
         }
         else
         {
-            Debug.LogWarning($"⚠️ Логист {name}: нет продукта для доставки");
+            // Если не удалось доставить - ждем немного и пробуем снова
+            Invoke("RetryDelivery", 1f);
         }
+    }
 
-        CompleteTask();
+    private void RetryDelivery()
+    {
+        DeliverProduct();
     }
 
     private void CompleteTask()
@@ -154,18 +163,24 @@ public class Logist : MonoBehaviour
         isMoving = false;
         isDelivering = false;
         currentTask = null;
-
-        // ВАЖНО: Всегда сообщаем о завершении задачи
+        carriedProduct = null;
+        
+        // Сообщаем менеджеру, что свободен
         if (LogisticsManager.Instance != null)
         {
-            LogisticsManager.Instance.OnTaskCompleted(this);
+            LogisticsManager.Instance.OnLogistAvailable(this);
         }
-        else
-        {
-            Debug.LogError("❌ LogisticsManager.Instance is null!");
-        }
+    }
 
-        Debug.Log($"✅ Логист {name} завершил задачу и свободен");
+    public void ReturnToSpawn()
+    {
+        if (!isMoving)
+        {
+            targetPosition = LogisticsManager.Instance.logistSpawnPoint.position;
+            isMoving = true;
+            isDelivering = false;
+            Debug.Log($"🏠 Логист {name} возвращается на базу");
+        }
     }
 
     // Визуализация для отладки
@@ -175,14 +190,7 @@ public class Logist : MonoBehaviour
         {
             Gizmos.color = isDelivering ? Color.green : Color.yellow;
             Gizmos.DrawLine(transform.position, targetPosition);
-
-            Gizmos.color = Color.blue;
             Gizmos.DrawWireSphere(transform.position, 0.3f);
-        }
-        else if (LogisticsManager.Instance != null && LogisticsManager.Instance.availableLogists.Contains(this))
-        {
-            Gizmos.color = Color.green;
-            Gizmos.DrawWireSphere(transform.position, 0.4f);
         }
     }
 }
