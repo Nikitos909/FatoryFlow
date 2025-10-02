@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
     public GameState gameState;
     public GameConfig config;
 
+    public RawMaterialWarehouse warehouse;
+
     private List<Machine> allMachines = new List<Machine>();
 
     // Ссылки на менеджеры (перетащи в инспекторе)
