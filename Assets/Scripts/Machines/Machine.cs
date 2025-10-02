@@ -5,33 +5,32 @@ public class Machine : MonoBehaviour
     public MachineTypeSO machineType;
     public Transform inputSlot;
     public Transform outputSlot;
+    public Transform waitingPoint; // Точка ожидания для логиста
 
     public Product currentInput;
     public Product currentOutput;
     public bool isWorking = false;
     public float workTimer = 0f;
 
-   void Update()
+    void Update()
     {
-        if (isWorking)
-        {
-            workTimer -= Time.deltaTime;
-            if (workTimer <= 0f) FinishProduction();
-        }
-        else if (currentInput != null && currentOutput == null)
+        // ЕСЛИ есть входной продукт И нет выходного И не работаем - начинаем производство
+        if (!isWorking && currentInput != null && currentOutput == null)
         {
             StartProduction();
         }
         
-        // ЕСЛИ есть готовый продукт И нет активной задачи - сообщаем логистике
-        if (currentOutput != null && !HasTransportTask())
+        if (isWorking)
         {
-            // Проверяем, чтобы не спамить
-            if (Mathf.FloorToInt(Time.time) % 2 == 0) // Каждые 2 секунды
-            {
-                LogisticsManager.Instance.OnProductProduced(this);
-                Debug.Log($"{machineType.displayName} ЕСТЬ ГОТОВЫЙ ПРОДУКТ");
-            }
+            workTimer -= Time.deltaTime;
+            if (workTimer <= 0f) 
+                FinishProduction();
+        }
+        
+        // ЕСЛИ есть готовый продукт на выходе - создаем задачу на перемещение
+        if (currentOutput != null && !HasActiveTask())
+        {
+            CreateTransportTask();
         }
     }
 
@@ -39,17 +38,7 @@ public class Machine : MonoBehaviour
     {
         isWorking = true;
         workTimer = machineType.baseProductionTime;
-        Debug.Log($"{machineType.displayName} начал работу");
-    }
-
-    // Проверяем есть ли задача для этого станка
-    private bool HasTransportTask()
-    {
-        if (LogisticsManager.Instance == null) return false;
-
-        // Эта проверка требует доступа к pendingTasks, поэтому упрощаем:
-        // Будем считать, что если продукт есть, но логист не едет - задачи нет
-        return false;
+        Debug.Log($"{machineType.displayName} начал работу над {currentInput.type}");
     }
 
     private void FinishProduction()
@@ -60,10 +49,15 @@ public class Machine : MonoBehaviour
         ProductType outputType = isDefective ? machineType.defectiveProductType : machineType.outputProductType;
 
         CreateOutputProduct(outputType, isDefective);
-        Destroy(currentInput.gameObject);
-        currentInput = null;
+        
+        // Уничтожаем входной продукт
+        if (currentInput != null)
+        {
+            Destroy(currentInput.gameObject);
+            currentInput = null;
+        }
 
-        LogisticsManager.Instance.OnProductProduced(this);
+        Debug.Log($"{machineType.displayName} произвел {outputType}");
     }
 
     private void CreateOutputProduct(ProductType type, bool defective)
@@ -76,15 +70,72 @@ public class Machine : MonoBehaviour
 
         SpriteRenderer sr = productObj.AddComponent<SpriteRenderer>();
         sr.sprite = CreateDefaultSprite();
-        if (defective) sr.color = Color.red;
-        else sr.color = GetProductColor(type);
+        sr.color = GetProductColor(type);
         sr.sortingOrder = 1;
 
+        // Добавляем коллайдер
+        BoxCollider2D collider = productObj.AddComponent<BoxCollider2D>();
+        collider.isTrigger = true;
+
         currentOutput = product;
-        Debug.Log($"{machineType.displayName} произвел {type}");
     }
 
-    // Цвета для разных типов продуктов
+    private void CreateTransportTask()
+    {
+        // Определяем куда везти продукт
+        Machine destinationMachine = null;
+        
+        // Если это ФИНАЛЬНЫЙ продукт - везем на склад продажи
+        if (machineType.outputProductType == ProductType.FinalProduct)
+        {
+            TransportTask task = new TransportTask(
+                sourceMachine: this,
+                dest: null, // null = склад продажи
+                type: machineType.outputProductType,
+                prio: 1
+            );
+            LogisticsManager.Instance.AddTask(task);
+        }
+        else
+        {
+            // Для промежуточных продуктов ищем следующий станок
+            destinationMachine = FindNextMachine();
+            
+            if (destinationMachine != null && destinationMachine.CanAcceptInput(machineType.outputProductType))
+            {
+                TransportTask task = new TransportTask(
+                    sourceMachine: this,
+                    dest: destinationMachine,
+                    type: machineType.outputProductType,
+                    prio: 2
+                );
+                LogisticsManager.Instance.AddTask(task);
+            }
+            else
+            {
+                Debug.Log($"⏳ {machineType.displayName} ждет освобождения станка-приемника");
+            }
+        }
+    }
+
+    private Machine FindNextMachine()
+    {
+        foreach (Machine machine in FindObjectsOfType<Machine>())
+        {
+            if (machine.machineType.inputProductType == machineType.outputProductType)
+            {
+                return machine;
+            }
+        }
+        return null;
+    }
+
+    private bool HasActiveTask()
+    {
+        // Проверяем, есть ли уже задача для этого станка
+        return LogisticsManager.Instance.HasTaskForMachine(this);
+    }
+
     private Color GetProductColor(ProductType type)
     {
         return type switch
@@ -121,6 +172,10 @@ public class Machine : MonoBehaviour
             product.transform.localPosition = Vector3.zero;
             Debug.Log($"{machineType.displayName} принял продукт: {product.type}");
         }
+        else
+        {
+            Debug.LogWarning($"❌ {machineType.displayName} не может принять {product.type}");
+        }
     }
 
     public Product TakeOutputProduct()
@@ -133,5 +188,10 @@ public class Machine : MonoBehaviour
     public Vector3 GetOutputSlotPosition()
     {
         return outputSlot.position;
+    }
+    
+    public Vector3 GetWaitingPosition()
+    {
+        return waitingPoint != null ? waitingPoint.position : transform.position + Vector3.right * 2f;
     }
 }
