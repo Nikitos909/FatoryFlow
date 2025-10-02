@@ -129,4 +129,12 @@ public class GameManager : MonoBehaviour
         }
         return count;
     }
+
+    public void OnBuyRawMaterialButton()
+    {
+        if (warehouse != null)
+        {
+            warehouse.BuyRawMaterial();
+        }
+    }
 }
