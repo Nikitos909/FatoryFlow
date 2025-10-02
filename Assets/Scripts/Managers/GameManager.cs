@@ -73,14 +73,6 @@ public class GameManager : MonoBehaviour
         // Проверяем инициализацию менеджеров
         if (economyManager == null || logisticsManager == null) return;
 
-        // Спавн сырых труб
-        spawnTimer -= Time.deltaTime;
-        if (spawnTimer <= 0f)
-        {
-            SpawnRawPipe();
-            spawnTimer = config.rawPipeSpawnInterval;
-        }
-
         // Обновляем экономику
         economyManager.UpdateEconomy(Time.deltaTime);
     }
