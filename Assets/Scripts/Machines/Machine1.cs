@@ -100,7 +100,7 @@ public class Machine1 : MonoBehaviour, ITaskGiver
         {
             Vector3 fromPos = GetPosition();
             Vector3 toPos = nextConsumer.GetPosition();
-            TransportTask1 task = new TransportTask(machineData.outputProductType, fromPos, toPos, this);
+            TransportTask1 task = new TransportTask1(machineData.outputProductType, fromPos, toPos, this);
             LogisticsManager1.Instance.AddTask(task);
         }
         else
@@ -123,7 +123,7 @@ public class Machine1 : MonoBehaviour, ITaskGiver
         }
 
         // Если станков нет, может быть, это конечный продукт и его нужно отнести на склад/продажу?
-        ProductSellPoint1 sellPoint = FindObjectOfType<ProductSellPoint>();
+        ProductSellPoint1 sellPoint = FindObjectOfType<ProductSellPoint1>();
         if (sellPoint != null && sellPoint.CanAcceptProduct(product))
         {
             return sellPoint;
@@ -132,7 +132,7 @@ public class Machine1 : MonoBehaviour, ITaskGiver
         return null;
     }
 
-    // ITaskGiver implementation
+    // ITaskGiver1 implementation
     public void OnTaskCompleted(TransportTask1 task)
     {
         // Это вызывается, когда логист забрал наш выходной продукт
