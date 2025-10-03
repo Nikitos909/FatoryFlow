@@ -30,13 +30,13 @@ public class ResourceWarehouse1 : MonoBehaviour, ITaskGiver
 
             // Для простоты на старте, давайте предположим, что мы знаем первый станок.
             // В полноценной системе здесь была бы более сложная логика.
-            Machine firstMachine = FindFirstMachineThatNeeds(storedProductType);
+            Machine1 firstMachine = FindFirstMachineThatNeeds(storedProductType);
             if (firstMachine != null)
             {
                 Vector3 fromPos = GetPosition();
                 Vector3 toPos = firstMachine.GetPosition();
-                TransportTask task = new TransportTask(storedProductType, fromPos, toPos, this);
-                LogisticsManager.Instance.AddTask(task);
+                TransportTask1 task = new TransportTask(storedProductType, fromPos, toPos, this);
+                LogisticsManager1.Instance.AddTask(task);
             }
         }
     }
@@ -45,7 +45,7 @@ public class ResourceWarehouse1 : MonoBehaviour, ITaskGiver
     {
         // Это упрощенная реализация. В реальной системе должен быть способ (например, регистрация станков в менеджере)
         Machine1[] allMachines = FindObjectsOfType<Machine>();
-        foreach (Machine machine in allMachines)
+        foreach (Machine1 machine in allMachines)
         {
             if (machine.CanAcceptProduct(product) && machine.IsInputSlotFree())
             {
