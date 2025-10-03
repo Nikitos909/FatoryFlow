@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ResourceWarehouse : MonoBehaviour, ITaskGiver
+public class ResourceWarehouse1 : MonoBehaviour, ITaskGiver
 {
     [SerializeField] private ProductType1 storedProductType = ProductType.RawPipe;
     [SerializeField] private int pipeCost = 100; // Стоимость одной трубы
@@ -13,7 +13,6 @@ public class ResourceWarehouse : MonoBehaviour, ITaskGiver
     {
         if (EconomyManager1.Instance.SpendMoney(pipeCost))
         {
-            // Создаем задание на перемещение "сырья" со склада... но куда?
             // На самом деле, склад просто сообщает, что у него есть продукт.
             // Задание на перемещение должен создать первый свободный станок, которому нужно сырье.
             // Или мы можем создать задание "на складирование", которое будет ждать, пока станок его не заберет.
@@ -42,10 +41,10 @@ public class ResourceWarehouse : MonoBehaviour, ITaskGiver
         }
     }
 
-    private Machine FindFirstMachineThatNeeds(ProductType product)
+    private Machine FindFirstMachineThatNeeds(ProductType1 product)
     {
-        // Это упрощенная реализация. В реальной системе должен быть更好的 способ (например, регистрация станков в менеджере)
-        Machine[] allMachines = FindObjectsOfType<Machine>();
+        // Это упрощенная реализация. В реальной системе должен быть способ (например, регистрация станков в менеджере)
+        Machine1[] allMachines = FindObjectsOfType<Machine>();
         foreach (Machine machine in allMachines)
         {
             if (machine.CanAcceptProduct(product) && machine.IsInputSlotFree())
@@ -63,7 +62,7 @@ public class ResourceWarehouse : MonoBehaviour, ITaskGiver
     }
 
     // ITaskGiver implementation
-    public void OnTaskCompleted(TransportTask task)
+    public void OnTaskCompleted(TransportTask1 task)
     {
         // Когда логист доставил сырье со склада на станок, мы можем очистить визуал на складе (если он был) или просто ничего не делать.
         Debug.Log($"Сырье доставлено со склада на станок.");
