@@ -5,9 +5,9 @@ public class GameManager1 : MonoBehaviour
     public static GameManager1 Instance;
 
     [Header("Managers")]
-    public EconomyManager economyManager;
-    public LogisticsManager logisticsManager;
-    public ResourceWarehouse resourceWarehouse;
+    public EconomyManager1 economyManager;
+    public LogisticsManager1 logisticsManager;
+    public ResourceWarehouse1 resourceWarehouse;
 
     private void Awake()
     {
