@@ -216,8 +216,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   machineData: {fileID: 11400000, guid: f6eabb5ac6c3e410f8e8ce9b87c2f043, type: 2}
-  inputSlot: {fileID: 0}
-  outputSlot: {fileID: 0}
+  inputSlot: {fileID: 547852913}
+  outputSlot: {fileID: 1288002728}
 --- !u!212 &814943118
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -286,6 +286,37 @@ Transform:
   - {fileID: 547852913}
   - {fileID: 1288002728}
   m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &833926008
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 833926009}
+  m_Layer: 0
+  m_Name: spawn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &833926009
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 833926008}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1525535043}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1009491678
 GameObject:
@@ -485,7 +516,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   storedProductType: 1
   pipeCost: 100
-  spawnPoint: {fileID: 0}
+  spawnPoint: {fileID: 833926009}
 --- !u!212 &1525535042
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -550,7 +581,8 @@ Transform:
   m_LocalPosition: {x: -10.25, y: -0.07894574, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 833926009}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1913289702
@@ -821,9 +853,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28fe59ab7ec9d4605b85e5691a5e0917, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  machineData: {fileID: 0}
-  inputSlot: {fileID: 0}
-  outputSlot: {fileID: 0}
+  machineData: {fileID: 11400000, guid: 060cc6fcf610c4420a9eb42731da3715, type: 2}
+  inputSlot: {fileID: 779059713}
+  outputSlot: {fileID: 2135058839}
 --- !u!212 &2079390548
 SpriteRenderer:
   m_ObjectHideFlags: 0

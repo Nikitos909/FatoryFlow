@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e870f8ee5380e41aba6e79969fb17deb, type: 3}
   m_Name: Bender
   m_EditorClassIdentifier: 
-  machineName: 
-  inputProductType: 0
-  outputProductType: 0
+  machineName: Bender
+  inputProductType: 2
+  outputProductType: 3
   productionTime: 3
-  productionCost: 0
+  productionCost: 2
