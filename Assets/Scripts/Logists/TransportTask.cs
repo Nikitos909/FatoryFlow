@@ -10,9 +10,9 @@ public class TransportTask
     public int priority; // 1 - высокий, 2 - средний, 3 - низкий
     public float timestamp; // время создания задачи
 
-    public TransportTask(Machine source, Machine dest, ProductType type, int prio = 2)
+    public TransportTask(Machine sourceMachine, Machine dest, ProductType type, int prio = 2)
     {
-        sourceMachine = source;
+        sourceMachine = sourceMachine;
         destinationMachine = dest;
         productType = type;
         priority = prio;

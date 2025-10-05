@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class Logist : MonoBehaviour
 {
     public float speed = 2f;

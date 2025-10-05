@@ -1,9 +1,9 @@
 using UnityEngine;
 using System.Collections;
 
-public class ProductSellPoint1 : MonoBehaviour, ITaskGiver
+public class ProductSellPoint1 : MonoBehaviour, ITaskGiver1
 {
-    [SerializeField] private ProductType1 acceptedProduct = ProductType.BentPipe;
+    [SerializeField] private ProductType1 acceptedProduct = ProductType1.BentPipe;
     [SerializeField] private int sellPrice = 150;
     [SerializeField] private float sellInterval = 2f;
 

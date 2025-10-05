@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class Machine1 : MonoBehaviour, ITaskGiver
+public class Machine1 : MonoBehaviour, ITaskGiver1
 {
     [SerializeField] private MachineData1 machineData;
     [SerializeField] private Transform inputSlot; // Визуальный слот для входного продукта
@@ -109,11 +109,11 @@ public class Machine1 : MonoBehaviour, ITaskGiver
         }
     }
 
-    private ITaskGiver1 FindNextConsumer(ProductType product)
+    private ITaskGiver1 FindNextConsumer(ProductType1 product)
     {
         // Упрощенная реализация. В реальной системе должен быть менеджер цепочек производства.
         // Ищем любой станок, который принимает наш выходной продукт как входной.
-        Machine1[] allMachines = FindObjectsOfType<Machine>();
+        Machine1[] allMachines = FindObjectsOfType<Machine1>();
         foreach (Machine1 machine in allMachines)
         {
             if (machine != this && machine.CanAcceptProduct(product) && machine.IsInputSlotFree())

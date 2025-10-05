@@ -1,4 +1,4 @@
-public enum ProductType
+public enum ProductType1
 {
     None,
     RawPipe,    // Сырая труба

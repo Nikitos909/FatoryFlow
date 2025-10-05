@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class ResourceWarehouse1 : MonoBehaviour, ITaskGiver
+public class ResourceWarehouse1 : MonoBehaviour, ITaskGiver1
 {
-    [SerializeField] private ProductType1 storedProductType = ProductType.RawPipe;
+    [SerializeField] private ProductType1 storedProductType = ProductType1.RawPipe;
     [SerializeField] private int pipeCost = 100; // Стоимость одной трубы
     [SerializeField] private Transform spawnPoint; // Точка, где появляется сырье
 
@@ -35,16 +35,16 @@ public class ResourceWarehouse1 : MonoBehaviour, ITaskGiver
             {
                 Vector3 fromPos = GetPosition();
                 Vector3 toPos = firstMachine.GetPosition();
-                TransportTask1 task = new TransportTask(storedProductType, fromPos, toPos, this);
+                TransportTask1 task = new TransportTask1(storedProductType, fromPos, toPos, this);
                 LogisticsManager1.Instance.AddTask(task);
             }
         }
     }
 
-    private Machine FindFirstMachineThatNeeds(ProductType1 product)
+    private Machine1 FindFirstMachineThatNeeds(ProductType1 product)
     {
         // Это упрощенная реализация. В реальной системе должен быть способ (например, регистрация станков в менеджере)
-        Machine1[] allMachines = FindObjectsOfType<Machine>();
+        Machine1[] allMachines = FindObjectsOfType<Machine1>();
         foreach (Machine1 machine in allMachines)
         {
             if (machine.CanAcceptProduct(product) && machine.IsInputSlotFree())
