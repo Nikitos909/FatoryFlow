@@ -3,47 +3,51 @@ using UnityEngine;
 public class ResourceWarehouse1 : MonoBehaviour, ITaskGiver1
 {
     [SerializeField] private ProductType1 storedProductType = ProductType1.RawPipe;
-    [SerializeField] private int pipeCost = 100; // Стоимость одной трубы
-    [SerializeField] private Transform spawnPoint; // Точка, где появляется сырье
+    [SerializeField] private int pipeCost = 100;
+    [SerializeField] private Transform spawnPoint;
+    [SerializeField] private GameObject rawPipePrefab; // Префаб сырой трубы для 2D
 
-    public void Initialize() { /* ... */ }
+    public void Initialize() 
+    {
+        Debug.Log("Склад инициализирован");
+    }
 
-    // Вызывается по кнопке UI
+    // Кнопка UI должна вызывать этот метод
     public void BuyRawMaterial()
     {
+        Debug.Log("Попытка купить сырье...");
+        
         if (EconomyManager1.Instance.SpendMoney(pipeCost))
         {
-            // На самом деле, склад просто сообщает, что у него есть продукт.
-            // Задание на перемещение должен создать первый свободный станок, которому нужно сырье.
-            // Или мы можем создать задание "на складирование", которое будет ждать, пока станок его не заберет.
-            // Давайте упростим: склад создает продукт и сразу дает задание логисту отнести его на первый станок.
-            // Но это негибко. Лучше использовать систему "поставщик-потребитель".
+            Debug.Log("Сырье куплено!");
+            CreateTransportTask();
+        }
+    }
 
-            // Вместо этого, давайте создадим визуальный объект на складе и сообщим LogisticsManager, что продукт доступен.
-            CreateProductVisual();
+    private void CreateTransportTask()
+    {
+        // Создаем визуал сырья на складе
+        CreateProductVisual();
 
-            // Создаем задание на перемещение от склада к... пока никому.
-            // Это задание будет "предложением", которое заберет первый станок, которому нужно сырье.
-            // Переработаем LogisticsManager для поддержки двух типов заданий: 
-            // 1. Конкретное (от А к Б)
-            // 2. Общее (от А -> "кто хочет?")
-
-            // Для простоты на старте, давайте предположим, что мы знаем первый станок.
-            // В полноценной системе здесь была бы более сложная логика.
-            Machine1 firstMachine = FindFirstMachineThatNeeds(storedProductType);
-            if (firstMachine != null)
-            {
-                Vector3 fromPos = GetPosition();
-                Vector3 toPos = firstMachine.GetPosition();
-                TransportTask1 task = new TransportTask1(storedProductType, fromPos, toPos, this);
-                LogisticsManager1.Instance.AddTask(task);
-            }
+        // Ищем первый свободный станок, который принимает сырые трубы
+        Machine1 targetMachine = FindFirstMachineThatNeeds(storedProductType);
+        
+        if (targetMachine != null)
+        {
+            Vector3 fromPos = GetPosition();
+            Vector3 toPos = targetMachine.GetPosition();
+            TransportTask1 task = new TransportTask(storedProductType, fromPos, toPos, this);
+            LogisticsManager1.Instance.AddTask(task);
+            Debug.Log($"Задание создано: со склада в {targetMachine.name}");
+        }
+        else
+        {
+            Debug.LogWarning("Нет свободных станков для обработки сырья!");
         }
     }
 
     private Machine1 FindFirstMachineThatNeeds(ProductType1 product)
     {
-        // Это упрощенная реализация. В реальной системе должен быть способ (например, регистрация станков в менеджере)
         Machine1[] allMachines = FindObjectsOfType<Machine1>();
         foreach (Machine1 machine in allMachines)
         {
@@ -57,16 +61,25 @@ public class ResourceWarehouse1 : MonoBehaviour, ITaskGiver1
 
     private void CreateProductVisual()
     {
-        // Создаем визуальное представление продукта на складе (например, 3D-модель трубы)
-        // Этот объект будет уничтожен, когда логист заберет продукт.
+        if (rawPipePrefab != null && spawnPoint != null)
+        {
+            GameObject product = Instantiate(rawPipePrefab, spawnPoint.position, Quaternion.identity);
+            product.name = $"RawPipe_{System.Guid.NewGuid()}";
+        }
+        else
+        {
+            Debug.LogWarning("Не назначен prefab или spawnPoint для сырья!");
+        }
     }
 
     // ITaskGiver implementation
     public void OnTaskCompleted(TransportTask1 task)
     {
-        // Когда логист доставил сырье со склада на станок, мы можем очистить визуал на складе (если он был) или просто ничего не делать.
-        Debug.Log($"Сырье доставлено со склада на станок.");
+        Debug.Log($"Сырье доставлено со склада на станок");
     }
 
-    public Vector3 GetPosition() => spawnPoint.position;
+    public Vector3 GetPosition() 
+    {
+        return spawnPoint != null ? spawnPoint.position : transform.position;
+    }
 }
