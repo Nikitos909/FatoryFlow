@@ -14,11 +14,11 @@ public class GameManager1 : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // Если это нужно для вашей структуры сцен
         }
         else
         {
             Destroy(gameObject);
+            return;
         }
 
         InitializeGame();
@@ -26,9 +26,17 @@ public class GameManager1 : MonoBehaviour
 
     private void InitializeGame()
     {
-        // Инициализация менеджеров в правильном порядке, если это необходимо
-        economyManager.Initialize();
-        logisticsManager.Initialize();
-        resourceWarehouse.Initialize();
+        Debug.Log("Инициализация игры...");
+        
+        // Явно находим менеджеры на сцене если не присвоены в инспекторе
+        if (economyManager == null) economyManager = FindObjectOfType<EconomyManager1>();
+        if (logisticsManager == null) logisticsManager = FindObjectOfType<LogisticsManager1>();
+        if (resourceWarehouse == null) resourceWarehouse = FindObjectOfType<ResourceWarehouse1>();
+
+        economyManager?.Initialize();
+        logisticsManager?.Initialize();
+        resourceWarehouse?.Initialize();
+        
+        Debug.Log("Игра инициализирована");
     }
 }
