@@ -5,16 +5,17 @@ public class Logist1 : MonoBehaviour
 {
     [SerializeField] private float movementSpeed = 3f;
     [SerializeField] private float pickUpDelay = 0.5f;
+    [SerializeField] private SpriteRenderer carriedProductSprite; // Спрайт для переносимого продукта
 
     private TransportTask1 currentTask;
     private bool isWorking = false;
-    private GameObject carriedProduct;
+    private ProductType1 carriedProductType;
 
     public void AssignTask(TransportTask1 task)
     {
         if (isWorking)
         {
-            Debug.LogError("Логист уже выполняет задание!");
+            Debug.LogError("Логист уже занят!");
             return;
         }
 
@@ -25,44 +26,61 @@ public class Logist1 : MonoBehaviour
 
     private IEnumerator ExecuteTask()
     {
-        // 1. Идем к точке забора
+        Debug.Log($"Логист начал задание: {currentTask.ProductType}");
+
+        // Движение к точке забора
         yield return StartCoroutine(MoveToPosition(currentTask.FromPosition));
 
-        // 2. Забираем продукт (здесь может быть анимация)
+        // Забор продукта
         yield return new WaitForSeconds(pickUpDelay);
         PickUpProduct();
 
-        // 3. Идем к точке доставки
+        // Движение к точке доставки
         yield return StartCoroutine(MoveToPosition(currentTask.ToPosition));
 
-        // 4. Сдаем продукт
+        // Доставка продукта
         yield return new WaitForSeconds(pickUpDelay);
         DeliverProduct();
 
-        // 5. Задание завершено
+        // Завершение задания
         CompleteTask();
     }
 
     private IEnumerator MoveToPosition(Vector3 targetPosition)
     {
-        while (Vector3.Distance(transform.position, targetPosition) > 0.1f)
+        // Для 2D используем только X координату для движения
+        Vector2 targetPos2D = new Vector2(targetPosition.x, transform.position.y);
+        
+        while (Vector2.Distance(transform.position, targetPos2D) > 0.1f)
         {
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, movementSpeed * Time.deltaTime);
-            transform.LookAt(targetPosition);
+            transform.position = Vector2.MoveTowards(
+                transform.position, 
+                targetPos2D, 
+                movementSpeed * Time.deltaTime
+            );
+            
+            // Поворот в сторону движения
+            if (targetPos2D.x > transform.position.x)
+                transform.localScale = new Vector3(1, 1, 1); // Смотрит вправо
+            else
+                transform.localScale = new Vector3(-1, 1, 1); // Смотрит влево
+                
             yield return null;
         }
     }
 
     private void PickUpProduct()
     {
-        // Здесь мы могли бы найти продукт в точке забора
-        // Для простоты создаем визуальный объект
-        carriedProduct = GameObject.CreatePrimitive(PrimitiveType.Sphere); // Заглушка
-        carriedProduct.transform.SetParent(transform);
-        carriedProduct.transform.localPosition = new Vector3(0, 1, 0); // Над головой
-        carriedProduct.name = $"Carried: {currentTask.ProductType}";
-
-        Debug.Log($"Логист забрал {currentTask.ProductType}");
+        carriedProductType = currentTask.ProductType;
+        
+        // Активируем спрайт переносимого продукта
+        if (carriedProductSprite != null)
+        {
+            carriedProductSprite.enabled = true;
+            carriedProductSprite.color = GetProductColor(carriedProductType);
+        }
+        
+        Debug.Log($"Логист взял {carriedProductType}");
     }
 
     private void DeliverProduct()
@@ -70,28 +88,41 @@ public class Logist1 : MonoBehaviour
         // Передаем продукт целевому объекту
         if (currentTask.TaskGiver is Machine1 machine)
         {
-            machine.ReceiveProduct(currentTask.ProductType, carriedProduct);
+            machine.ReceiveProduct(carriedProductType);
         }
         else if (currentTask.TaskGiver is ProductSellPoint1 sellPoint)
         {
-            sellPoint.ReceiveProduct(currentTask.ProductType, carriedProduct);
+            sellPoint.ReceiveProduct(carriedProductType);
         }
-        else if (currentTask.TaskGiver is ResourceWarehouse1 warehouse)
+
+        // Скрываем переносимый продукт
+        if (carriedProductSprite != null)
         {
-            // Для склада, вероятно, просто уничтожаем продукт
-            Destroy(carriedProduct);
+            carriedProductSprite.enabled = false;
         }
 
-        carriedProduct = null;
-
-        // Уведомляем того, кто дал задание, что оно завершено
+        // Уведомляем о завершении задания
         currentTask.TaskGiver.OnTaskCompleted(currentTask);
+        
+        carriedProductType = ProductType.None;
+    }
+
+    private Color GetProductColor(ProductType1 product)
+    {
+        return product switch
+        {
+            ProductType1.RawPipe => Color.gray,
+            ProductType1.CutPipe => Color.blue,
+            ProductType1.BentPipe => Color.red,
+            _ => Color.white
+        };
     }
 
     private void CompleteTask()
     {
         isWorking = false;
-        currentTask = null;
         LogisticsManager1.Instance.OnTaskCompleted(currentTask, this);
+        currentTask = null;
+        Debug.Log("Логист завершил задание и свободен");
     }
 }
