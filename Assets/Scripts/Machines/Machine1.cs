@@ -4,8 +4,9 @@ using System.Collections;
 public class Machine1 : MonoBehaviour, ITaskGiver1
 {
     [SerializeField] private MachineData1 machineData;
-    [SerializeField] private Transform inputSlot; // Визуальный слот для входного продукта
-    [SerializeField] private Transform outputSlot; // Визуальный слот для выходного продукта
+    [SerializeField] private Transform inputSlot;
+    [SerializeField] private Transform outputSlot;
+    [SerializeField] private GameObject processingParticles; // Визуальные эффекты для 2D
 
     private ProductType1 currentInputProduct;
     private GameObject currentInputVisual;
@@ -17,23 +18,30 @@ public class Machine1 : MonoBehaviour, ITaskGiver1
 
     public bool IsInputSlotFree() => currentInputVisual == null && !isProducing;
 
-    public void Initialize() { /* ... */ }
+    public void Initialize() 
+    {
+        Debug.Log($"Станок {machineData.machineName} инициализирован");
+    }
 
-    // Вызывается LogisticsManager, когда логист принес продукт
     public void ReceiveProduct(ProductType1 product, GameObject productVisual = null)
     {
-        if (!IsInputSlotFree() || !CanAcceptProduct(product)) return;
+        if (!IsInputSlotFree() || !CanAcceptProduct(product)) 
+        {
+            Debug.Log($"Станок {machineData.machineName} не может принять продукт");
+            return;
+        }
+
+        Debug.Log($"Станок {machineData.machineName} принял продукт {product}");
 
         currentInputProduct = product;
-        currentInputVisual = productVisual; // Логист "передает" визуальный объект станку
+        currentInputVisual = productVisual;
+        
         if (productVisual != null)
         {
-            // Размещаем визуал во входном слоте
             productVisual.transform.SetParent(inputSlot);
             productVisual.transform.localPosition = Vector3.zero;
         }
 
-        // Начинаем производство
         StartProduction();
     }
 
@@ -46,27 +54,29 @@ public class Machine1 : MonoBehaviour, ITaskGiver1
     private IEnumerator ProductionRoutine()
     {
         isProducing = true;
-        Debug.Log($"Станок {machineData.machineName} начал производство...");
+        
+        // Визуальный эффект производства
+        if (processingParticles != null)
+            processingParticles.SetActive(true);
 
-        // Производственный цикл
+        Debug.Log($"Производство {machineData.outputProductType}...");
         yield return new WaitForSeconds(machineData.productionTime);
 
-        // Производство завершено
-        Debug.Log($"Станок {machineData.machineName} произвел {machineData.outputProductType}");
+        // Завершение производства
+        if (processingParticles != null)
+            processingParticles.SetActive(false);
 
-        // Уничтожаем входной продукт (сырье переработано)
+        // Очистка входного продукта
         if (currentInputVisual != null)
         {
             Destroy(currentInputVisual);
             currentInputVisual = null;
         }
 
-        // Создаем выходной продукт
         CreateOutputProduct();
-
         isProducing = false;
 
-        // Если можно, сразу запускаем следующую операцию (если на входе есть сырье)
+        // Автоматически запускаем следующее производство если есть сырье
         if (currentInputVisual != null)
         {
             StartProduction();
@@ -75,26 +85,48 @@ public class Machine1 : MonoBehaviour, ITaskGiver1
 
     private void CreateOutputProduct()
     {
-        if (outputSlotFull) return;
+        if (outputSlotFull) 
+        {
+            Debug.Log("Выходной слот занят, производство остановлено");
+            return;
+        }
 
         // Создаем визуал выходного продукта
-        // (В реальной системе здесь может быть пул объектов или фабрика)
-        GameObject outputVisual = GameObject.CreatePrimitive(PrimitiveType.Cube); // Заглушка
+        GameObject outputVisual = GameObject.CreatePrimitive(PrimitiveType.Quad); // Quad для 2D
+        outputVisual.name = machineData.outputProductType.ToString();
         outputVisual.transform.SetParent(outputSlot);
         outputVisual.transform.localPosition = Vector3.zero;
-        outputVisual.name = machineData.outputProductType.ToString();
-        currentOutputVisual = outputVisual;
+        
+        // Добавляем спрайт рендерер для 2D
+        SpriteRenderer sr = outputVisual.GetComponent<SpriteRenderer>();
+        if (sr == null) sr = outputVisual.AddComponent<SpriteRenderer>();
+        
+        // Меняем цвет в зависимости от типа продукта
+        sr.color = GetProductColor(machineData.outputProductType);
+        
+        // Добавляем коллайдер для 2D
+        BoxCollider2D collider = outputVisual.GetComponent<BoxCollider2D>();
+        if (collider == null) outputVisual.AddComponent<BoxCollider2D>();
 
+        currentOutputVisual = outputVisual;
         outputSlotFull = true;
 
-        // Сообщаем LogisticsManager, что продукт готов к вывозу
         CreateTransportTaskForOutput();
+    }
+
+    private Color GetProductColor(ProductType1 product)
+    {
+        return product switch
+        {
+            ProductType1.RawPipe => Color.gray,
+            ProductType1.CutPipe => Color.blue,
+            ProductType1.BentPipe => Color.red,
+            _ => Color.white
+        };
     }
 
     private void CreateTransportTaskForOutput()
     {
-        // Находим следующего потребителя для нашего продукта
-        // (например, следующий станок в цепочке или точка продажи)
         ITaskGiver1 nextConsumer = FindNextConsumer(machineData.outputProductType);
         if (nextConsumer != null)
         {
@@ -102,6 +134,7 @@ public class Machine1 : MonoBehaviour, ITaskGiver1
             Vector3 toPos = nextConsumer.GetPosition();
             TransportTask1 task = new TransportTask1(machineData.outputProductType, fromPos, toPos, this);
             LogisticsManager1.Instance.AddTask(task);
+            Debug.Log($"Задание на доставку {machineData.outputProductType} создано");
         }
         else
         {
@@ -109,12 +142,11 @@ public class Machine1 : MonoBehaviour, ITaskGiver1
         }
     }
 
-    private ITaskGiver1 FindNextConsumer(ProductType1 product)
+    private ITaskGiver1 FindNextConsumer(ProductType product)
     {
-        // Упрощенная реализация. В реальной системе должен быть менеджер цепочек производства.
-        // Ищем любой станок, который принимает наш выходной продукт как входной.
-        Machine1[] allMachines = FindObjectsOfType<Machine1>();
-        foreach (Machine1 machine in allMachines)
+        // Ищем станки
+        Machine1[] machines = FindObjectsOfType<Machine1>();
+        foreach (Machine1 machine in machines)
         {
             if (machine != this && machine.CanAcceptProduct(product) && machine.IsInputSlotFree())
             {
@@ -122,7 +154,7 @@ public class Machine1 : MonoBehaviour, ITaskGiver1
             }
         }
 
-        // Если станков нет, может быть, это конечный продукт и его нужно отнести на склад/продажу?
+        // Ищем точку продажи
         ProductSellPoint1 sellPoint = FindObjectOfType<ProductSellPoint1>();
         if (sellPoint != null && sellPoint.CanAcceptProduct(product))
         {
@@ -132,18 +164,20 @@ public class Machine1 : MonoBehaviour, ITaskGiver1
         return null;
     }
 
-    // ITaskGiver1 implementation
+    // ITaskGiver implementation
     public void OnTaskCompleted(TransportTask1 task)
     {
-        // Это вызывается, когда логист забрал наш выходной продукт
         if (task.ProductType == machineData.outputProductType)
         {
-            // Освобождаем выходной слот
             outputSlotFull = false;
-            currentOutputVisual = null;
-            Debug.Log($"Продукт {task.ProductType} был забран со станка {machineData.machineName}");
+            if (currentOutputVisual != null)
+            {
+                Destroy(currentOutputVisual);
+                currentOutputVisual = null;
+            }
+            Debug.Log($"Продукт {task.ProductType} забран со станка");
         }
     }
 
-    public Vector3 GetPosition() => outputSlot.position; // Логист подходит к выходному слоту
+    public Vector3 GetPosition() => outputSlot != null ? outputSlot.position : transform.position;
 }
