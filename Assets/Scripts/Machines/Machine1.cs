@@ -142,7 +142,7 @@ public class Machine1 : MonoBehaviour, ITaskGiver1
         }
     }
 
-    private ITaskGiver1 FindNextConsumer(ProductType product)
+    private ITaskGiver1 FindNextConsumer(ProductType1 product)
     {
         // Ищем станки
         Machine1[] machines = FindObjectsOfType<Machine1>();

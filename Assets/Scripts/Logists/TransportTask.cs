@@ -12,7 +12,7 @@ public class TransportTask
 
     public TransportTask(Machine sourceMachine, Machine dest, ProductType type, int prio = 2)
     {
-        sourceMachine = sourceMachine;
+        this.sourceMachine = sourceMachine;
         destinationMachine = dest;
         productType = type;
         priority = prio;

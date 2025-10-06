@@ -104,7 +104,7 @@ public class Logist1 : MonoBehaviour
         // Уведомляем о завершении задания
         currentTask.TaskGiver.OnTaskCompleted(currentTask);
         
-        carriedProductType = ProductType.None;
+        carriedProductType = ProductType1.None;
     }
 
     private Color GetProductColor(ProductType1 product)

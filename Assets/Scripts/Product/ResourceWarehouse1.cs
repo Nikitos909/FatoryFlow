@@ -36,7 +36,7 @@ public class ResourceWarehouse1 : MonoBehaviour, ITaskGiver1
         {
             Vector3 fromPos = GetPosition();
             Vector3 toPos = targetMachine.GetPosition();
-            TransportTask1 task = new TransportTask(storedProductType, fromPos, toPos, this);
+            TransportTask1 task = new TransportTask1(storedProductType, fromPos, toPos, this);
             LogisticsManager1.Instance.AddTask(task);
             Debug.Log($"Задание создано: со склада в {targetMachine.name}");
         }
