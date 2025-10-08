@@ -82,4 +82,13 @@ public class ResourceWarehouse1 : MonoBehaviour, ITaskGiver1
     {
         return spawnPoint != null ? spawnPoint.position : transform.position;
     }
+
+    public void OnBuyButtonClick()
+    {
+        ResourceWarehouse1 warehouse = FindObjectOfType<ResourceWarehouse1>();
+        if (warehouse != null)
+            warehouse.BuyRawMaterial();
+        else
+            Debug.LogError("ResourceWarehouse не найден на сцене!");
+    }
 }
