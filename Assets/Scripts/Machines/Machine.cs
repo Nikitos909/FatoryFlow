@@ -177,21 +177,4 @@ public class Machine : MonoBehaviour
             Debug.LogWarning($"❌ {machineType.displayName} не может принять {product.type}");
         }
     }
-
-    public Product TakeOutputProduct()
-    {
-        Product product = currentOutput;
-        currentOutput = null;
-        return product;
-    }
-
-    public Vector3 GetOutputSlotPosition()
-    {
-        return outputSlot.position;
-    }
-    
-    public Vector3 GetWaitingPosition()
-    {
-        return waitingPoint != null ? waitingPoint.position : transform.position + Vector3.right * 2f;
-    }
 }
