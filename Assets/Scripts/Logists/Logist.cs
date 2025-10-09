@@ -174,17 +174,6 @@ public class Logist : MonoBehaviour
         }
     }
 
-    public void ReturnToSpawn()
-    {
-        if (!isMoving)
-        {
-            targetPosition = LogisticsManager.Instance.logistSpawnPoint.position;
-            isMoving = true;
-            isDelivering = false;
-            Debug.Log($"🏠 Логист {name} возвращается на базу");
-        }
-    }
-
     // Визуализация для отладки
     void OnDrawGizmos()
     {
