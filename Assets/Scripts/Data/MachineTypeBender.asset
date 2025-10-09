@@ -17,5 +17,5 @@ MonoBehaviour:
   inputProductType: 1
   outputProductType: 2
   defectiveProductType: 2
-  baseProductionTime: 5
+  baseProductionTime: 7
   baseDefectChance: 0.1
