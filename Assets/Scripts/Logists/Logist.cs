@@ -184,4 +184,15 @@ public class Logist : MonoBehaviour
             Gizmos.DrawWireSphere(transform.position, 0.3f);
         }
     }
+
+    public void ReturnToSpawn()
+    {
+        if (!isMoving)
+        {
+            targetPosition = LogisticsManager.Instance.logistSpawnPoint.position;
+            isMoving = true;
+            isDelivering = false;
+            Debug.Log($"🏠 Логист {name} возвращается на базу");
+        }
+    }
 }
