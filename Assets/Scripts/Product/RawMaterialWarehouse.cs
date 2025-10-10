@@ -24,17 +24,21 @@ public class RawMaterialWarehouse : MonoBehaviour
     // Вызывается по кнопке UI
     public bool BuyRawMaterial()
     {
-        if (EconomyManager.Instance.SpendMoney(rawPipePrice))
+        if (EconomyManager.Instance != null && EconomyManager.Instance.SpendMoney(rawPipePrice))
         {
-            SpawnRawMaterial();
-            CreateTransportTask();
-            return true;
+            Product newMaterial = SpawnRawMaterial();
+            if (newMaterial != null)
+            {
+                availableRawMaterials.Add(newMaterial);
+                CreateTransportTask();
+                return true;
+            }
         }
         else
         {
             Debug.Log("❌ Недостаточно денег для покупки сырья!");
-            return false;
         }
+        return false;
     }
     
     private void SpawnRawMaterial()
