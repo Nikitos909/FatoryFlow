@@ -5,6 +5,9 @@ public class RawMaterialWarehouse : MonoBehaviour
     public Transform spawnPoint;
     public int rawPipePrice = 50;
     public ProductType rawProductType = ProductType.RawPipe;
+
+    // Список для отслеживания созданного сырья
+    private List<Product> availableRawMaterials = new List<Product>();
     
     // Визуализация склада
     public SpriteRenderer warehouseSprite;
