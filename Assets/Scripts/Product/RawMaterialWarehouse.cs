@@ -98,7 +98,28 @@ public class RawMaterialWarehouse : MonoBehaviour
         }
         return null;
     }
-    
+
+    // Метод для удаления сырья из списка при его взятии
+    public void RemoveRawMaterial(Product product)
+    {
+        if (availableRawMaterials.Contains(product))
+        {
+            availableRawMaterials.Remove(product);
+        }
+    }
+
+    // Получить доступное сырье
+    public Product GetAvailableRawMaterial()
+    {
+        if (availableRawMaterials.Count > 0)
+        {
+            Product product = availableRawMaterials[0];
+            availableRawMaterials.RemoveAt(0);
+            return product;
+        }
+        return null;
+    }
+
     private Sprite CreateDefaultSprite()
     {
         Texture2D texture = new Texture2D(16, 16);
