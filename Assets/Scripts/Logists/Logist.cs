@@ -149,7 +149,7 @@ public class Logist : MonoBehaviour
         PickUpProduct();
     }
 
-    private void DeliverProduct()
+    p    private void DeliverProduct()
     {
         bool success = false;
 
@@ -167,30 +167,36 @@ public class Logist : MonoBehaviour
                 }
                 else
                 {
-                    Debug.LogWarning($"❌ Станок занят, оставляю продукт у себя");
-                    // Оставляем продукт у логиста - задача не завершена
-                    // Можно добавить логику повторной попытки
+                    Debug.LogWarning($"❌ Станок {currentTask.destinationMachine.machineType.displayName} занят, оставляю продукт у себя");
+                    // Ждем и пробуем снова
+                    Invoke("RetryDelivery", 1f);
+                    return;
                 }
             }
             else
             {
                 // Доставляем на склад продажи
-                carriedProduct.transform.SetParent(null);
-                carriedProduct.transform.position = targetPosition;
-                carriedProduct = null;
-                success = true;
-                Debug.Log($"💰 Логист {name} доставил на СКЛАД");
+                if (LogisticsManager.Instance != null && LogisticsManager.Instance.sellPoint != null)
+                {
+                    carriedProduct.transform.SetParent(null);
+                    carriedProduct.transform.position = LogisticsManager.Instance.sellPoint.transform.position;
+                    
+                    // Убедимся, что продукт активирован для продажи
+                    if (carriedProduct.GetComponent<Collider2D>() == null)
+                    {
+                        carriedProduct.gameObject.AddComponent<BoxCollider2D>().isTrigger = true;
+                    }
+                    
+                    carriedProduct = null;
+                    success = true;
+                    Debug.Log($"💰 Логист {name} доставил на СКЛАД");
+                }
             }
         }
 
         if (success)
         {
             CompleteTask();
-        }
-        else
-        {
-            // Если не удалось доставить - ждем немного и пробуем снова
-            Invoke("RetryDelivery", 1f);
         }
     }
 
@@ -199,13 +205,13 @@ public class Logist : MonoBehaviour
         DeliverProduct();
     }
 
-    private void CompleteTask()
+   private void CompleteTask()
     {
         isMoving = false;
         isDelivering = false;
         currentTask = null;
         carriedProduct = null;
-        
+       
         // Сообщаем менеджеру, что свободен
         if (LogisticsManager.Instance != null)
         {
@@ -213,7 +219,7 @@ public class Logist : MonoBehaviour
         }
     }
 
-    // Визуализация для отладки
+   // Визуализация для отладки
     void OnDrawGizmos()
     {
         if (isMoving)
@@ -228,10 +234,13 @@ public class Logist : MonoBehaviour
     {
         if (!isMoving)
         {
-            targetPosition = LogisticsManager.Instance.logistSpawnPoint.position;
-            isMoving = true;
-            isDelivering = false;
-            Debug.Log($"🏠 Логист {name} возвращается на базу");
+            if (LogisticsManager.Instance != null && LogisticsManager.Instance.logistSpawnPoint != null)
+            {
+                targetPosition = LogisticsManager.Instance.logistSpawnPoint.position;
+                isMoving = true;
+                isDelivering = false;
+                Debug.Log($"🏠 Логист {name} возвращается на базу");
+            }
         }
     }
 }
