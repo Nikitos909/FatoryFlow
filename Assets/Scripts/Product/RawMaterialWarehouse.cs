@@ -65,7 +65,7 @@ public class RawMaterialWarehouse : MonoBehaviour
     {
         // Находим первый станок, который принимает сырье
         Machine destinationMachine = FindMachineForRawMaterial();
-        
+       
         if (destinationMachine != null)
         {
             TransportTask task = new TransportTask(
@@ -74,8 +74,11 @@ public class RawMaterialWarehouse : MonoBehaviour
                 type: rawProductType,
                 prio: 1
             );
-            
-            LogisticsManager.Instance.AddTask(task);
+           
+            if (LogisticsManager.Instance != null)
+            {
+                LogisticsManager.Instance.AddTask(task);
+            }
         }
         else
         {
