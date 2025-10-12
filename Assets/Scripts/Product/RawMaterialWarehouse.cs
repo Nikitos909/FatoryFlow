@@ -131,4 +131,22 @@ public class RawMaterialWarehouse : MonoBehaviour
         texture.Apply();
         return Sprite.Create(texture, new Rect(0, 0, 16, 16), Vector2.one * 0.5f);
     }
+
+    public bool HasRawMaterialAvailable()
+    {
+        // Проверяем есть ли сырье на складе
+        Product[] rawProducts = FindObjectsOfType<Product>();
+        foreach (Product product in rawProducts)
+        {
+            if (product.type == ProductType.RawPipe && product.producedAt == null)
+            {
+                float distance = Vector3.Distance(product.transform.position, spawnPoint.position);
+                if (distance < 3f)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

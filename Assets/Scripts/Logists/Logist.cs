@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class Logist : MonoBehaviour
 {
@@ -10,11 +11,14 @@ public class Logist : MonoBehaviour
     private bool isMoving = false;
     private bool isDelivering = false;
     private Vector3 spawnPosition;
+    private bool isWaitingForProduct = false;
+    private int pickupAttempts = 0;
+    private const int MAX_PICKUP_ATTEMPTS = 3;
 
     void Start()
     {
         spawnPosition = transform.position;
-        
+
         // Регистрируем в LogisticsManager
         if (LogisticsManager.Instance != null)
         {
@@ -24,24 +28,25 @@ public class Logist : MonoBehaviour
 
     void Update()
     {
-        if (isMoving)
+        if (isMoving && !isWaitingForProduct)
         {
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
 
             if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
             {
-                if (!isDelivering) 
+                if (!isDelivering)
                     PickUpProduct();
-                else 
+                else
                     DeliverProduct();
             }
         }
     }
 
-   public void AssignTask(TransportTask task)
+    public void AssignTask(TransportTask task)
     {
         currentTask = task;
-       
+        pickupAttempts = 0;
+
         // Определяем начальную позицию для движения
         if (task.sourceMachine != null)
         {
@@ -51,7 +56,7 @@ public class Logist : MonoBehaviour
         else
         {
             // Едем на склад сырья
-            if (GameManager.Instance != null && GameManager.Instance.warehouse != null)
+            if (GameManager.Instance != null && GameManager.Instance.warehouse != null && GameManager.Instance.warehouse.spawnPoint != null)
             {
                 targetPosition = GameManager.Instance.warehouse.spawnPoint.position;
             }
@@ -62,21 +67,32 @@ public class Logist : MonoBehaviour
                 return;
             }
         }
-       
+
         isMoving = true;
         isDelivering = false;
-       
+        isWaitingForProduct = false;
+
         Debug.Log($"🚚 Логист {name} начал задачу: {task.productType}");
     }
 
     private void PickUpProduct()
     {
         Product productToPickup = null;
-       
+
         // Берем продукт со станка или со склада
         if (currentTask.sourceMachine != null)
         {
-            productToPickup = currentTask.sourceMachine.TakeOutputProduct();
+            // Проверяем, есть ли готовый продукт на станке
+            if (currentTask.sourceMachine.currentOutput != null)
+            {
+                productToPickup = currentTask.sourceMachine.TakeOutputProduct();
+            }
+            else
+            {
+                Debug.Log($"⏳ Логист {name}: продукт еще не готов на станке {currentTask.sourceMachine.machineType.displayName}");
+                WaitForProduct();
+                return;
+            }
         }
         else
         {
@@ -84,12 +100,13 @@ public class Logist : MonoBehaviour
             productToPickup = FindRawMaterialOnWarehouse();
         }
 
+        // ГЛАВНОЕ ИСПРАВЛЕНИЕ - проверяем что продукт найден
         if (productToPickup != null)
         {
             carriedProduct = productToPickup;
             carriedProduct.transform.SetParent(transform);
             carriedProduct.transform.localPosition = new Vector3(0, 0.5f, 0);
-           
+
             // Определяем куда везти
             if (currentTask.destinationMachine != null)
             {
@@ -109,21 +126,54 @@ public class Logist : MonoBehaviour
                     return;
                 }
             }
-           
+
             isDelivering = true;
+            isWaitingForProduct = false;
+            pickupAttempts = 0;
             Debug.Log($"📥 Логист {name} взял {carriedProduct.type}");
         }
         else
         {
-            Debug.LogWarning($"⚠️ Логист {name}: не нашел продукт для забора");
-            // Ждем немного и пробуем снова
-            Invoke("RetryPickup", 1f);
+            pickupAttempts++;
+            Debug.LogWarning($"⚠️ Логист {name}: не нашел продукт для забора (попытка {pickupAttempts}/{MAX_PICKUP_ATTEMPTS})");
+
+            if (pickupAttempts >= MAX_PICKUP_ATTEMPTS)
+            {
+                Debug.LogError($"❌ Логист {name}: не смог найти продукт после {MAX_PICKUP_ATTEMPTS} попыток, отменяем задачу");
+                CompleteTask();
+            }
+            else
+            {
+                WaitForProduct();
+            }
         }
     }
 
-        private Product FindRawMaterialOnWarehouse()
+    private void WaitForProduct()
     {
-        // Ищем сырье на складе
+        isWaitingForProduct = true;
+        Debug.Log($"⏰ Логист {name} ждет продукт...");
+
+        // Ждем 2 секунды и пробуем снова
+        StartCoroutine(RetryPickupAfterDelay(2f));
+    }
+
+    private IEnumerator RetryPickupAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        isWaitingForProduct = false;
+        PickUpProduct();
+    }
+
+    private Product FindRawMaterialOnWarehouse()
+    {
+        // Используем метод склада если доступен
+        if (GameManager.Instance != null && GameManager.Instance.warehouse != null)
+        {
+            return GameManager.Instance.warehouse.GetAvailableRawMaterial();
+        }
+
+        // Резервный поиск
         Product[] rawProducts = FindObjectsOfType<Product>();
         foreach (Product product in rawProducts)
         {
@@ -132,9 +182,9 @@ public class Logist : MonoBehaviour
                 // Проверяем, находится ли продукт в зоне склада
                 if (GameManager.Instance != null && GameManager.Instance.warehouse != null)
                 {
-                    float distance = Vector3.Distance(product.transform.position, 
+                    float distance = Vector3.Distance(product.transform.position,
                         GameManager.Instance.warehouse.spawnPoint.position);
-                    if (distance < 2f) // Продукт находится рядом со складом
+                    if (distance < 3f) // Продукт находится рядом со складом
                     {
                         return product;
                     }
@@ -142,11 +192,6 @@ public class Logist : MonoBehaviour
             }
         }
         return null;
-    }
-
-    private void RetryPickup()
-    {
-        PickUpProduct();
     }
 
     private void DeliverProduct()
@@ -167,9 +212,8 @@ public class Logist : MonoBehaviour
                 }
                 else
                 {
-                    Debug.LogWarning($"❌ Станок {currentTask.destinationMachine.machineType.displayName} занят, оставляю продукт у себя");
-                    // Ждем и пробуем снова
-                    Invoke("RetryDelivery", 1f);
+                    Debug.LogWarning($"❌ Станок {currentTask.destinationMachine.machineType.displayName} занят, жду...");
+                    StartCoroutine(RetryDeliveryAfterDelay(2f));
                     return;
                 }
             }
@@ -180,18 +224,24 @@ public class Logist : MonoBehaviour
                 {
                     carriedProduct.transform.SetParent(null);
                     carriedProduct.transform.position = LogisticsManager.Instance.sellPoint.transform.position;
-                    
+
                     // Убедимся, что продукт активирован для продажи
                     if (carriedProduct.GetComponent<Collider2D>() == null)
                     {
                         carriedProduct.gameObject.AddComponent<BoxCollider2D>().isTrigger = true;
                     }
-                    
+
                     carriedProduct = null;
                     success = true;
-                    Debug.Log($"💰 Логист {name} доставил на СКЛАД");
+                    Debug.Log($"💰 Логист {name} доставил на склад продажи");
                 }
             }
+        }
+        else
+        {
+            Debug.LogError($"❌ Логист {name}: пытается доставить null продукт!");
+            CompleteTask();
+            return;
         }
 
         if (success)
@@ -200,17 +250,20 @@ public class Logist : MonoBehaviour
         }
     }
 
-    private void RetryDelivery()
+    private IEnumerator RetryDeliveryAfterDelay(float delay)
     {
+        yield return new WaitForSeconds(delay);
         DeliverProduct();
     }
 
-   private void CompleteTask()
+    private void CompleteTask()
     {
         isMoving = false;
         isDelivering = false;
+        isWaitingForProduct = false;
         currentTask = null;
         carriedProduct = null;
+        pickupAttempts = 0;
        
         // Сообщаем менеджеру, что свободен
         if (LogisticsManager.Instance != null)
@@ -219,20 +272,26 @@ public class Logist : MonoBehaviour
         }
     }
 
-   // Визуализация для отладки
+    // Визуализация для отладки
     void OnDrawGizmos()
     {
         if (isMoving)
         {
             Gizmos.color = isDelivering ? Color.green : Color.yellow;
             Gizmos.DrawLine(transform.position, targetPosition);
-            Gizmos.DrawWireSphere(transform.position, 0.3f);
+            Gizmos.DrawWireSphere(targetPosition, 0.2f);
+        }
+        
+        if (isWaitingForProduct)
+        {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireSphere(transform.position, 0.5f);
         }
     }
 
     public void ReturnToSpawn()
     {
-        if (!isMoving)
+        if (!isMoving && !isWaitingForProduct)
         {
             if (LogisticsManager.Instance != null && LogisticsManager.Instance.logistSpawnPoint != null)
             {

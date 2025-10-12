@@ -93,6 +93,35 @@ public class LogisticsManager : MonoBehaviour
         }
     }
 
+    private bool IsTaskValid(TransportTask task)
+    {
+        // Для задач со складом сырья (source = null) - проверяем наличие сырья
+        if (task.sourceMachine == null)
+        {
+            // Проверяем, есть ли сырье на складе
+            if (GameManager.Instance != null && GameManager.Instance.warehouse != null)
+            {
+                return GameManager.Instance.warehouse.HasRawMaterialAvailable();
+            }
+            return false;
+        }
+
+        // Проверяем существование станка-источника
+        if (task.sourceMachine == null)
+            return false;
+
+        // Проверяем наличие продукта
+        if (task.sourceMachine.currentOutput == null)
+            return false;
+
+        // Для задач на продажу проверяем только наличие продукта
+        if (task.destinationMachine == null)
+            return true;
+
+        // Для обычных задач проверяем, что приемник может принять продукт
+        return task.destinationMachine.CanAcceptInput(task.productType);
+    }
+
     // ЛОГИСТ освободился
     public void OnLogistAvailable(Logist logist)
     {
@@ -110,28 +139,6 @@ public class LogisticsManager : MonoBehaviour
         {
             logist.ReturnToSpawn();
         }
-    }
-
-    private bool IsTaskValid(TransportTask task)
-    {
-        // Для задач со складом сырья (source = null) - всегда валидны
-        if (task.sourceMachine == null)
-            return true;
-            
-        // Проверяем существование станка-источника
-        if (task.sourceMachine == null)
-            return false;
-
-        // Проверяем наличие продукта
-        if (task.sourceMachine.currentOutput == null)
-            return false;
-
-        // Для задач на продажу проверяем только наличие продукта
-        if (task.destinationMachine == null)
-            return true;
-
-        // Для обычных задач проверяем, что приемник может принять продукт
-        return task.destinationMachine.CanAcceptInput(task.productType);
     }
 
     public bool HasTaskForMachine(Machine machine)
