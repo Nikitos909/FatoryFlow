@@ -149,7 +149,7 @@ public class Logist : MonoBehaviour
         PickUpProduct();
     }
 
-    p    private void DeliverProduct()
+    private void DeliverProduct()
     {
         bool success = false;
 
