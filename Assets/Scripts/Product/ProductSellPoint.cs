@@ -5,6 +5,8 @@ public class ProductSellPoint : MonoBehaviour
     void OnTriggerEnter2D(Collider2D other)
     {
         Product product = other.GetComponent<Product>();
+        Debug.Log($"{product}");
+        Debug.Log($"{product.type}");
         if (product != null && product.type == ProductType.FinalProduct)
         {
             // Продаем продукт
