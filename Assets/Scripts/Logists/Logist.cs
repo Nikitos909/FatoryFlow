@@ -77,6 +77,14 @@ public class Logist : MonoBehaviour
 
     private void PickUpProduct()
     {
+        // ДОБАВИТЬ ПРОВЕРКУ В НАЧАЛЕ МЕТОДА
+        if (currentTask == null)
+        {
+            Debug.LogError($"❌ Логист {name}: безработный!");
+            CompleteTask();
+            return;
+        }
+    
         Product productToPickup = null;
 
         // Берем продукт со станка или со склада
