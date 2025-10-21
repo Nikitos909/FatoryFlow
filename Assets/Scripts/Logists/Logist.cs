@@ -108,10 +108,11 @@ public class Logist : MonoBehaviour
             productToPickup = FindRawMaterialOnWarehouse();
         }
 
-        // ГЛАВНОЕ ИСПРАВЛЕНИЕ - проверяем что продукт найден
+        // Проверяем что продукт найден
         if (productToPickup != null)
         {
             carriedProduct = productToPickup;
+            carriedProduct.LockForTransport(this); // Включается блокировка коллайдера при захвате
             carriedProduct.transform.SetParent(transform);
             carriedProduct.transform.localPosition = new Vector3(0, 0.5f, 0);
 
