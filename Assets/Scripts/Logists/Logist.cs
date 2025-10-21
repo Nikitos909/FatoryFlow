@@ -232,6 +232,7 @@ public class Logist : MonoBehaviour
                 // Доставляем на склад продажи
                 if (LogisticsManager.Instance != null && LogisticsManager.Instance.sellPoint != null)
                 {
+                    carriedProduct.UnlockAfterDelivery();
                     carriedProduct.transform.SetParent(null);
                     carriedProduct.transform.position = LogisticsManager.Instance.sellPoint.transform.position;
 
