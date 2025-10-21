@@ -12,6 +12,12 @@ public class LogisticsManager : MonoBehaviour
     public ProductSellPoint sellPoint;
     public Transform logistSpawnPoint; // Начальная точка для логистов
 
+    // Для отложенных задач
+    private List<TransportTask> pendingTasks = new List<TransportTask>(); // Отложенные задачи
+    private float retryTimer = 0f;
+    private const float RETRY_INTERVAL = 2f; // Проверять каждые 2 секунды
+
+
     void Awake()
     {
         if (Instance == null)
@@ -50,13 +56,42 @@ public class LogisticsManager : MonoBehaviour
         }
     }
 
+    void FixedUpdate()
+    {
+        // Периодически проверяем отложенные задачи
+        retryTimer -= Time.deltaTime;
+        if (retryTimer <= 0f)
+        {
+            RetryPendingTasks();
+            retryTimer = RETRY_INTERVAL;
+        }
+    }
+
+    private void RetryPendingTasks()
+    {
+        if (pendingTasks.Count == 0) return;
+
+        // Пробуем добавить отложенные задачи обратно в очередь
+        for (int i = pendingTasks.Count - 1; i >= 0; i--)
+        {
+            TransportTask task = pendingTasks[i];
+            if (IsTaskValid(task))
+            {
+                pendingTasks.RemoveAt(i);
+                AddTask(task);
+                Debug.Log($"🔄 Повторно добавляем задачу: {task.productType}");
+            }
+        }
+    }
+
     // ДОБАВЛЕНИЕ задачи в очередь
     public void AddTask(TransportTask task)
     {
         taskQueue.Enqueue(task);
-        Debug.Log($"✅ Добавлена задача: {task.productType} -> {(task.destinationMachine != null ? task.destinationMachine.machineType.displayName : "СКЛАД")}");
-        
-        // Пытаемся сразу назначить задачу
+        Debug.Log($"✅ Добавлена задача: {task.productType} -> " +
+                 $"{(task.destinationMachine != null ? task.destinationMachine.machineType.displayName : "СКЛАД")} " +
+                 $"(очередь: {taskQueue.Count})");
+
         TryAssignTask();
     }
 
@@ -72,8 +107,15 @@ public class LogisticsManager : MonoBehaviour
         // Проверяем валидность задачи
         if (!IsTaskValid(task))
         {
-            Debug.Log($"🗑️ Задача невалидна, удаляем: {task.productType}");
+            Debug.Log($"⏳ Задача отложена: {task.productType} (станок занят)");
             taskQueue.Dequeue();
+
+            // Добавляем в отложенные вместо удаления
+            if (!pendingTasks.Contains(task))
+            {
+                pendingTasks.Add(task);
+            }
+
             TryAssignTask(); // Пробуем следующую задачу
             return;
         }
