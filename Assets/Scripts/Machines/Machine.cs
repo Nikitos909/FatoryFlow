@@ -12,6 +12,8 @@ public class Machine : MonoBehaviour
     public bool isWorking = false;
     public float workTimer = 0f;
 
+    private bool hasPendingOutput = false; 
+
     void Update()
     {
         // ЕСЛИ есть входной продукт И нет выходного И не работаем - начинаем производство
@@ -29,6 +31,12 @@ public class Machine : MonoBehaviour
         
         // ЕСЛИ есть готовый продукт на выходе - создаем задачу на перемещение
         if (currentOutput != null && !HasActiveTask())
+        {
+            CreateTransportTask();
+        }
+
+        // ЕСЛИ есть готовый продукт И нет активной задачи - создаем задачу
+        if (currentOutput != null && !HasActiveTask() && !hasPendingOutput)
         {
             CreateTransportTask();
         }
