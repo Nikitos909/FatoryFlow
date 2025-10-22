@@ -83,7 +83,7 @@ public class Machine : MonoBehaviour
     }
 
     private void CreateTransportTask()
-    {
+    {    
         // Определяем куда везти продукт
         Machine destinationMachine = null;
         
@@ -97,6 +97,7 @@ public class Machine : MonoBehaviour
                 prio: 1
             );
             LogisticsManager.Instance.AddTask(task);
+            hasPendingOutput = true;
         }
         else
         {
@@ -112,6 +113,7 @@ public class Machine : MonoBehaviour
                     prio: 2
                 );
                 LogisticsManager.Instance.AddTask(task);
+                hasPendingOutput = true;
             }
             else
             {
