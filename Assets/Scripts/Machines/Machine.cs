@@ -100,7 +100,7 @@ public class Machine : MonoBehaviour
             hasPendingOutput = true;
         }
         else
-        {
+        {        
             // Для промежуточных продуктов ищем следующий станок
             destinationMachine = FindNextMachine();
             
@@ -118,6 +118,31 @@ public class Machine : MonoBehaviour
             else
             {
                 Debug.Log($"⏳ {machineType.displayName} ждет освобождения станка-приемника");
+                // Запускаем корутину для повторной проверки
+                StartCoroutine(RetryTransportTaskCreation());
+
+            }
+        }
+    }
+
+    private IEnumerator RetryTransportTaskCreation()
+    {
+        float waitTime = 2f;
+        while (currentOutput != null && !HasActiveTask())
+        {
+            yield return new WaitForSeconds(waitTime);
+            
+            Machine destinationMachine = FindNextMachine();
+            if (destinationMachine != null && destinationMachine.CanAcceptInput(machineType.outputProductType))
+            {
+                TransportTask task = new TransportTask(this, destinationMachine, machineType.outputProductType, 2);
+                LogisticsManager.Instance.AddTask(task);
+                hasPendingOutput = true;
+                yield break;
+            }
+            else
+            {
+                Debug.Log($"🔄 {machineType.displayName} повторно проверяет приемник...");
             }
         }
     }
