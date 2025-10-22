@@ -28,12 +28,6 @@ public class Machine : MonoBehaviour
             if (workTimer <= 0f) 
                 FinishProduction();
         }
-        
-        // ЕСЛИ есть готовый продукт на выходе - создаем задачу на перемещение
-        if (currentOutput != null && !HasActiveTask())
-        {
-            CreateTransportTask();
-        }
 
         // ЕСЛИ есть готовый продукт И нет активной задачи - создаем задачу
         if (currentOutput != null && !HasActiveTask() && !hasPendingOutput)
