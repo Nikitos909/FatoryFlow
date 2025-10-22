@@ -223,4 +223,22 @@ public class Machine : MonoBehaviour
     {
         return waitingPoint != null ? waitingPoint.position : transform.position + Vector3.right * 2f;
     }
+
+     public Product TakeOutputProduct()
+    {
+        Product product = currentOutput;
+        currentOutput = null;
+        hasPendingOutput = false; // Сбрасываем флаг при взятии продукта
+        return product;
+    }
+
+    // Добавляем метод для уведомления о освобождении
+    public void OnInputProcessed()
+    {
+        // Уведомляем менеджер логистики о том, что станок освободился
+        if (LogisticsManager.Instance != null)
+        {
+            LogisticsManager.Instance.OnMachineBecameAvailable(this);
+        }
+    }
 }
