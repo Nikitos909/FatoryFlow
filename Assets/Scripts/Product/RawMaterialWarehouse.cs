@@ -7,6 +7,8 @@ public class RawMaterialWarehouse : MonoBehaviour
     public int rawPipePrice = 50;
     public ProductType rawProductType = ProductType.RawPipe;
 
+    private List<TransportTask> pendingRawMaterialTasks = new List<TransportTask>();
+
     // Список для отслеживания созданного сырья
     private List<Product> availableRawMaterials = new List<Product>();
     
@@ -85,7 +87,35 @@ public class RawMaterialWarehouse : MonoBehaviour
         else
         {
             Debug.LogWarning("❌ Не найден свободный станок для сырья!");
+            // Создаем задачу и добавляем в отложенные
+            TransportTask task = new TransportTask(null, null, rawProductType, 1);
+            StartCoroutine(RetryRawMaterialTask(task));
         }
+    }
+
+    private IEnumerator RetryRawMaterialTask(TransportTask task)
+    {
+        float waitTime = 3f;
+        int maxAttempts = 10;
+        int attempts = 0;
+
+        while (attempts < maxAttempts)
+        {
+            yield return new WaitForSeconds(waitTime);
+            
+            Machine destinationMachine = FindMachineForRawMaterial();
+            if (destinationMachine != null)
+            {
+                task.destinationMachine = destinationMachine;
+                LogisticsManager.Instance.AddTask(task);
+                yield break;
+            }
+            
+            attempts++;
+            Debug.Log($"🔄 Склад: повторная попытка найти станок ({attempts}/{maxAttempts})");
+        }
+        
+        Debug.LogError("❌ Склад: не удалось найти станок после всех попыток!");
     }
     
     private Machine FindMachineForRawMaterial()
