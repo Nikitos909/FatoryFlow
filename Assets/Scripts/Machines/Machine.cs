@@ -87,7 +87,7 @@ public class Machine : MonoBehaviour
         // Определяем куда везти продукт
         Machine destinationMachine = null;
         
-        // Если это ФИНАЛЬНЫЙ продукт - везем на склад продажи
+        // Если это ФИНАЛЬНЫЙ продукт - везем на склад продажи 
         if (machineType.outputProductType == ProductType.FinalProduct)
         {
             TransportTask task = new TransportTask(
