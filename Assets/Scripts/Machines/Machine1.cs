@@ -12,8 +12,6 @@ public class Machine : MonoBehaviour
     public bool isWorking = false;
     public float workTimer = 0f;
 
-    private bool hasPendingOutput = false; 
-
     void Update()
     {
         // ЕСЛИ есть входной продукт И нет выходного И не работаем - начинаем производство
