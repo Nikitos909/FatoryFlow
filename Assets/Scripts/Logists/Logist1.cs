@@ -8,12 +8,8 @@ public class Logist1 : MonoBehaviour
 
     private Vector3 targetPosition;
     private TransportTask currentTask;
-    private bool isMoving = false;
-    private bool isDelivering = false;
+    private bool isEmployed = false;
     private Vector3 spawnPosition;
-    private bool isWaitingForProduct = false;
-    private int pickupAttempts = 0;
-    private const int MAX_PICKUP_ATTEMPTS = 3;
 
     void Start()
     {
