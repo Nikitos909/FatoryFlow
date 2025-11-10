@@ -4,16 +4,12 @@ public class Product : MonoBehaviour
 {
     public ProductType type;
     public Machine producedAt;
-    public bool isDefective;
     public int baseValue = 50;
-    public bool isLockedForTransport = false; 
 
-    public void Initialize(ProductType productType, Machine machine, bool defective = false)
+    public void Initialize(ProductType productType, Machine machine)
     {
         type = productType;
         producedAt = machine;
-        isDefective = defective;
-        isLockedForTransport = false; 
 
         // Устанавливаем стоимость в зависимости от типа
         baseValue = type switch
