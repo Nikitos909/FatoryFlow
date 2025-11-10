@@ -45,7 +45,7 @@ public class Machine : MonoBehaviour
     {
         isWorking = false;
 
-        CreateOutputProduct(outputType, isDefective);
+        CreateOutputProduct(outputType);
         
         // Уничтожаем входной продукт
         if (currentInput != null)
@@ -57,4 +57,66 @@ public class Machine : MonoBehaviour
         Debug.Log($"{machineType.displayName} произвел {outputType}");
     }
 
+    private void CreateOutputProduct(ProductType type)
+    {
+        GameObject productObj = new GameObject($"Product_{type}");
+        productObj.transform.position = outputSlot.position;
+
+        Product product = productObj.AddComponent<Product>();
+        product.Initialize(type, this);
+
+        SpriteRenderer sr = productObj.AddComponent<SpriteRenderer>();
+        sr.sprite = CreateDefaultSprite();
+        sr.color = GetProductColor(type);
+        sr.sortingOrder = 1;
+
+        // Добавляем коллайдер
+        BoxCollider2D collider = productObj.AddComponent<BoxCollider2D>();
+        collider.isTrigger = true;
+
+        currentOutput = product;
+    }
+
+    private void CreateTransportTask()
+    {    
+        // Определяем куда везти продукт
+        Machine destinationMachine = null;
+        
+        // Если это ФИНАЛЬНЫЙ продукт - везем на склад продажи 
+        if (machineType.outputProductType == ProductType.FinalProduct)
+        {
+            TransportTask task = new TransportTask(
+                sourceMachine: this,
+                dest: null, // null = склад продажи
+                type: machineType.outputProductType,
+                prio: 1
+            );
+            LogisticsManager.Instance.AddTask(task);
+            hasPendingOutput = true;
+        }
+        else
+        {        
+            // Для промежуточных продуктов ищем следующий станок
+            destinationMachine = FindNextMachine();
+            
+            if (destinationMachine != null && destinationMachine.CanAcceptInput(machineType.outputProductType))
+            {
+                TransportTask task = new TransportTask(
+                    sourceMachine: this,
+                    dest: destinationMachine,
+                    type: machineType.outputProductType,
+                    prio: 2
+                );
+                LogisticsManager.Instance.AddTask(task);
+                hasPendingOutput = true;
+            }
+            else
+            {
+                Debug.Log($"⏳ {machineType.displayName} ждет освобождения станка-приемника");
+                // Запускаем корутину для повторной проверки
+                StartCoroutine(RetryTransportTaskCreation());
+
+            }
+        }
+    }
 }
