@@ -45,9 +45,6 @@ public class Machine : MonoBehaviour
     {
         isWorking = false;
 
-        bool isDefective = Random.value < machineType.baseDefectChance;
-        ProductType outputType = isDefective ? machineType.defectiveProductType : machineType.outputProductType;
-
         CreateOutputProduct(outputType, isDefective);
         
         // Уничтожаем входной продукт
