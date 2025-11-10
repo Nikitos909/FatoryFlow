@@ -33,3 +33,31 @@ public class Machine : MonoBehaviour
             CreateTransportTask();
         }
     }
+
+    public void StartProduction()
+    {
+        isWorking = true;
+        workTimer = machineType.baseProductionTime;
+        Debug.Log($"{machineType.displayName} начал работу над {currentInput.type}");
+    }
+
+    private void FinishProduction()
+    {
+        isWorking = false;
+
+        bool isDefective = Random.value < machineType.baseDefectChance;
+        ProductType outputType = isDefective ? machineType.defectiveProductType : machineType.outputProductType;
+
+        CreateOutputProduct(outputType, isDefective);
+        
+        // Уничтожаем входной продукт
+        if (currentInput != null)
+        {
+            Destroy(currentInput.gameObject);
+            currentInput = null;
+        }
+
+        Debug.Log($"{machineType.displayName} произвел {outputType}");
+    }
+
+}
