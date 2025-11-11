@@ -4,6 +4,7 @@ using UnityEngine.AddressableAssets;
 public class Machine1 : MonoBehaviour
 {
     public MachineTypeSO machineType;
+    public GameObject outputProduct;
     public Transform inputSlot;
     public Transform outputSlot;
     public Transform waitingPoint; // Точка ожидания для логиста
@@ -59,27 +60,29 @@ public class Machine1 : MonoBehaviour
     }
 
     private void CreateOutputProduct(ProductType type)
-{
-    // Загружаем префаб из Resources (или используем ссылку, если она уже есть)
-    GameObject productPrefab = Resources.Load<GameObject>($"Prefabs/Product_{type}");
-
-    // Создаем объект из префаба
-    GameObject productObj = Instantiate(productPrefab, outputSlot.position, Quaternion.identity);
-    productObj.name = $"Product_{type}";
-
-    // Получаем компонент Product
-    Product product = productObj.GetComponent<Product>();
-    if (product != null)
     {
-        product.Initialize(type, this);
-        currentOutput = product;
+        // Загружаем префаб из Resources (или используем ссылку, если она уже есть)
+        GameObject productPrefab = Resources.Load<GameObject>($"Prefabs/Product_{type}");
+    
+        // Создаем объект из префаба
+        GameObject productObj = Instantiate(productPrefab, outputSlot.position, Quaternion.identity);
+        productObj.name = $"Product_{type}";
+    
+        // Получаем компонент Product
+        Product product = productObj.GetComponent<Product>();
+        if (product != null)
+        {
+            product.Initialize(type, this);
+            currentOutput = product;
+        }
+
+        //Addressables.InstantiateAsync("SektorOneChamferA", CNCMachine.positionCNCMachine,
+       //         Quaternion.Euler(CNCMachine.angelCNCMachine.x, CNCMachine.angelCNCMachine.y + 90f, CNCMachine.angelCNCMachine.z)).Completed += handle =>
+       //         {
+       //             CNCMachine.details.Add(handle.Result);
+      //          };
+      //      Addressables.ReleaseInstance(lastSektor);
     }
-    else
-    {
-        Debug.LogError($"Product component not found on prefab for {type}");
-        Destroy(productObj);
-    }
-}
 
 
     private void CreateOutputProduct(ProductType type)
