@@ -117,7 +117,6 @@ public class Machine1 : MonoBehaviour
                 prio: 1
             );
             LogisticsManager.Instance.AddTask(task);
-            hasPendingOutput = true;
         }
         else
         {        
@@ -133,7 +132,6 @@ public class Machine1 : MonoBehaviour
                     prio: 2
                 );
                 LogisticsManager.Instance.AddTask(task);
-                hasPendingOutput = true;
             }
             else
             {
