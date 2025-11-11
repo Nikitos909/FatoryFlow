@@ -28,7 +28,7 @@ public class Machine1 : MonoBehaviour
         }
 
         // ЕСЛИ есть готовый продукт И нет активной задачи - создаем задачу
-        if (currentOutput != null && !HasActiveTask() && !hasPendingOutput)
+        if (currentOutput != null && !HasActiveTask())
         {
             CreateTransportTask();
         }
@@ -118,5 +118,11 @@ public class Machine1 : MonoBehaviour
 
             }
         }
+    }
+
+    private bool HasActiveTask()
+    {
+        // Проверяем, есть ли уже задача для этого станка
+        return LogisticsManager.Instance.HasTaskForMachine(this);
     }
 }
