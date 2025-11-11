@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 public class Machine1 : MonoBehaviour
 {
@@ -56,6 +57,30 @@ public class Machine1 : MonoBehaviour
 
         Debug.Log($"{machineType.displayName} произвел {outputType}");
     }
+
+    private void CreateOutputProduct(ProductType type)
+{
+    // Загружаем префаб из Resources (или используем ссылку, если она уже есть)
+    GameObject productPrefab = Resources.Load<GameObject>($"Prefabs/Product_{type}");
+
+    // Создаем объект из префаба
+    GameObject productObj = Instantiate(productPrefab, outputSlot.position, Quaternion.identity);
+    productObj.name = $"Product_{type}";
+
+    // Получаем компонент Product
+    Product product = productObj.GetComponent<Product>();
+    if (product != null)
+    {
+        product.Initialize(type, this);
+        currentOutput = product;
+    }
+    else
+    {
+        Debug.LogError($"Product component not found on prefab for {type}");
+        Destroy(productObj);
+    }
+}
+
 
     private void CreateOutputProduct(ProductType type)
     {
