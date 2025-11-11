@@ -60,12 +60,9 @@ public class Machine1 : MonoBehaviour
     }
 
     private void CreateOutputProduct(ProductType type)
-    {
-        // Загружаем префаб из Resources (или используем ссылку, если она уже есть)
-        GameObject productPrefab = Resources.Load<GameObject>($"Prefabs/Product_{type}");
-    
+    {    
         // Создаем объект из префаба
-        GameObject productObj = Instantiate(productPrefab, outputSlot.position, Quaternion.identity);
+        GameObject productObj = Instantiate(outputProduct, outputSlot.position, Quaternion.identity);
         productObj.name = $"Product_{type}";
     
         // Получаем компонент Product
