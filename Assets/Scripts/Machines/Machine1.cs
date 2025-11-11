@@ -58,7 +58,7 @@ public class Machine1 : MonoBehaviour
 
         Debug.Log($"{machineType.displayName} произвел {outputType}");
     }
-
+//=======================================
     private void CreateOutputProduct(ProductType type)
     {    
         // Создаем объект из префаба
@@ -81,7 +81,40 @@ public class Machine1 : MonoBehaviour
       //      Addressables.ReleaseInstance(lastSektor);
     }
 
+    [SerializeField] private GameObject[] productPrefabs; // Настройте в инспекторе
 
+private void CreateOutputProduct(ProductType type)
+{
+    GameObject prefab = GetPrefabByType(type);
+    
+    if (prefab == null)
+    {
+        Debug.LogError($"Prefab for {type} not found!");
+        return;
+    }
+
+    GameObject productObj = Instantiate(prefab, outputSlot.position, Quaternion.identity);
+    productObj.name = $"Product_{type}";
+
+    Product product = productObj.GetComponent<Product>();
+    product.Initialize(type, this);
+    
+    currentOutput = product;
+}
+
+private GameObject GetPrefabByType(ProductType type)
+{
+    foreach (var prefab in productPrefabs)
+    {
+        Product product = prefab.GetComponent<Product>();
+        if (product != null && product.Type == type)
+            return prefab;
+    }
+    return null;
+}
+
+
+//==================================================
     private void CreateOutputProduct(ProductType type)
     {
         GameObject productObj = new GameObject($"Product_{type}");
