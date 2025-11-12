@@ -57,7 +57,7 @@ public class Machine1 : MonoBehaviour
 
         Debug.Log($"{machineType.displayName} произвел {outputType}");
     }
-//=======================================
+
     private void CreateOutputProduct(ProductType type)
     {
         if (machineType.outputProductPrefab == null)
@@ -66,7 +66,7 @@ public class Machine1 : MonoBehaviour
             return;
         }
         // Создаем объект из префаба
-        GameObject productObj = Instantiate(outputProduct, outputSlot.position, Quaternion.identity);
+        GameObject productObj = Instantiate(machineType.outputProductPrefab, outputSlot.position, Quaternion.identity);
         productObj.name = $"Product_{type}";
     
         // Получаем компонент Product
@@ -76,67 +76,6 @@ public class Machine1 : MonoBehaviour
             product.Initialize(type, this);
             currentOutput = product;
         }
-
-        //Addressables.InstantiateAsync("SektorOneChamferA", CNCMachine.positionCNCMachine,
-       //         Quaternion.Euler(CNCMachine.angelCNCMachine.x, CNCMachine.angelCNCMachine.y + 90f, CNCMachine.angelCNCMachine.z)).Completed += handle =>
-       //         {
-       //             CNCMachine.details.Add(handle.Result);
-      //          };
-      //      Addressables.ReleaseInstance(lastSektor);
-    }
-
-    [SerializeField] private GameObject[] productPrefabs; // Настройте в инспекторе
-
-private void CreateOutputProduct(ProductType type)
-{
-    GameObject prefab = GetPrefabByType(type);
-    
-    if (prefab == null)
-    {
-        Debug.LogError($"Prefab for {type} not found!");
-        return;
-    }
-
-    GameObject productObj = Instantiate(prefab, outputSlot.position, Quaternion.identity);
-    productObj.name = $"Product_{type}";
-
-    Product product = productObj.GetComponent<Product>();
-    product.Initialize(type, this);
-    
-    currentOutput = product;
-}
-
-private GameObject GetPrefabByType(ProductType type)
-{
-    foreach (var prefab in productPrefabs)
-    {
-        Product product = prefab.GetComponent<Product>();
-        if (product != null && product.Type == type)
-            return prefab;
-    }
-    return null;
-}
-
-
-//==================================================
-    private void CreateOutputProduct(ProductType type)
-    {
-        GameObject productObj = new GameObject($"Product_{type}");
-        productObj.transform.position = outputSlot.position;
-
-        Product product = productObj.AddComponent<Product>();
-        product.Initialize(type, this);
-
-        SpriteRenderer sr = productObj.AddComponent<SpriteRenderer>();
-        sr.sprite = CreateDefaultSprite();
-        sr.color = GetProductColor(type);
-        sr.sortingOrder = 1;
-
-        // Добавляем коллайдер
-        BoxCollider2D collider = productObj.AddComponent<BoxCollider2D>();
-        collider.isTrigger = true;
-
-        currentOutput = product;
     }
 
     private void CreateTransportTask()
