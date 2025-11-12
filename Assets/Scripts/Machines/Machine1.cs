@@ -59,7 +59,12 @@ public class Machine1 : MonoBehaviour
     }
 //=======================================
     private void CreateOutputProduct(ProductType type)
-    {    
+    {
+        if (machineType.outputProductPrefab == null)
+        {
+            Debug.LogError($"Output prefab not set in {machineType.displayName}!");
+            return;
+        }
         // Создаем объект из префаба
         GameObject productObj = Instantiate(outputProduct, outputSlot.position, Quaternion.identity);
         productObj.name = $"Product_{type}";
