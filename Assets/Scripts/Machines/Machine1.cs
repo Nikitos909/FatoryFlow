@@ -102,7 +102,7 @@ public class Machine1 : MonoBehaviour
             {
                 TransportTask task = new TransportTask(
                     sourceMachine: this,
-                    //dest: destinationMachine,
+                    dest: destinationMachine,
                     type: machineType.outputProductType,
                     prio: 2
                 );
