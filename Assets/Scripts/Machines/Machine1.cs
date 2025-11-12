@@ -46,7 +46,7 @@ public class Machine1 : MonoBehaviour
     {
         isWorking = false;
 
-        CreateOutputProduct(outputType);
+        CreateOutputProduct(machineType.outputType);
         
         // Уничтожаем входной продукт
         if (currentInput != null)
@@ -55,7 +55,7 @@ public class Machine1 : MonoBehaviour
             currentInput = null;
         }
 
-        Debug.Log($"{machineType.displayName} произвел {outputType}");
+        Debug.Log($"{machineType.displayName} произвел {machineType.outputType}");
     }
 
     private void CreateOutputProduct(ProductType type)
