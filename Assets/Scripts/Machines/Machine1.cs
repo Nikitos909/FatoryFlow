@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 public class Machine1 : MonoBehaviour
 {
@@ -46,7 +45,7 @@ public class Machine1 : MonoBehaviour
     {
         isWorking = false;
 
-        CreateOutputProduct(machineType.outputType);
+        CreateOutputProduct(machineType.outputProductType);
         
         // Уничтожаем входной продукт
         if (currentInput != null)
@@ -55,7 +54,7 @@ public class Machine1 : MonoBehaviour
             currentInput = null;
         }
 
-        Debug.Log($"{machineType.displayName} произвел {machineType.outputType}");
+        Debug.Log($"{machineType.displayName} произвел {machineType.outputProductType}");
     }
 
     private void CreateOutputProduct(ProductType type)
@@ -97,13 +96,13 @@ public class Machine1 : MonoBehaviour
         else
         {        
             // Для промежуточных продуктов ищем следующий станок
-            destinationMachine = FindNextMachine();
+            //destinationMachine = FindNextMachine();
             
             if (destinationMachine != null && destinationMachine.CanAcceptInput(machineType.outputProductType))
             {
                 TransportTask task = new TransportTask(
                     sourceMachine: this,
-                    dest: destinationMachine,
+                    //dest: destinationMachine,
                     type: machineType.outputProductType,
                     prio: 2
                 );
@@ -113,7 +112,7 @@ public class Machine1 : MonoBehaviour
             {
                 Debug.Log($"⏳ {machineType.displayName} ждет освобождения станка-приемника");
                 // Запускаем корутину для повторной проверки
-                StartCoroutine(RetryTransportTaskCreation());
+                //StartCoroutine(RetryTransportTaskCreation());
 
             }
         }
