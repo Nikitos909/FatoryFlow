@@ -4,7 +4,6 @@ using UnityEngine.AddressableAssets;
 public class Machine1 : MonoBehaviour
 {
     public MachineTypeSO machineType;
-    public GameObject outputProduct;
     public Transform inputSlot;
     public Transform outputSlot;
     public Transform waitingPoint; // Точка ожидания для логиста
