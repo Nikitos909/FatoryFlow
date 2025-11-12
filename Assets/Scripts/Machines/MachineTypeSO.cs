@@ -10,4 +10,9 @@ public class MachineTypeSO : ScriptableObject
     public ProductType defectiveProductType;
     public float baseProductionTime = 5f;
     [Range(0f, 1f)] public float baseDefectChance = 0.1f;
+
+    // Добавьте ссылки на префабы
+    public GameObject outputProductPrefab;
+    public GameObject defectiveProductPrefab;
+
 }
