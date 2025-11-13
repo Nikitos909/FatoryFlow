@@ -123,4 +123,9 @@ public class Machine1 : MonoBehaviour
         // Проверяем, есть ли уже задача для этого станка
         return LogisticsManager.Instance.HasTaskForMachine(this);
     }
+
+    public bool CanAcceptInput(ProductType type)
+    {
+        return !isWorking && currentInput == null && type == machineType.inputProductType;
+    }
 }
