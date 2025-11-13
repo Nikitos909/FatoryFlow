@@ -124,6 +124,18 @@ public class Machine1 : MonoBehaviour
         return LogisticsManager.Instance.HasTaskForMachine(this);
     }
 
+    private Machine FindNextMachine()
+    {
+        foreach (Machine machine in FindObjectsOfType<Machine>())
+        {
+            if (machine.machineType.inputProductType == machineType.outputProductType)
+            {
+                return machine;
+            }
+        }
+        return null;
+    }
+
     public bool CanAcceptInput(ProductType type)
     {
         return !isWorking && currentInput == null && type == machineType.inputProductType;
