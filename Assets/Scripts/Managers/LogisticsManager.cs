@@ -20,12 +20,10 @@ public class LogisticsManager : MonoBehaviour
 
     void Awake()
     {
-        if (Instance == null)
-        {
+        if (Instance == null) {
             Instance = this;
         }
-        else
-        {
+        else {
             Destroy(gameObject);
         }
     }
