@@ -46,12 +46,6 @@ public class LogisticsManager : MonoBehaviour
         availableLogists = new List<Logist>(allLogists);
         
         Debug.Log($"🚚 Инициализировано логистов: {allLogists.Count}");
-        
-        // Отправляем всех логистов на стартовую позицию
-        foreach (Logist logist in allLogists)
-        {
-            logist.ReturnToSpawn();
-        }
     }
 
     void FixedUpdate()
