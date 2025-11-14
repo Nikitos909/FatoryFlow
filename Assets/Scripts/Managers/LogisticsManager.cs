@@ -12,12 +12,6 @@ public class LogisticsManager : MonoBehaviour
     public ProductSellPoint sellPoint;
     public Transform logistSpawnPoint; // Начальная точка для логистов
 
-    // Для отложенных задач
-    private List<TransportTask> pendingTasks = new List<TransportTask>(); // Отложенные задачи
-    private float retryTimer = 0f;
-    private const float RETRY_INTERVAL = 2f; // Проверять каждые 2 секунды
-
-
     void Awake()
     {
         if (Instance == null)
