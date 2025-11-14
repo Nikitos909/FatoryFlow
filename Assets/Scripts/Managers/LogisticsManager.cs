@@ -101,13 +101,6 @@ public class LogisticsManager : MonoBehaviour
         }
     }
 
-    // Добавляем метод для принудительной проверки при освобождении станка
-    public void OnMachineBecameAvailable(Machine machine)
-    {
-        Debug.Log($"🔄 Станок {machine.machineType.displayName} освободился, проверяем отложенные задачи");
-        RetryPendingTasks();
-    }
-
     private bool IsTaskValid(TransportTask task)
     {
         // Для задач со складом сырья (source = null) - проверяем наличие сырья
