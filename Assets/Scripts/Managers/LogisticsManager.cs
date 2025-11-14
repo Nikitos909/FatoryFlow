@@ -76,12 +76,6 @@ public class LogisticsManager : MonoBehaviour
             Debug.Log($"⏳ Задача отложена: {task.productType} (станок занят)");
             taskQueue.Dequeue();
 
-            // Добавляем в отложенные вместо удаления
-            if (!pendingTasks.Contains(task))
-            {
-                pendingTasks.Add(task);
-            }
-
             TryAssignTask(); // Пробуем следующую задачу
             return;
         }
