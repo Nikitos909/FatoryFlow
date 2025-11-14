@@ -50,34 +50,6 @@ public class LogisticsManager : MonoBehaviour
         Debug.Log($"🚚 Инициализировано логистов: {allLogists.Count}");
     }
 
-    void FixedUpdate()
-    {
-        // Периодически проверяем отложенные задачи
-        retryTimer -= Time.deltaTime;
-        if (retryTimer <= 0f)
-        {
-            RetryPendingTasks();
-            retryTimer = RETRY_INTERVAL;
-        }
-    }
-
-    private void RetryPendingTasks()
-    {
-        if (pendingTasks.Count == 0) return;
-
-        // Пробуем добавить отложенные задачи обратно в очередь
-        for (int i = pendingTasks.Count - 1; i >= 0; i--)
-        {
-            TransportTask task = pendingTasks[i];
-            if (IsTaskValid(task))
-            {
-                pendingTasks.RemoveAt(i);
-                AddTask(task);
-                Debug.Log($"🔄 Повторно добавляем задачу: {task.productType}");
-            }
-        }
-    }
-
     // ДОБАВЛЕНИЕ задачи в очередь
     public void AddTask(TransportTask task)
     {
