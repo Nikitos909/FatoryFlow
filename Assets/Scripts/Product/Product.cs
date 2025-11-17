@@ -3,10 +3,11 @@ using UnityEngine;
 public class Product : MonoBehaviour
 {
     public ProductType type;
-    public Machine producedAt;
+    public Machine1 producedAt;
     public int baseValue = 50;
+    public bool isLockedForTransport = false;
 
-    public void Initialize(ProductType productType, Machine machine)
+    public void Initialize(ProductType productType, Machine1 machine)
     {
         type = productType;
         producedAt = machine;
@@ -16,13 +17,13 @@ public class Product : MonoBehaviour
         {
             ProductType.RawPipe => 10,
             ProductType.BentSector => 30,
-            ProductType.FinalProduct => defective ? 5 : 100,
+            ProductType.FinalProduct => 100,
             _ => 10
         };
     }
 
     // Метод для блокировки коллайдера продукта во время траспортировки
-    public void LockForTransport(Logist transporter)
+    public void LockForTransport(Logist1 transporter)
     {
         isLockedForTransport = true;
         
