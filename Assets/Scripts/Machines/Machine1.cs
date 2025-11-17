@@ -80,7 +80,7 @@ public class Machine1 : MonoBehaviour
     private void CreateTransportTask()
     {    
         // Определяем куда везти продукт
-        Machine destinationMachine = null;
+        Machine1 destinationMachine = null;
         
         // Если это ФИНАЛЬНЫЙ продукт - везем на склад продажи 
         if (machineType.outputProductType == ProductType.FinalProduct)
@@ -124,9 +124,9 @@ public class Machine1 : MonoBehaviour
         return LogisticsManager.Instance.HasTaskForMachine(this);
     }
 
-    private Machine FindNextMachine()
+    private Machine1 FindNextMachine()
     {
-        foreach (Machine machine in FindObjectsOfType<Machine>())
+        foreach (Machine1 machine in FindObjectsOfType<Machine1>())
         {
             if (machine.machineType.inputProductType == machineType.outputProductType)
             {
