@@ -69,7 +69,7 @@ public class RawMaterialWarehouse : MonoBehaviour
     private void CreateTransportTask()
     {
         // Находим первый станок, который принимает сырье
-        Machine destinationMachine = FindMachineForRawMaterial();
+        Machine1 destinationMachine = FindMachineForRawMaterial();
        
         if (destinationMachine != null)
         {
@@ -104,7 +104,7 @@ public class RawMaterialWarehouse : MonoBehaviour
         {
             yield return new WaitForSeconds(waitTime);
             
-            Machine destinationMachine = FindMachineForRawMaterial();
+            Machine1 destinationMachine = FindMachineForRawMaterial();
             if (destinationMachine != null)
             {
                 task.destinationMachine = destinationMachine;
@@ -119,9 +119,9 @@ public class RawMaterialWarehouse : MonoBehaviour
         Debug.LogError("❌ Склад: не удалось найти станок после всех попыток!");
     }
     
-    private Machine FindMachineForRawMaterial()
+    private Machine1 FindMachineForRawMaterial()
     {
-        foreach (Machine machine in FindObjectsOfType<Machine>())
+        foreach (Machine1 machine in FindObjectsOfType<Machine1>())
         {
             if (machine.machineType.inputProductType == rawProductType && 
                 machine.CanAcceptInput(rawProductType))
