@@ -3,11 +3,11 @@ using UnityEngine;
 public class Product : MonoBehaviour
 {
     public ProductType type;
-    public Machine1 producedAt;
+    public Machine producedAt;
     public int baseValue = 50;
     public bool isLockedForTransport = false;
 
-    public void Initialize(ProductType productType, Machine1 machine)
+    public void Initialize(ProductType productType, Machine machine)
     {
         type = productType;
         producedAt = machine;
@@ -23,7 +23,7 @@ public class Product : MonoBehaviour
     }
 
     // Метод для блокировки коллайдера продукта во время траспортировки
-    public void LockForTransport(Logist1 transporter)
+    public void LockForTransport(Logist transporter)
     {
         isLockedForTransport = true;
         
