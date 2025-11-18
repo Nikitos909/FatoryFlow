@@ -119,9 +119,9 @@ public class RawMaterialWarehouse : MonoBehaviour
         Debug.LogError("❌ Склад: не удалось найти станок после всех попыток!");
     }
     
-    private Machine1 FindMachineForRawMaterial()
+    private Machine FindMachineForRawMaterial()
     {
-        foreach (Machine1 machine in FindObjectsOfType<Machine1>())
+        foreach (Machine machine in FindObjectsOfType<Machine>())
         {
             if (machine.machineType.inputProductType == rawProductType && 
                 machine.CanAcceptInput(rawProductType))
