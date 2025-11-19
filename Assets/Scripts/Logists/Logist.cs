@@ -115,18 +115,7 @@ public class Logist : MonoBehaviour
         }
         else
         {
-            pickupAttempts++;
-            Debug.LogWarning($"⚠️ Логист {name}: не нашел продукт для забора (попытка {pickupAttempts}/{MAX_PICKUP_ATTEMPTS})");
-
-            if (pickupAttempts >= MAX_PICKUP_ATTEMPTS)
-            {
-                Debug.LogError($"❌ Логист {name}: не смог найти продукт после {MAX_PICKUP_ATTEMPTS} попыток, отменяем задачу");
-                CompleteTask();
-            }
-            else
-            {
-                WaitForProduct();
-            }
+            Debug.LogWarning($"⚠️ Логист {name}: не нашел продукт для забора (попытка {pickupAttempts}/{MAX_PICKUP_ATTEMPTS})");        
         }
     }
 
@@ -392,22 +381,6 @@ public class Logist : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         DeliverProduct();
-    }
-
-    private void CompleteTask()
-    {
-        isMoving = false;
-        isDelivering = false;
-        isWaitingForProduct = false;
-        currentTask = null;
-        carriedProduct = null;
-        pickupAttempts = 0;
-       
-        // Сообщаем менеджеру, что свободен
-        if (LogisticsManager.Instance != null)
-        {
-            LogisticsManager.Instance.OnLogistAvailable(this);
-        }
     }
 
     // Визуализация для отладки
