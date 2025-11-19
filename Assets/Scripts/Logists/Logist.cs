@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class Logist1 : MonoBehaviour
+public class Logist : MonoBehaviour
 {
     public float speed = 3f;
     public Product carriedProduct;
