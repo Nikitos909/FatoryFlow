@@ -39,16 +39,13 @@ public class Logist : MonoBehaviour
         }
     }
 
-     private void CompleteTask()
+    // Завершение задачи
+    private void CompleteTask()
     {
-        isMoving = false;
-        isDelivering = false;
-        isWaitingForProduct = false;
         currentTask = null;
-        carriedProduct = null;
-        pickupAttempts = 0;
-       
-        // Сообщаем менеджеру, что свободен
+        isEmployed = false;
+        
+        // Сообщаем менеджеру о доступности
         if (LogisticsManager.Instance != null)
         {
             LogisticsManager.Instance.OnLogistAvailable(this);
