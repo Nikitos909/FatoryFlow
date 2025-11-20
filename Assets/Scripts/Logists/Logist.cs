@@ -110,7 +110,6 @@ public class Logist : MonoBehaviour
 
             isDelivering = true;
             isWaitingForProduct = false;
-            pickupAttempts = 0;
             Debug.Log($"📥 Логист {name} взял {carriedProduct.type}");
         }
         else
