@@ -55,6 +55,20 @@ public class Logist : MonoBehaviour
         }
     }
 
+    // Назначение задачи логисту
+    public void AssignTask(TransportTask task)
+    {
+        currentTask = task;
+        isEmployed = true;
+        
+        // Начинаем с подбора изделия
+        targetPosition = task.sourceMachine != null ? 
+            task.sourceMachine.GetPickupPosition() : 
+            GetRawMaterialPosition();
+        
+        isDelivering = false;
+    }
+
     private void PickUpProduct()
     {    
         Product productToPickup = null;
