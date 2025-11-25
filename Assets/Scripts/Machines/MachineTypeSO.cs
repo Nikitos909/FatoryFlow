@@ -14,5 +14,4 @@ public class MachineTypeSO : ScriptableObject
     // Добавьте ссылки на префабы
     public GameObject outputProductPrefab;
     public GameObject defectiveProductPrefab;
-
 }
