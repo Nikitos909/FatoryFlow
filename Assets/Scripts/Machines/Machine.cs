@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Machine1 : MonoBehaviour
+public class Machine : MonoBehaviour
 {
     public MachineTypeSO machineType;
     public Transform inputSlot;
