@@ -75,32 +75,7 @@ public class Logist : MonoBehaviour
     }
 
     /*============================================================
-     public float speed = 2f;
-    public Product carriedProduct;
-
-    private Vector3 targetPosition;
-    private TransportTask currentTask;
-    private bool isMoving = false;
-    private bool isDelivering = false;
-    private Vector3 spawnPosition;
-    private bool isWaitingForProduct = false;
-
-    private void WaitForProduct()
-    {
-        isWaitingForProduct = true;
-        Debug.Log($"⏰ Логист {name} ждет продукт...");
-
-        // Ждем 2 секунды и пробуем снова
-        StartCoroutine(RetryPickupAfterDelay(2f));
-    }
-
-    private IEnumerator RetryPickupAfterDelay(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        isWaitingForProduct = false;
-        PickUpProduct();
-    }
-
+   
     private Product FindRawMaterialOnWarehouse()
     {
         // Используем метод склада если доступен
