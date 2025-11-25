@@ -69,7 +69,7 @@ public class RawMaterialWarehouse : MonoBehaviour
     private void CreateTransportTask()
     {
         // Находим первый станок, который принимает сырье
-        Machine1 destinationMachine = FindMachineForRawMaterial();
+        Machine destinationMachine = FindMachineForRawMaterial();
        
         if (destinationMachine != null)
         {
@@ -104,7 +104,7 @@ public class RawMaterialWarehouse : MonoBehaviour
         {
             yield return new WaitForSeconds(waitTime);
             
-            Machine1 destinationMachine = FindMachineForRawMaterial();
+            Machine destinationMachine = FindMachineForRawMaterial();
             if (destinationMachine != null)
             {
                 task.destinationMachine = destinationMachine;
