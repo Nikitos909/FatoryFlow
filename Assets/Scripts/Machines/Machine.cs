@@ -26,12 +26,6 @@ public class Machine : MonoBehaviour
             if (workTimer <= 0f) 
                 FinishProduction();
         }
-
-        // ЕСЛИ есть готовый продукт И нет активной задачи - создаем задачу
-        if (currentOutput != null && !HasActiveTask())
-        {
-            CreateTransportTask();
-        }
     }
 
     public void StartProduction()
@@ -55,6 +49,8 @@ public class Machine : MonoBehaviour
         }
 
         Debug.Log($"{machineType.displayName} произвел {machineType.outputProductType}");
+        
+        CreateTransportTask();
     }
 
     private void CreateOutputProduct(ProductType type)
@@ -113,7 +109,6 @@ public class Machine : MonoBehaviour
                 Debug.Log($"⏳ {machineType.displayName} ждет освобождения станка-приемника");
                 // Запускаем корутину для повторной проверки
                 //StartCoroutine(RetryTransportTaskCreation());
-
             }
         }
     }
