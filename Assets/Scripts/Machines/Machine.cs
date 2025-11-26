@@ -77,6 +77,7 @@ public class Machine : MonoBehaviour
     {    
         // Определяем куда везти продукт
         Machine destinationMachine = null;
+        Debug.Log("Creating Task");
         
         // Если это ФИНАЛЬНЫЙ продукт - везем на склад продажи 
         if (machineType.outputProductType == ProductType.FinalProduct)
@@ -111,6 +112,8 @@ public class Machine : MonoBehaviour
                 //StartCoroutine(RetryTransportTaskCreation());
             }
         }
+
+        Debug.Log("Task created ==========>");
     }
 
     private bool HasActiveTask()
