@@ -74,6 +74,13 @@ public class Logist : MonoBehaviour
         isDelivering = false;
     }
 
+    private void PickUpProduct()
+    {
+        CurrentProduct = CurrentTask.product;
+        CurrentProduct.transform.SetParent(transform);
+        CurrentProduct.transform.localPosition = Vector3.up * 1.5f;
+    }
+
     /*============================================================
    
     private Product FindRawMaterialOnWarehouse()
