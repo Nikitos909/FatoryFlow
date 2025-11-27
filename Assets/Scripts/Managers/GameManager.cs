@@ -92,7 +92,7 @@ public class GameManager : MonoBehaviour
         sr.color = Color.gray;
         sr.sortingOrder = 1;
 
-        cutterMachine.PutInputProduct(product);
+        //cutterMachine.PutInputProduct(product);
         gameState.productsManufactured++;
 
         Debug.Log("📦 Создана сырая труба");

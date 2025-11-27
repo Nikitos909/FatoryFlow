@@ -85,7 +85,7 @@ public class EconomyManager : MonoBehaviour
 
     public void SellProduct(Product product)
     {
-        int value = product.isDefective ? product.baseValue / 3 : product.baseValue;
+        int value = product.baseValue;
         AddMoney(value);
         Debug.Log($"Продажа: {product.type} за {value}₽");
     }
