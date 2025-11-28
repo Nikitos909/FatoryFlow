@@ -12,40 +12,24 @@ public class Machine : MonoBehaviour
     public bool isWorking = false;
     public float workTimer = 5f;
 
-    void Update()
+    void StartProduction()
     {
         // ЕСЛИ есть входной продукт И нет выходного И не работаем - начинаем производство
         if (!isWorking && currentInput != null && currentOutput == null)
         {
-            StartProduction();
-        }
-        
-        if (isWorking)
-        {
-            workTimer -= Time.deltaTime;
-            if (workTimer <= 0f) 
-                FinishProduction();
+            StartCoroutine(ProduceCoroutine());
         }
     }
 
-    public void Production()
+    public IEnumerator ProduceCoroutine()
     {
         isWorking = true;
         Debug.Log($"{stationName} начал производство...");
         
-        yield return new WaitForSeconds(productionTime);
-
-        workTimer = machineType.baseProductionTime;
-        Debug.Log($"{machineType.displayName} начал работу над {currentInput.type}");
-    }
-
-    private void FinishProduction()
-    {
-        isWorking = false;
+        yield return new WaitForSeconds(workTimer);
 
         CreateOutputProduct(machineType.outputProductType);
-        
-        // Уничтожаем входной продукт
+         // Уничтожаем входной продукт
         if (currentInput != null)
         {
             Destroy(currentInput.gameObject);
