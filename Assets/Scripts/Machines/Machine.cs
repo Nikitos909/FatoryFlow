@@ -63,7 +63,6 @@ public class Machine : MonoBehaviour
 
     private void CreateTransportTask()
     {    
-        Debug.Log("Создана задача на перемещение");
         // Определяем куда везти продукт
         Machine destinationMachine = null;
         Debug.Log("Creating Task");
@@ -74,8 +73,7 @@ public class Machine : MonoBehaviour
             TransportTask task = new TransportTask(
                 sourceMachine: this,
                 dest: null, // null = склад продажи
-                type: machineType.outputProductType,
-                prio: 1
+                type: machineType.outputProductType
             );
             LogisticsManager.Instance.AddTask(task);
         }
@@ -89,8 +87,7 @@ public class Machine : MonoBehaviour
                 TransportTask task = new TransportTask(
                     sourceMachine: this,
                     dest: destinationMachine,
-                    type: machineType.outputProductType,
-                    prio: 2
+                    type: machineType.outputProductType
                 );
                 LogisticsManager.Instance.AddTask(task);
             }
@@ -101,7 +98,6 @@ public class Machine : MonoBehaviour
                 //StartCoroutine(RetryTransportTaskCreation());
             }
         }
-
         Debug.Log("Task created ==========>");
     }
 
