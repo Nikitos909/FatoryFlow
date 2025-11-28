@@ -7,15 +7,13 @@ public class TransportTask
     public Machine sourceMachine;
     public Machine destinationMachine; // null = доставка на склад
     public ProductType productType;
-    public int priority; // 1 - высокий, 2 - средний, 3 - низкий
     public float timestamp; // время создания задачи
 
-    public TransportTask(Machine sourceMachine, Machine dest, ProductType type, int prio = 2)
+    public TransportTask(Machine sourceMachine, Machine dest, ProductType type)
     {
         this.sourceMachine = sourceMachine;
         destinationMachine = dest;
         productType = type;
-        priority = prio;
         timestamp = Time.time;
     }
 
