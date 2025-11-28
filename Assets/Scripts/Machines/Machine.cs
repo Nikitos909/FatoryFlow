@@ -10,7 +10,7 @@ public class Machine : MonoBehaviour
     public Product currentInput;
     public Product currentOutput;
     public bool isWorking = false;
-    public float workTimer = 0f;
+    public float workTimer = 5f;
 
     void Update()
     {
@@ -28,9 +28,13 @@ public class Machine : MonoBehaviour
         }
     }
 
-    public void StartProduction()
+    public void Production()
     {
         isWorking = true;
+        Debug.Log($"{stationName} начал производство...");
+        
+        yield return new WaitForSeconds(productionTime);
+
         workTimer = machineType.baseProductionTime;
         Debug.Log($"{machineType.displayName} начал работу над {currentInput.type}");
     }
