@@ -41,6 +41,21 @@ public class Machine : MonoBehaviour
         CreateTransportTask();
     }
 
+    private void CreateInputProduct(ProductType type)
+    {
+        // Создаем объект из префаба
+        GameObject productObj = Instantiate(machineType.inputProductPrefab, inputSlot.position, Quaternion.identity);
+        productObj.name = $"Product_{type}";
+    
+        // Получаем компонент Product
+        Product product = productObj.GetComponent<Product>();
+        if (product != null)
+        {
+            product.Initialize(type, this);
+            currentInput = product;
+        }
+    }
+
     private void CreateOutputProduct(ProductType type)
     {
         if (machineType.outputProductPrefab == null)
