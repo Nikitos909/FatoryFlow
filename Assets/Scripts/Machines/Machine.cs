@@ -138,4 +138,24 @@ public class Machine : MonoBehaviour
     {
         return !isWorking && currentInput == null && type == machineType.inputProductType;
     }
+
+    // Вызывается по кнопке UI Вспомогательный метод-временный
+    public bool BuyMaterial()
+    {
+        if (EconomyManager.Instance != null && EconomyManager.Instance.SpendMoney(rawPipePrice))
+        {
+            Product newMaterial = SpawnRawMaterial();
+            if (newMaterial != null)
+            {
+                availableRawMaterials.Add(newMaterial);
+                CreateTransportTask();
+                return true;
+            }
+        }
+        else
+        {
+            Debug.Log("❌ Недостаточно денег для покупки сырья!");
+        }
+        return false;
+    }
 }
