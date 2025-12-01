@@ -40,7 +40,8 @@ public class Machine : MonoBehaviour
         
         CreateTransportTask();
     }
-
+    
+    // Вспомогательный метод- после отработки удалить
     private void CreateInputProduct(ProductType type)
     {
         // Создаем объект из префаба
@@ -142,20 +143,6 @@ public class Machine : MonoBehaviour
     // Вызывается по кнопке UI Вспомогательный метод-временный
     public bool BuyMaterial()
     {
-        if (EconomyManager.Instance != null && EconomyManager.Instance.SpendMoney(rawPipePrice))
-        {
-            Product newMaterial = SpawnRawMaterial();
-            if (newMaterial != null)
-            {
-                availableRawMaterials.Add(newMaterial);
-                CreateTransportTask();
-                return true;
-            }
-        }
-        else
-        {
-            Debug.Log("❌ Недостаточно денег для покупки сырья!");
-        }
-        return false;
+        CreateInputProduct();
     }
 }
