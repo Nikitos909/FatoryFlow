@@ -107,12 +107,6 @@ public class Machine : MonoBehaviour
                 );
                 LogisticsManager.Instance.AddTask(task);
             }
-            else
-            {
-                Debug.Log($"⏳ {machineType.displayName} ждет освобождения станка-приемника");
-                // Запускаем корутину для повторной проверки
-                //StartCoroutine(RetryTransportTaskCreation());
-            }
         }
         Debug.Log("Task created ==========>");
     }
