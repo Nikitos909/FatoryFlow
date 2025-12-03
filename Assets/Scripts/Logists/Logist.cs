@@ -15,7 +15,6 @@ public class Logist : MonoBehaviour
     void Start()
     {
         spawnPosition = transform.position;
-
         // Регистрируем в LogisticsManager
         if (LogisticsManager.Instance != null)
         {
