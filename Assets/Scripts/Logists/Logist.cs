@@ -82,6 +82,10 @@ public class Logist : MonoBehaviour
         CurrentProduct.transform.localPosition = Vector3.up * 1.5f;
     }
 
+    private void DeliverProduct()
+    {
+        
+    }
     /*============================================================
    
     private Product FindRawMaterialOnWarehouse()
