@@ -48,4 +48,5 @@ public class Product : MonoBehaviour
         }
     }
 
+    // Можно добавить визуальные эффекты, звуки и т.д.
 }
