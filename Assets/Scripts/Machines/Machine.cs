@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class Machine : MonoBehaviour
 {
@@ -24,7 +25,7 @@ public class Machine : MonoBehaviour
     public IEnumerator ProduceCoroutine()
     {
         isWorking = true;
-        Debug.Log($"{stationName} начал производство...");
+        Debug.Log($"начал производство...");
         
         yield return new WaitForSeconds(workTimer);
 
