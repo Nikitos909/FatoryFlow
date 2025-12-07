@@ -136,8 +136,8 @@ public class Machine : MonoBehaviour
     }
 
     // Вызывается по кнопке UI Вспомогательный метод-временный
-    public bool BuyMaterial()
+    public void BuyMaterial()
     {
-        CreateInputProduct();
+        CreateInputProduct(machineType.inputProductType);
     }
 }
