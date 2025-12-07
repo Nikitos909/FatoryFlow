@@ -19,3 +19,5 @@ MonoBehaviour:
   defectiveProductType: 1
   baseProductionTime: 5
   baseDefectChance: 0.1
+  outputProductPrefab: {fileID: 7132356579207848978, guid: 67b736f5f4c214d9da76ffa5f8d75e87, type: 3}
+  inputProductPrefab: {fileID: 8509257234729060609, guid: 22903de9170ef494ca0f03b8ece02a88, type: 3}
