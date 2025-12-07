@@ -60,9 +60,9 @@ public class Logist : MonoBehaviour
         Debug.Log("Logist recived task");
         
         // Начинаем с подбора изделия
-        targetPosition = task.sourceMachine != null ? 
-            task.sourceMachine.GetPickupPosition() : 
-            GetRawMaterialPosition();
+        //targetPosition = task.sourceMachine != null ? 
+         //   task.sourceMachine.GetPickupPosition() : 
+         //   GetRawMaterialPosition();
         
         isDelivering = false;
     }
@@ -77,9 +77,9 @@ public class Logist : MonoBehaviour
 
     private void PickUpProduct()
     {
-        CurrentProduct = CurrentTask.product;
-        CurrentProduct.transform.SetParent(transform);
-        CurrentProduct.transform.localPosition = Vector3.up * 1.5f;
+        //CurrentProduct = CurrentTask.product;
+        //CurrentProduct.transform.SetParent(transform);
+        //CurrentProduct.transform.localPosition = Vector3.up * 1.5f;
     }
 
     private void DeliverProduct()

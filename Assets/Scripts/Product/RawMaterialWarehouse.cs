@@ -76,8 +76,7 @@ public class RawMaterialWarehouse : MonoBehaviour
             TransportTask task = new TransportTask(
                 sourceMachine: null, // null = склад
                 dest: destinationMachine,
-                type: rawProductType,
-                prio: 1
+                type: rawProductType
             );
            
             if (LogisticsManager.Instance != null)
@@ -89,7 +88,7 @@ public class RawMaterialWarehouse : MonoBehaviour
         {
             Debug.LogWarning("❌ Не найден свободный станок для сырья!");
             // Создаем задачу и добавляем в отложенные
-            TransportTask task = new TransportTask(null, null, rawProductType, 1);
+            TransportTask task = new TransportTask(null, null, rawProductType);
             StartCoroutine(RetryRawMaterialTask(task));
         }
     }
