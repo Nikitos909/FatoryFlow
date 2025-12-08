@@ -10,7 +10,6 @@ public class LogisticsManager : MonoBehaviour
     public List<Logist> availableLogists = new List<Logist>();
     private Queue<TransportTask> taskQueue = new Queue<TransportTask>();
     public ProductSellPoint sellPoint;
-    public Transform logistSpawnPoint; // Начальная точка для логистов
 
     void Awake()
     {
