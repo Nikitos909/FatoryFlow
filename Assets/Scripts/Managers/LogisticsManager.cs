@@ -48,7 +48,7 @@ public class LogisticsManager : MonoBehaviour
     public void AddTask(TransportTask task)
     {
         taskQueue.Enqueue(task);
-        Debug.Log($"✅ Добавлена задача: {task.productType} -> " +
+        Debug.Log($"✅ В LogisticsManager Добавлена задача: {task.productType} -> " +
                  $"{(task.destinationMachine != null ? task.destinationMachine.machineType.displayName : "СКЛАД")} " +
                  $"(очередь: {taskQueue.Count})");
 
