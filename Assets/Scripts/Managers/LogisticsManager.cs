@@ -29,13 +29,6 @@ public class LogisticsManager : MonoBehaviour
         // Находим все объекты
         if (sellPoint == null)
             sellPoint = FindObjectOfType<ProductSellPoint>();
-            
-        if (logistSpawnPoint == null)
-        {
-            GameObject spawnPoint = new GameObject("LogistSpawnPoint");
-            logistSpawnPoint = spawnPoint.transform;
-            logistSpawnPoint.position = Vector3.zero;
-        }
         
         // Находим всех логистов на сцене
         allLogists = new List<Logist>(FindObjectsOfType<Logist>());
