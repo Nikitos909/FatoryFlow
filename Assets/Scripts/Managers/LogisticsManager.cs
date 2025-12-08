@@ -140,7 +140,6 @@ public class LogisticsManager : MonoBehaviour
     
     void OnGUI()
     {
-        GUI.Box(new Rect(10, 10, 300, 100), "Логистика");
         GUI.Label(new Rect(20, 40, 280, 20), $"Очередь задач: {taskQueue.Count}");
         GUI.Label(new Rect(20, 60, 280, 20), $"Свободных логистов: {availableLogists.Count}");
         GUI.Label(new Rect(20, 80, 280, 20), $"Всего логистов: {allLogists.Count}");
