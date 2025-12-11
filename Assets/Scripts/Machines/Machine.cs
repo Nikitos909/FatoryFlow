@@ -11,31 +11,7 @@ public class Machine : MonoBehaviour
     public Product currentInput;
     public Product currentOutput;
     public bool isWorking = false;
-    public float workTimer = 5f;
-
-    //=================Temp code for test
-    private void Start()
-    {
-        DebugPrefabSetup();
-    }
-
-    public void DebugPrefabSetup()
-    {
-        Debug.Log($"Machine Type: {machineType.name}");
-        Debug.Log($"Input Prefab: {machineType.inputProductPrefab?.name ?? "NULL"}");
-        Debug.Log($"Output Prefab: {machineType.outputProductPrefab?.name ?? "NULL"}");
-        
-        if (machineType.inputProductPrefab != null)
-        {
-            var comps = machineType.inputProductPrefab.GetComponents<Component>();
-            Debug.Log($"Components on input prefab:");
-            foreach (var comp in comps)
-            {
-                Debug.Log($"- {comp.GetType().Name}");
-            }
-        }
-    }
-  //=================Temp code for test
+    public float workTimer = 50f;
 
     private void Update()
     {
