@@ -46,14 +46,6 @@ public class Machine : MonoBehaviour
     // Вспомогательный метод- после отработки удалить
     private void CreateInputProduct(ProductType type)
     {
-        // Проверка компонента на префабе
-        Product prefabProduct = machineType.inputProductPrefab.GetComponent<Product>();
-        if (prefabProduct == null)
-        {
-            Debug.LogError($"Prefab {machineType.inputProductPrefab.name} has no Product component!");
-            return;
-        }
-
         // Создаем объект из префаба
         GameObject productObj = Instantiate(machineType.inputProductPrefab, inputSlot.position, Quaternion.identity);
         productObj.name = $"Product_{type}";
@@ -65,7 +57,6 @@ public class Machine : MonoBehaviour
         {
             product.Initialize(type, this);
             currentInput = product;
-            Debug.Log(currentInput);
         }
     }
 
