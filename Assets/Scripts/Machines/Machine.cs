@@ -13,17 +13,12 @@ public class Machine : MonoBehaviour
     public bool isWorking = false;
     public float workTimer = 50f;
 
-    private void Update()
-    {
-        StartProduction();
-    }
 
     void StartProduction()
     {
         // ЕСЛИ есть входной продукт И нет выходного И не работаем - начинаем производство
         if (!isWorking && currentInput != null && currentOutput == null)
         {
-            Debug.Log("work");
             StartCoroutine(ProduceCoroutine());
         }
     }
@@ -62,17 +57,16 @@ public class Machine : MonoBehaviour
         // Создаем объект из префаба
         GameObject productObj = Instantiate(machineType.inputProductPrefab, inputSlot.position, Quaternion.identity);
         productObj.name = $"Product_{type}";
-        Debug.Log(productObj.name);
+
         // Получаем компонент Product
         Product product = productObj.GetComponent<Product>();
-        Debug.Log(product);
+        
         if (product != null)
         {
             product.Initialize(type, this);
             currentInput = product;
             Debug.Log(currentInput);
         }
-        Debug.Log(currentInput);
     }
 
     private void CreateOutputProduct(ProductType type)
