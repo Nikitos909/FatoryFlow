@@ -16,36 +16,27 @@ public class Machine : MonoBehaviour
 
     private void Update()
     {
-       ProduceCoroutine();
+       Produce();
     }
 
-    private void ProduceCoroutine()
+    private void Produce()
     {
-        while (true)
+        if (!isWorking && currentInput != null && currentOutput == null)
         {
-            if (!isWorking && currentInput != null && currentOutput == null)
+            isWorking = true;
+            Debug.Log($"начал производство...");
+        
+            CreateOutputProduct(machineType.outputProductType);
+            // Уничтожаем входной продукт
+            if (currentInput != null)
             {
-                isWorking = true;
-                Debug.Log($"начал производство...");
-                
-                yield return new WaitForSeconds(workTimer);
+                Destroy(currentInput.gameObject);
+                currentInput = null;
+            }
         
-                CreateOutputProduct(machineType.outputProductType);
-                 // Уничтожаем входной продукт
-                if (currentInput != null)
-                {
-                    Destroy(currentInput.gameObject);
-                    currentInput = null;
-                }
-        
-                Debug.Log($"{machineType.displayName} произвел {machineType.outputProductType}");
+            Debug.Log($"{machineType.displayName} произвел {machineType.outputProductType}");
 
-                CreateTransportTask();
-            }
-            else
-            {
-                yield return null;
-            }
+            CreateTransportTask();
         }
     }
 
