@@ -11,7 +11,7 @@ public class Machine : MonoBehaviour
     public Product currentInput;
     public Product currentOutput;
     public bool isWorking = false;
-    public float workTimer = 50f;
+    public float workTimer = 5f;
 
 
     private void Start()
