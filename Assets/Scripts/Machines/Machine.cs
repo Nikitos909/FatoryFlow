@@ -23,29 +23,11 @@ public class Machine : MonoBehaviour
         }
     }
 
-    public IEnumerator ProduceCoroutine()
-    {
-        isWorking = true;
-        Debug.Log($"начал производство...");
-        
-        yield return new WaitForSeconds(workTimer);
 
-        CreateOutputProduct(machineType.outputProductType);
-         // Уничтожаем входной продукт
-        if (currentInput != null)
-        {
-            Destroy(currentInput.gameObject);
-            currentInput = null;
-        }
-
-        Debug.Log($"{machineType.displayName} произвел {machineType.outputProductType}");
-        
-        CreateTransportTask();
-    }
 //===================
 
 
-    IEnumerator AssemblyProcess()
+    IEnumerator ProduceCoroutine()
     {
         while (true)
         {
@@ -68,31 +50,6 @@ public class Machine : MonoBehaviour
                 
                 CreateTransportTask();
                 yield return null;
-            }
-          
-            else
-            {
-                _source.clip = _clipsWorks[Random.Range(0, _clipsWorks.Length - 1)];
-                dataLevel.clockCycle = GetBuildDuration();
-                _text.text = "Â ðàáîòå";
-                timerImage.color = Color.green;
-                _source.Play();
-                StartCoroutine(Timer());
-                yield return new WaitForSeconds(GetBuildDuration());
-                _source.Stop();
-                _source.clip = _changeover;
-                _source.Play();
-                _timeWork += GetBuildDuration();
-                dataLevel.coefOfEquipment = _timeWork / MachineToolController.fullWorkTime * 100;
-                dataLevel.quantityWarehouse = CalculateQuantityDetails(_recipientSlot, _slots);
-                AddItemInSlotsOut(_recipientSlot);
-                countDetails += 1;
-                DecreaseItemInSlots(_slots);
-                _text.text = "Ïåðåíàëàäêà";
-                timerImage.color = Color.yellow;
-                timerImage.fillAmount = 1f;
-                yield return new WaitForSeconds(2f);
-                _source.Stop();
             }
         }
     }
