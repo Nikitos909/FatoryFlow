@@ -42,6 +42,67 @@ public class Machine : MonoBehaviour
         
         CreateTransportTask();
     }
+//===================
+
+
+    IEnumerator AssemblyProcess()
+    {
+        while (true)
+        {
+            if (CheckAmountItemsInSlots() == 0)
+            {
+                _text.text = "Ïðîñòîé";
+                timerImage.color = Color.gray;
+                timerImage.fillAmount = 1f;
+                if (FormedFD.costWarehouse.Count > 0) 
+                {
+                    if (countDetails == 0) { _endCostWarehouse = _recipientSlot.amount * FormedFD.costWarehouse[stage] + GetCostBoxIn(_slots) + _wageFund; }
+                    else { _endCostWarehouse = _recipientSlot.amount * FormedFD.costWarehouse[stage] + _wageFund / countDetails + GetCostBoxIn(_slots); }                    
+                }
+                dataLevel.endCostWarehouse = _endCostWarehouse;
+                yield return null;
+            }
+            else if (CheckAmountItemsInSlots() == -1)
+            {
+                _text.text = "Ïîëîìêà";
+                _source.clip = _clipsRepair[Random.Range(0, _clipsRepair.Length - 1)];
+                _source.Play();
+                timerImage.color = Color.red;
+                timerImage.fillAmount = 1f;
+                yield return new WaitForSeconds(25f);
+                ResetSlotData(_slots);
+                _source.Stop();
+            }
+            else
+            if (!isWorking && currentInput != null && currentOutput == null)
+            {
+                _source.clip = _clipsWorks[Random.Range(0, _clipsWorks.Length - 1)];
+                dataLevel.clockCycle = GetBuildDuration();
+                _text.text = "Â ðàáîòå";
+                timerImage.color = Color.green;
+                _source.Play();
+                StartCoroutine(Timer());
+                yield return new WaitForSeconds(GetBuildDuration());
+                _source.Stop();
+                _source.clip = _changeover;
+                _source.Play();
+                _timeWork += GetBuildDuration();
+                dataLevel.coefOfEquipment = _timeWork / MachineToolController.fullWorkTime * 100;
+                dataLevel.quantityWarehouse = CalculateQuantityDetails(_recipientSlot, _slots);
+                AddItemInSlotsOut(_recipientSlot);
+                countDetails += 1;
+                DecreaseItemInSlots(_slots);
+                _text.text = "Ïåðåíàëàäêà";
+                timerImage.color = Color.yellow;
+                timerImage.fillAmount = 1f;
+                yield return new WaitForSeconds(2f);
+                _source.Stop();
+            }
+        }
+    }
+
+
+//==================    
     
     // Вспомогательный метод- после отработки удалить
     private void CreateInputProduct(ProductType type)
