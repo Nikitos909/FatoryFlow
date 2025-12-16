@@ -19,11 +19,7 @@ public class Machine : MonoBehaviour
        StartCoroutine(ProduceCoroutine());
     }
 
-
-//===================
-
-
-    IEnumerator ProduceCoroutine()
+    private IEnumerator ProduceCoroutine()
     {
         while (true)
         {
@@ -50,9 +46,6 @@ public class Machine : MonoBehaviour
         }
     }
 
-
-//==================    
-    
     // Вспомогательный метод- после отработки удалить
     private void CreateInputProduct(ProductType type)
     {
