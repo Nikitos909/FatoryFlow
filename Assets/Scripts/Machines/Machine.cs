@@ -14,13 +14,9 @@ public class Machine : MonoBehaviour
     public float workTimer = 50f;
 
 
-    void StartProduction()
+    private void Start()
     {
-        // ЕСЛИ есть входной продукт И нет выходного И не работаем - начинаем производство
-        if (!isWorking && currentInput != null && currentOutput == null)
-        {
-            StartCoroutine(ProduceCoroutine());
-        }
+       StartCoroutine(ProduceCoroutine());
     }
 
 
