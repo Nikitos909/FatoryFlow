@@ -14,12 +14,12 @@ public class Machine : MonoBehaviour
     public float workTimer = 5f;
 
 
-    private void Start()
+    private void Update()
     {
-       StartCoroutine(ProduceCoroutine());
+       ProduceCoroutine();
     }
 
-    private IEnumerator ProduceCoroutine()
+    private void ProduceCoroutine()
     {
         while (true)
         {
@@ -39,8 +39,11 @@ public class Machine : MonoBehaviour
                 }
         
                 Debug.Log($"{machineType.displayName} произвел {machineType.outputProductType}");
-                
+
                 CreateTransportTask();
+            }
+            else
+            {
                 yield return null;
             }
         }
