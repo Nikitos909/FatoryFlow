@@ -62,6 +62,12 @@ public class Machine : MonoBehaviour
             currentInput = product;
         }
     }
+    
+    // Вызывается по кнопке UI Вспомогательный метод-временный
+    public void BuyMaterial()
+    {
+        CreateInputProduct(machineType.inputProductType);
+    }
 
     private void CreateOutputProduct(ProductType type)
     {
@@ -138,11 +144,5 @@ public class Machine : MonoBehaviour
     public bool CanAcceptInput(ProductType type)
     {
         return !isWorking && currentInput == null && type == machineType.inputProductType;
-    }
-
-    // Вызывается по кнопке UI Вспомогательный метод-временный
-    public void BuyMaterial()
-    {
-        CreateInputProduct(machineType.inputProductType);
     }
 }
