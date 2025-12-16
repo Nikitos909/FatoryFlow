@@ -49,32 +49,28 @@ public class Machine : MonoBehaviour
     {
         while (true)
         {
-            if (CheckAmountItemsInSlots() == 0)
+            if (!isWorking && currentInput != null && currentOutput == null)
             {
-                _text.text = "Ïðîñòîé";
-                timerImage.color = Color.gray;
-                timerImage.fillAmount = 1f;
-                if (FormedFD.costWarehouse.Count > 0) 
+                isWorking = true;
+                Debug.Log($"начал производство...");
+                
+                yield return new WaitForSeconds(workTimer);
+        
+                CreateOutputProduct(machineType.outputProductType);
+                 // Уничтожаем входной продукт
+                if (currentInput != null)
                 {
-                    if (countDetails == 0) { _endCostWarehouse = _recipientSlot.amount * FormedFD.costWarehouse[stage] + GetCostBoxIn(_slots) + _wageFund; }
-                    else { _endCostWarehouse = _recipientSlot.amount * FormedFD.costWarehouse[stage] + _wageFund / countDetails + GetCostBoxIn(_slots); }                    
+                    Destroy(currentInput.gameObject);
+                    currentInput = null;
                 }
-                dataLevel.endCostWarehouse = _endCostWarehouse;
+        
+                Debug.Log($"{machineType.displayName} произвел {machineType.outputProductType}");
+                
+                CreateTransportTask();
                 yield return null;
             }
-            else if (CheckAmountItemsInSlots() == -1)
-            {
-                _text.text = "Ïîëîìêà";
-                _source.clip = _clipsRepair[Random.Range(0, _clipsRepair.Length - 1)];
-                _source.Play();
-                timerImage.color = Color.red;
-                timerImage.fillAmount = 1f;
-                yield return new WaitForSeconds(25f);
-                ResetSlotData(_slots);
-                _source.Stop();
-            }
+          
             else
-            if (!isWorking && currentInput != null && currentOutput == null)
             {
                 _source.clip = _clipsWorks[Random.Range(0, _clipsWorks.Length - 1)];
                 dataLevel.clockCycle = GetBuildDuration();
