@@ -14,30 +14,44 @@ public class Machine : MonoBehaviour
     public float workTimer = 5f;
 
 
-    private void Update()
+    private void Start()
     {
-       Produce();
+       TryStartProduction();
     }
 
-    private void Produce()
+        public void TryStartProduction()
     {
+        // ЕСЛИ есть входной продукт И нет выходного И не работаем - начинаем производство
         if (!isWorking && currentInput != null && currentOutput == null)
         {
-            isWorking = true;
-            Debug.Log($"начал производство...");
-        
-            CreateOutputProduct(machineType.outputProductType);
-            // Уничтожаем входной продукт
-            if (currentInput != null)
-            {
-                Destroy(currentInput.gameObject);
-                currentInput = null;
-            }
-        
-            Debug.Log($"{machineType.displayName} произвел {machineType.outputProductType}");
-
-            CreateTransportTask();
+            StartCoroutine(ProduceCoroutine());
         }
+    }
+
+        public IEnumerator ProduceCoroutine()
+    {
+        isWorking = true;
+        Debug.Log($"начал производство...");
+       
+        yield return new WaitForSeconds(workTimer);
+
+        CreateOutputProduct(machineType.outputProductType);
+        
+        // Уничтожаем входной продукт
+        if (currentInput != null)
+        {
+            Destroy(currentInput.gameObject);
+            currentInput = null;
+        }
+
+        Debug.Log($"{machineType.displayName} произвел {machineType.outputProductType}");
+        
+        isWorking = false; // Важно: сбросить флаг работы
+        
+        // После завершения проверяем, можно ли начать новое производство
+        TryStartProduction();
+        
+        CreateTransportTask();
     }
 
     // Вспомогательный метод- после отработки удалить
