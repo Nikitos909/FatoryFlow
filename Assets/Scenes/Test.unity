@@ -779,7 +779,6 @@ MonoBehaviour:
   availableLogists:
   - {fileID: 842124670}
   sellPoint: {fileID: 1882857555}
-  logistSpawnPoint: {fileID: 1620259680}
 --- !u!1 &825895614
 GameObject:
   m_ObjectHideFlags: 0
@@ -1046,7 +1045,7 @@ MonoBehaviour:
   currentInput: {fileID: 0}
   currentOutput: {fileID: 0}
   isWorking: 0
-  workTimer: 0
+  workTimer: 5
 --- !u!212 &1065010887
 SpriteRenderer:
   m_ObjectHideFlags: 0
