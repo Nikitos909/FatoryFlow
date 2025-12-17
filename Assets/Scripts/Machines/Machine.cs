@@ -11,42 +11,24 @@ public class Machine : MonoBehaviour
     public Product currentInput;
     public Product currentOutput;
     public bool isWorking = false;
-    public float workTimer = 5f;
+    public float workTimer;
 
-
-    private void Start()
+    private void Update()
     {
-       TryStartProduction();
+        StartProduction();
     }
 
-        public void TryStartProduction()
+    void StartProduction()
     {
-        // ЕСЛИ есть входной продукт И нет выходного И не работаем - начинаем производство
+         //ЕСЛИ есть входной продукт И нет выходного И не работаем - начинаем производство
         if (!isWorking && currentInput != null && currentOutput == null)
         {
-            StartCoroutine(ProduceCoroutine());
-        }
+            Debug.Log("work");
+           StartCoroutine(ProduceCoroutine());
+       }
     }
 
-    //=========
-    //private void Update()
-    //{
-    //    StartProduction();
-    //}
-
-   // void StartProduction()
-   // {
-        // ЕСЛИ есть входной продукт И нет выходного И не работаем - начинаем производство
-    //    if (!isWorking && currentInput != null && currentOutput == null)
-   //     {
-    //        Debug.Log("work");
-    //        StartCoroutine(ProduceCoroutine());
-    //    }
-  //  }
-
-    //============
-
-        public IEnumerator ProduceCoroutine()
+    public IEnumerator ProduceCoroutine()
     {
         isWorking = true;
         Debug.Log($"начал производство...");
@@ -66,9 +48,6 @@ public class Machine : MonoBehaviour
         
         isWorking = false; // Важно: сбросить флаг работы
         
-        // После завершения проверяем, можно ли начать новое производство
-        TryStartProduction();
-        
         CreateTransportTask();
     }
 
@@ -87,9 +66,6 @@ public class Machine : MonoBehaviour
             product.Initialize(type, this);
             currentInput = product;
         }
-
-        // Запускаем производство после создания продукта
-        TryStartProduction();
     }
     
     // Вызывается по кнопке UI Вспомогательный метод-временный
