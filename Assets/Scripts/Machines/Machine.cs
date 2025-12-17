@@ -69,6 +69,9 @@ public class Machine : MonoBehaviour
             product.Initialize(type, this);
             currentInput = product;
         }
+
+        // Запускаем производство после создания продукта
+        TryStartProduction();
     }
     
     // Вызывается по кнопке UI Вспомогательный метод-временный
