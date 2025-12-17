@@ -28,6 +28,24 @@ public class Machine : MonoBehaviour
         }
     }
 
+    //=========
+    //private void Update()
+    //{
+    //    StartProduction();
+    //}
+
+   // void StartProduction()
+   // {
+        // ЕСЛИ есть входной продукт И нет выходного И не работаем - начинаем производство
+    //    if (!isWorking && currentInput != null && currentOutput == null)
+   //     {
+    //        Debug.Log("work");
+    //        StartCoroutine(ProduceCoroutine());
+    //    }
+  //  }
+
+    //============
+
         public IEnumerator ProduceCoroutine()
     {
         isWorking = true;
