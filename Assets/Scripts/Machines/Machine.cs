@@ -15,16 +15,11 @@ public class Machine : MonoBehaviour
 
     private void Update()
     {
-        StartProduction();
-    }
-
-    void StartProduction()
-    {
-         //ЕСЛИ есть входной продукт И нет выходного И не работаем - начинаем производство
+        //ЕСЛИ есть входной продукт И нет выходного И не работаем - начинаем производство
         if (!isWorking && currentInput != null && currentOutput == null)
         {
            StartCoroutine(ProduceCoroutine());
-       }
+        }
     }
 
     public IEnumerator ProduceCoroutine()
