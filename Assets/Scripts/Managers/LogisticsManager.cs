@@ -56,16 +56,6 @@ public class LogisticsManager : MonoBehaviour
         // Берем первую задачу из очереди
         TransportTask task = taskQueue.Peek();
         
-        // Проверяем валидность задачи
-        if (!IsTaskValid(task))
-        {
-            Debug.Log($"⏳ Задача отложена: {task.productType} (станок занят)");
-            taskQueue.Dequeue();
-
-            TryAssignTask(); // Пробуем следующую задачу
-            return;
-        }
-
         // Назначаем задачу первому свободному логисту
         Logist logist = availableLogists[0];
         availableLogists.RemoveAt(0);
@@ -80,7 +70,7 @@ public class LogisticsManager : MonoBehaviour
             TryAssignTask();
         }
     }
-
+//======= Thinking about this method
     private bool IsTaskValid(TransportTask task)
     {
         // Для задач со складом сырья (source = null) - проверяем наличие сырья
