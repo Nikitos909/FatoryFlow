@@ -36,6 +36,10 @@ public class LogisticsManager : MonoBehaviour
         Debug.Log($"🚚 Инициализировано логистов: {allLogists.Count}");
     }
 
+
+// Пересотреть добавление задачи, когда логист свободен, проверка через Update свободен логист или нет
+
+
     // ДОБАВЛЕНИЕ задачи в очередь
     public void AddTask(TransportTask task)
     {
