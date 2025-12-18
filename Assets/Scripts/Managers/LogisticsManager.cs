@@ -128,14 +128,9 @@ public class LogisticsManager : MonoBehaviour
         return taskQueue.Any(task => task.sourceMachine == machine);
     }
 
-    // Методы для UI и отладки
-    public int GetQueueCount() => taskQueue.Count;
-    public int GetAvailableLogistsCount() => availableLogists.Count;
-    
     void OnGUI()
     {
         GUI.Label(new Rect(20, 40, 280, 20), $"Очередь задач: {taskQueue.Count}");
         GUI.Label(new Rect(20, 60, 280, 20), $"Свободных логистов: {availableLogists.Count}");
-        GUI.Label(new Rect(20, 80, 280, 20), $"Всего логистов: {allLogists.Count}");
     }
 }
