@@ -23,7 +23,6 @@ public class Machine : MonoBehaviour
          //ЕСЛИ есть входной продукт И нет выходного И не работаем - начинаем производство
         if (!isWorking && currentInput != null && currentOutput == null)
         {
-            Debug.Log("work");
            StartCoroutine(ProduceCoroutine());
        }
     }
@@ -31,7 +30,6 @@ public class Machine : MonoBehaviour
     public IEnumerator ProduceCoroutine()
     {
         isWorking = true;
-        Debug.Log($"начал производство...");
        
         yield return new WaitForSeconds(workTimer);
 
@@ -98,7 +96,6 @@ public class Machine : MonoBehaviour
     {    
         // Определяем куда везти продукт
         Machine destinationMachine = null;
-        Debug.Log("Creating task");
         
         // Если это ФИНАЛЬНЫЙ продукт - везем на склад продажи 
         if (machineType.outputProductType == ProductType.FinalProduct)
@@ -125,7 +122,6 @@ public class Machine : MonoBehaviour
                 LogisticsManager.Instance.AddTask(task);
             }
         }
-        Debug.Log("Task created ==========>");
     }
 
     private bool HasActiveTask()
