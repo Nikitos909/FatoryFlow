@@ -58,7 +58,7 @@ public class Logist : MonoBehaviour
         isEmployed = true;
         
         Debug.Log("Logist recived task");
-        targetPosition = task.sourceMachine.outputSlot;
+        targetPosition = task.sourceMachine.outputSlot.position;
         
         // Начинаем с подбора изделия
         //targetPosition = task.sourceMachine != null ? 
@@ -79,7 +79,7 @@ public class Logist : MonoBehaviour
     private void PickUpProduct()
     {
         Debug.Log("pickup product");
-        carriedProduct = CurrentTask.product;
+        carriedProduct = currentTask.sourceMachine.currentOutput;
         carriedProduct.transform.SetParent(transform);
         carriedProduct.transform.localPosition = Vector3.up * 1.5f;
     }
