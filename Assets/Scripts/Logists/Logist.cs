@@ -58,6 +58,7 @@ public class Logist : MonoBehaviour
         isEmployed = true;
         
         Debug.Log("Logist recived task");
+        targetPosition = task.sourceMachine.GetPickupPosition();
         
         // Начинаем с подбора изделия
         //targetPosition = task.sourceMachine != null ? 
