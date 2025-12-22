@@ -79,9 +79,9 @@ public class Logist : MonoBehaviour
     private void PickUpProduct()
     {
         Debug.Log("pickup product");
-        //CurrentProduct = CurrentTask.product;
-        //CurrentProduct.transform.SetParent(transform);
-        //CurrentProduct.transform.localPosition = Vector3.up * 1.5f;
+        carriedProduct = CurrentTask.product;
+        carriedProduct.transform.SetParent(transform);
+        carriedProduct.transform.localPosition = Vector3.up * 1.5f;
     }
 
     private void DeliverProduct()
