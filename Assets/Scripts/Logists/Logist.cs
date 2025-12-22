@@ -14,7 +14,6 @@ public class Logist : MonoBehaviour
 
     void Start()
     {
-        Debug.Log(isEmployed);
         spawnPosition = transform.position;
         // Регистрируем в LogisticsManager
         if (LogisticsManager.Instance != null)
@@ -58,7 +57,6 @@ public class Logist : MonoBehaviour
         currentTask = task;
         isEmployed = true;
         
-        Debug.Log("Logist recived task");
         targetPosition = task.sourceMachine.outputSlot.position;
         
         // Начинаем с подбора изделия

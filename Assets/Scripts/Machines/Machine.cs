@@ -36,8 +36,6 @@ public class Machine : MonoBehaviour
             Destroy(currentInput.gameObject);
             currentInput = null;
         }
-
-        Debug.Log($"{machineType.displayName} произвел {machineType.outputProductType}");
         
         isWorking = false; // Важно: сбросить флаг работы
         
