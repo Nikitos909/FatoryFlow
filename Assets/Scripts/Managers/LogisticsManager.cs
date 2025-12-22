@@ -66,7 +66,6 @@ public class LogisticsManager : MonoBehaviour
         taskQueue.Dequeue();
         
         logist.AssignTask(task);
-        Debug.Log($"🎯 Задача назначена логисту {logist.name}: {task.productType}");
         
         // Пробуем назначить следующую задачу (если есть свободные логисты)
         if (availableLogists.Count > 0 && taskQueue.Count > 0)
