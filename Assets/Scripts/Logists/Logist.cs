@@ -87,7 +87,46 @@ public class Logist : MonoBehaviour
 
     private void DeliverProduct()
     {
-        Debug.Log("delivery product");
+        bool success = false;
+
+        if (carriedProduct != null)
+        {
+            if (currentTask.destinationMachine != null)
+            {
+                Debug.Log("Find next Machine");
+            }
+            else
+            {
+                // Доставляем на склад продажи
+                if (LogisticsManager.Instance != null && LogisticsManager.Instance.sellPoint != null)
+                {
+                    carriedProduct.UnlockAfterDelivery();
+                    carriedProduct.transform.SetParent(null);
+                    carriedProduct.transform.position = LogisticsManager.Instance.sellPoint.transform.position;
+
+                    // Убедимся, что продукт активирован для продажи
+                    if (carriedProduct.GetComponent<Collider2D>() == null)
+                    {
+                        carriedProduct.gameObject.AddComponent<BoxCollider2D>().isTrigger = true;
+                    }
+
+                    carriedProduct = null;
+                    success = true;
+                    Debug.Log($"💰 Логист {name} доставил на склад продажи");
+                }
+            }
+        }
+        else
+        {
+            Debug.LogError($"❌ Логист {name}: пытается доставить null продукт!");
+            CompleteTask();
+            return;
+        }
+
+        if (success)
+        {
+            CompleteTask();
+        }
     }
     /*============================================================
    
