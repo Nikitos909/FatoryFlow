@@ -14,6 +14,7 @@ public class Logist : MonoBehaviour
 
     void Start()
     {
+        Debug.Log(isEmployed);
         spawnPosition = transform.position;
         // Регистрируем в LogisticsManager
         if (LogisticsManager.Instance != null)
@@ -24,7 +25,7 @@ public class Logist : MonoBehaviour
 
     void Update()
     {
-        if (!isEmployed)
+        if (isEmployed)
         {
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
 
@@ -68,20 +69,23 @@ public class Logist : MonoBehaviour
         isDelivering = false;
     }
 
-        // Возврат на точку спавна
+    // Возврат на точку спавна
     public void ReturnToSpawn()
     {
         targetPosition = spawnPosition;
-        isEmployed = true;
+        //isEmployed = true;
         isDelivering = false;
     }
 
     private void PickUpProduct()
     {
         Debug.Log("pickup product");
-        carriedProduct = currentTask.sourceMachine.currentOutput;
-        carriedProduct.transform.SetParent(transform);
-        carriedProduct.transform.localPosition = Vector3.up * 1.5f;
+        if (currentTask.sourceMachine.currentOutput != null)
+        {
+            carriedProduct = currentTask.sourceMachine.currentOutput;
+            carriedProduct.transform.SetParent(transform);
+            carriedProduct.transform.localPosition = Vector3.up * 1.5f;
+        }
     }
 
     private void DeliverProduct()
