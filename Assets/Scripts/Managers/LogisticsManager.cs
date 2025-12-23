@@ -119,7 +119,7 @@ public class LogisticsManager : MonoBehaviour
         // Если задач нет - возвращаем на базу
         if (taskQueue.Count == 0)
         {
-            logist.ReturnToSpawn();
+            //logist.ReturnToSpawn();
         }
     }
 

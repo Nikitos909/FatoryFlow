@@ -98,7 +98,7 @@ public class Logist : MonoBehaviour
                 if (currentTask.destinationMachine.CanAcceptInput(carriedProduct.type))
                 {
                     carriedProduct.UnlockAfterDelivery(); // Разблокировка перед отдачей на склад для отгрузки
-                    currentTask.destinationMachine.PutInputProduct(carriedProduct);
+                    //currentTask.destinationMachine.PutInputProduct(carriedProduct);
                     carriedProduct = null;
                     success = true;
                     Debug.Log($"📤 Логист {name} доставил на {currentTask.destinationMachine.machineType.displayName}");
