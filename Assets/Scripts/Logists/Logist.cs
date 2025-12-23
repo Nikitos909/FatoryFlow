@@ -43,6 +43,7 @@ public class Logist : MonoBehaviour
     {
         currentTask = null;
         isEmployed = false;
+        isDelivering = false;
         
         // Сообщаем менеджеру о доступности
         if (LogisticsManager.Instance != null)
