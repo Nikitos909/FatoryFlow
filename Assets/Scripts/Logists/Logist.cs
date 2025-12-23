@@ -79,6 +79,7 @@ public class Logist : MonoBehaviour
         carriedProduct = currentTask.sourceMachine.currentOutput;
         carriedProduct.transform.SetParent(transform);
         carriedProduct.transform.localPosition = Vector3.up * 1.5f;
+        carriedProduct.LockForTransport();
         isDelivering = true;
     }
 
