@@ -23,7 +23,7 @@ public class Product : MonoBehaviour
     }
 
     // Метод для блокировки коллайдера продукта во время траспортировки
-    public void LockForTransport(Logist transporter)
+    public void LockForTransport()
     {
         isLockedForTransport = true;
         
