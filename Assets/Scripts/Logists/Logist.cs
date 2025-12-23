@@ -71,7 +71,6 @@ public class Logist : MonoBehaviour
     public void ReturnToSpawn()
     {
         targetPosition = spawnPosition;
-        //isEmployed = true;
         isDelivering = false;
     }
 
