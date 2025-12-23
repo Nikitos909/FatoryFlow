@@ -68,13 +68,6 @@ public class Logist : MonoBehaviour
         isDelivering = false;
     }
 
-    // Возврат на точку спавна
-    public void ReturnToSpawn()
-    {
-        targetPosition = spawnPosition;
-        isDelivering = false;
-    }
-
     private void PickUpProduct()
     {
         carriedProduct = currentTask.sourceMachine.currentOutput;
@@ -239,20 +232,6 @@ public class Logist : MonoBehaviour
         {
             Gizmos.color = Color.blue;
             Gizmos.DrawWireSphere(transform.position, 0.5f);
-        }
-    }
-
-    public void ReturnToSpawn()
-    {
-        if (!isMoving && !isWaitingForProduct)
-        {
-            if (LogisticsManager.Instance != null && LogisticsManager.Instance.logistSpawnPoint != null)
-            {
-                targetPosition = LogisticsManager.Instance.logistSpawnPoint.position;
-                isMoving = true;
-                isDelivering = false;
-                Debug.Log($"🏠 Логист {name} возвращается на базу");
-            }
         }
     }
     =============================================================*/
