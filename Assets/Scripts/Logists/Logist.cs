@@ -75,7 +75,7 @@ public class Logist : MonoBehaviour
         carriedProduct.transform.localPosition = Vector3.up * 1.5f;
         if (currentTask.destinationMachine != null)
         {
-            targetPosition = currentTask.sourceMachine.inputSlot.position;
+            targetPosition = currentTask.destinationMachine.inputSlot.position;
         }
         else
         {
