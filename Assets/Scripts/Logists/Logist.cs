@@ -83,6 +83,11 @@ public class Logist : MonoBehaviour
         isDelivering = true;
     }
 
+    private void  GetRawMaterialPosition()
+    {
+        Debug.Log("pick up from the warehouse");
+    }
+
     private void DeliverProduct()
     {
         bool success = false;
