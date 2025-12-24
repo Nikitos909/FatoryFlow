@@ -74,14 +74,15 @@ public class Logist : MonoBehaviour
 
         targetPosition = currentTask.destinationMachine != null ? 
            currentTask.destinationMachine.inputSlot.position : 
-           Debug.Log("targetPosition of warehouse");
+           GetRawMaterialPosition();
         
         isDelivering = true;
     }
 
-    private void  GetRawMaterialPosition()
+    private Vector3 GetRawMaterialPosition()
     {
         Debug.Log("pick up from the warehouse");
+        return Vector3.zero;
     }
 
     private void DeliverProduct()
@@ -97,7 +98,7 @@ public class Logist : MonoBehaviour
                 if (currentTask.destinationMachine.CanAcceptInput(carriedProduct.type))
                 {
                     carriedProduct.UnlockAfterDelivery(); // Разблокировка перед отдачей на склад для отгрузки
-                    //currentTask.destinationMachine.PutInputProduct(carriedProduct);
+                    currentTask.destinationMachine.PutInputProduct(carriedProduct);
                     carriedProduct = null;
                     success = true;
                     Debug.Log($"📤 Логист {name} доставил на {currentTask.destinationMachine.machineType.displayName}");

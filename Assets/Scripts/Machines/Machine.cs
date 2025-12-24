@@ -18,27 +18,27 @@ public class Machine : MonoBehaviour
         //ЕСЛИ есть входной продукт И нет выходного И не работаем - начинаем производство
         if (!isWorking && currentInput != null && currentOutput == null)
         {
-           StartCoroutine(ProduceCoroutine());
+            StartCoroutine(ProduceCoroutine());
         }
     }
 
     public IEnumerator ProduceCoroutine()
     {
         isWorking = true;
-       
+
         yield return new WaitForSeconds(workTimer);
 
         CreateOutputProduct(machineType.outputProductType);
-        
+
         // Уничтожаем входной продукт
         if (currentInput != null)
         {
             Destroy(currentInput.gameObject);
             currentInput = null;
         }
-        
+
         isWorking = false; // Важно: сбросить флаг работы
-        
+
         CreateTransportTask();
     }
 
@@ -51,14 +51,14 @@ public class Machine : MonoBehaviour
 
         // Получаем компонент Product
         Product product = productObj.GetComponent<Product>();
-        
+
         if (product != null)
         {
             product.Initialize(type, this);
             currentInput = product;
         }
     }
-    
+
     // Вызывается по кнопке UI Вспомогательный метод-временный
     public void BuyMaterial()
     {
@@ -75,7 +75,7 @@ public class Machine : MonoBehaviour
         // Создаем объект из префаба
         GameObject productObj = Instantiate(machineType.outputProductPrefab, outputSlot.position, Quaternion.identity);
         productObj.name = $"Product_{type}";
-    
+
         // Получаем компонент Product
         Product product = productObj.GetComponent<Product>();
         if (product != null)
@@ -86,10 +86,10 @@ public class Machine : MonoBehaviour
     }
 
     private void CreateTransportTask()
-    {    
+    {
         // Определяем куда везти продукт
         Machine destinationMachine = null;
-        
+
         // Если это ФИНАЛЬНЫЙ продукт - везем на склад продажи 
         if (machineType.outputProductType == ProductType.FinalProduct)
         {
@@ -101,10 +101,10 @@ public class Machine : MonoBehaviour
             LogisticsManager.Instance.AddTask(task);
         }
         else
-        {        
+        {
             // Для промежуточных продуктов ищем следующий станок
             destinationMachine = FindNextMachine();
-            
+
             if (destinationMachine != null && destinationMachine.CanAcceptInput(machineType.outputProductType))
             {
                 TransportTask task = new TransportTask(
@@ -115,6 +115,10 @@ public class Machine : MonoBehaviour
                 LogisticsManager.Instance.AddTask(task);
             }
         }
+    }
+    public void PutInputProduct(Product product)
+    {
+        Debug.Log("Put product");
     }
 
     private bool HasActiveTask()
