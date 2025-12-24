@@ -116,12 +116,6 @@ public class Logist : MonoBehaviour
                     carriedProduct.transform.SetParent(null);
                     carriedProduct.transform.position = LogisticsManager.Instance.sellPoint.transform.position;
 
-                    // Убедимся, что продукт активирован для продажи
-                    if (carriedProduct.GetComponent<Collider2D>() == null)
-                    {
-                        carriedProduct.gameObject.AddComponent<BoxCollider2D>().isTrigger = true;
-                    }
-
                     carriedProduct = null;
                     success = true;
                     Debug.Log($"💰 Логист {name} доставил на склад продажи");
@@ -226,23 +220,6 @@ public class Logist : MonoBehaviour
         if (success)
         {
             CompleteTask();
-        }
-    }
-
-    // Визуализация для отладки
-    void OnDrawGizmos()
-    {
-        if (isMoving)
-        {
-            Gizmos.color = isDelivering ? Color.green : Color.yellow;
-            Gizmos.DrawLine(transform.position, targetPosition);
-            Gizmos.DrawWireSphere(targetPosition, 0.2f);
-        }
-        
-        if (isWaitingForProduct)
-        {
-            Gizmos.color = Color.blue;
-            Gizmos.DrawWireSphere(transform.position, 0.5f);
         }
     }
     =============================================================*/
