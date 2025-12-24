@@ -58,12 +58,10 @@ public class Logist : MonoBehaviour
         currentTask = task;
         isEmployed = true;
         
-        targetPosition = task.sourceMachine.outputSlot.position;
-        
         // Начинаем с подбора изделия
-        //targetPosition = task.sourceMachine != null ? 
-         //   task.sourceMachine.GetPickupPosition() : 
-         //   GetRawMaterialPosition();
+        targetPosition = task.sourceMachine != null ? 
+           task.sourceMachine.outputSlot.position : 
+           GetRawMaterialPosition();
         
         isDelivering = false;
     }
