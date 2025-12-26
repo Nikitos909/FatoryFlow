@@ -120,21 +120,21 @@ public class Machine : MonoBehaviour
     {
         Debug.Log("Put product");
         // Проверяем, можем ли принять продукт
-    if (!CanAcceptInput(product.type))
-    {
-        Debug.LogWarning($"❌ Станок {machineType.displayName} не может принять продукт типа {product.type} сейчас");
-        return;
-    }
-
-    // Размещаем продукт в inputSlot
-    product.transform.SetParent(inputSlot);
-    product.transform.localPosition = Vector3.zero;
-    product.transform.localRotation = Quaternion.identity;
-
-    // Устанавливаем текущий входной продукт
-    currentInput = product;
-
-    Debug.Log($"✅ Продукт {product.type} размещен на станке {machineType.displayName}");
+        if (!CanAcceptInput(product.type))
+        {
+            Debug.LogWarning($"❌ Станок {machineType.displayName} не может принять продукт типа {product.type} сейчас");
+            return;
+        }
+    
+        // Размещаем продукт в inputSlot
+        product.transform.SetParent(inputSlot);
+        product.transform.localPosition = Vector3.zero;
+        product.transform.localRotation = Quaternion.identity;
+    
+        // Устанавливаем текущий входной продукт
+        currentInput = product;
+    
+        Debug.Log($"✅ Продукт {product.type} размещен на станке {machineType.displayName}");
 
     }
 
