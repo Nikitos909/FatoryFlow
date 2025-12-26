@@ -160,7 +160,7 @@ MonoBehaviour:
   currentInput: {fileID: 0}
   currentOutput: {fileID: 0}
   isWorking: 0
-  workTimer: 0
+  workTimer: 5
 --- !u!212 &108117651
 SpriteRenderer:
   m_ObjectHideFlags: 0
