@@ -129,7 +129,7 @@ public class Machine : MonoBehaviour
         // Размещаем продукт в inputSlot
         product.transform.SetParent(null);
         product.transform.localPosition = inputSlot.position;
-        product.transform.localRotation = Quaternion.identity;
+        product.transform.localRotation = inputSlot.rotation;
     
         // Устанавливаем текущий входной продукт
         currentInput = product;
