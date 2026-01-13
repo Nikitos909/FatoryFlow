@@ -133,9 +133,6 @@ public class Machine : MonoBehaviour
     
         // Устанавливаем текущий входной продукт
         currentInput = product;
-    
-        Debug.Log($"✅ Продукт {product.type} размещен на станке {machineType.displayName}");
-
     }
 
     private bool HasActiveTask()
