@@ -79,8 +79,7 @@ public class Logist : MonoBehaviour
                 currentTask.destinationMachine.inputSlot.position : 
                 GetRawMaterialPosition();
     
-    isDelivering = true;
-
+        isDelivering = true;
     }
 
     private Vector3 GetRawMaterialPosition()
@@ -135,8 +134,7 @@ public class Logist : MonoBehaviour
             CompleteTask();
         }
     }
-    /*============================================================
-   
+    /*============================================================   
     private Product FindRawMaterialOnWarehouse()
     {
         // Используем метод склада если доступен
@@ -144,7 +142,6 @@ public class Logist : MonoBehaviour
         {
             return GameManager.Instance.warehouse.GetAvailableRawMaterial();
         }
-
         // Резервный поиск
         Product[] rawProducts = FindObjectsOfType<Product>();
         foreach (Product product in rawProducts)
