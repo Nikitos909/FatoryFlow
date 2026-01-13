@@ -28,6 +28,12 @@ public class Logist : MonoBehaviour
         {
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
 
+            // Обновляем позицию продукта если он переносится
+            if (carriedProduct != null)
+            {
+                carriedProduct.transform.position = transform.position + Vector3.up * 1.2f;
+            }
+
             if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
             {
                 if (!isDelivering)
@@ -72,8 +78,7 @@ public class Logist : MonoBehaviour
         carriedProduct = currentTask.sourceMachine.currentOutput;
         currentTask.sourceMachine.currentOutput = null;
         carriedProduct.transform.SetParent(null);
-        carriedProduct.transform.position = transform.position + Vector3.up * 1.1f;
-    
+        
         // Устанавливаем цель доставки
         targetPosition = currentTask.destinationMachine != null ? 
                 currentTask.destinationMachine.inputSlot.position : 
@@ -137,7 +142,6 @@ public class Logist : MonoBehaviour
     /*============================================================   
     private Product FindRawMaterialOnWarehouse()
     {
-        // Используем метод склада если доступен
         if (GameManager.Instance != null && GameManager.Instance.warehouse != null)
         {
             return GameManager.Instance.warehouse.GetAvailableRawMaterial();
