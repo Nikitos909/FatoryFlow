@@ -68,15 +68,19 @@ public class Logist : MonoBehaviour
 
     private void PickUpProduct()
     {
+        // Забираем продукт у станка
         carriedProduct = currentTask.sourceMachine.currentOutput;
-        carriedProduct.transform.SetParent(transform);
-        carriedProduct.transform.localPosition = Vector3.up * 1.2f;
-
+        currentTask.sourceMachine.currentOutput = null;
+        carriedProduct.transform.SetParent(null);
+        carriedProduct.transform.position = transform.position + Vector3.up * 1.1f;
+    
+        // Устанавливаем цель доставки
         targetPosition = currentTask.destinationMachine != null ? 
-           currentTask.destinationMachine.inputSlot.position : 
-           GetRawMaterialPosition();
-        
-        isDelivering = true;
+                currentTask.destinationMachine.inputSlot.position : 
+                GetRawMaterialPosition();
+    
+    isDelivering = true;
+
     }
 
     private Vector3 GetRawMaterialPosition()
