@@ -28,10 +28,9 @@ public class Logist : MonoBehaviour
         {
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
 
-            // Обновляем позицию продукта если он переносится
             if (carriedProduct != null)
             {
-                carriedProduct.transform.position = transform.position + Vector3.up * 1.2f;
+                carriedProduct.transform.position = transform.position + Vector3.up * 1.1f;
             }
 
             if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
@@ -89,7 +88,6 @@ public class Logist : MonoBehaviour
 
     private Vector3 GetRawMaterialPosition()
     {
-        Debug.Log("pick up from the warehouse");
         return Vector3.zero;
     }
 

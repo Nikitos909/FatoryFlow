@@ -58,7 +58,6 @@ public class EconomyManager : MonoBehaviour
             GameManager.Instance.gameState.currentMoney -= amount;
             GameManager.Instance.gameState.totalExpenses += amount;
             UpdateMoneyUI();
-            Debug.Log($"💸 -{amount}₽");
             return true;
         }
         return false;
@@ -70,11 +69,6 @@ public class EconomyManager : MonoBehaviour
         
         int logistCount = FindObjectsOfType<Logist>().Length;
         int totalSalary = config.workerSalary * logistCount;
-
-        if (SpendMoney(totalSalary))
-        {
-            Debug.Log($"Выплачена зарплата {logistCount} логистам: {totalSalary}₽");
-        }
     }
 
     private void UpdateMoneyUI()
