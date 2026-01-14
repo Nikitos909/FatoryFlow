@@ -58,7 +58,6 @@ public class GameManager : MonoBehaviour
         allMachines = new List<Machine>(FindObjectsOfType<Machine>());
         
         spawnTimer = config.rawPipeSpawnInterval;
-        Debug.Log("🎮 Игра инициализирована!");
     }
 
     private void Update()
