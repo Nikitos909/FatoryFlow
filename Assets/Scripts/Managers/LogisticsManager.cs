@@ -32,8 +32,6 @@ public class LogisticsManager : MonoBehaviour
         // Находим всех логистов на сцене
         allLogists = new List<Logist>(FindObjectsOfType<Logist>());
         availableLogists = new List<Logist>(allLogists);
-        
-        Debug.Log($"🚚 Инициализировано логистов: {allLogists.Count}");
     }
 
 
