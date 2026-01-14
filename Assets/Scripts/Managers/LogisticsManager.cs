@@ -113,12 +113,6 @@ public class LogisticsManager : MonoBehaviour
         
         // Пытаемся дать ему новую задачу
         TryAssignTask();
-        
-        // Если задач нет - возвращаем на базу
-        if (taskQueue.Count == 0)
-        {
-            //logist.ReturnToSpawn();
-        }
     }
 
     public bool HasTaskForMachine(Machine machine)
