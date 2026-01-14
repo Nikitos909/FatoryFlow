@@ -33,7 +33,6 @@ public class GameManager : MonoBehaviour
         }
 
         Instance = this;
-        Debug.Log("Initialize Game Manager");
         InitializeGame();
     }
 
@@ -57,11 +56,7 @@ public class GameManager : MonoBehaviour
 
         // Автоматически находим все станки на сцене
         allMachines = new List<Machine>(FindObjectsOfType<Machine>());
-        foreach (var machine in allMachines)
-        {
-            Debug.Log($"Найден станок: {machine.machineType.displayName}");
-        }
-
+        
         spawnTimer = config.rawPipeSpawnInterval;
         Debug.Log("🎮 Игра инициализирована!");
     }
