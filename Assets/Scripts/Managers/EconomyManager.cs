@@ -15,7 +15,6 @@ public class EconomyManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            Debug.Log("Initialize Economy Manager");
         }
         else
         {
