@@ -72,27 +72,6 @@ public class GameManager : MonoBehaviour
         economyManager.UpdateEconomy(Time.deltaTime);
     }
 
-    private void SpawnRawPipe()
-    {
-        if (!cutterMachine.CanAcceptInput(ProductType.RawPipe)) return;
-
-        GameObject pipeObj = new GameObject("RawPipe");
-        pipeObj.transform.position = resourceSpawnPoint.position;
-
-        Product product = pipeObj.AddComponent<Product>();
-        product.Initialize(ProductType.RawPipe, null);
-
-        SpriteRenderer sr = pipeObj.AddComponent<SpriteRenderer>();
-        sr.sprite = CreateDefaultSprite();
-        sr.color = Color.gray;
-        sr.sortingOrder = 1;
-
-        //cutterMachine.PutInputProduct(product);
-        gameState.productsManufactured++;
-
-        Debug.Log("📦 Создана сырая труба");
-    }
-
     private Sprite CreateDefaultSprite()
     {
         Texture2D texture = new Texture2D(16, 16);
