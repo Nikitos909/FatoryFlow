@@ -41,13 +41,17 @@ public class LogisticsManager : MonoBehaviour
     {
         while (true)
         {
+            Debug.Log("Check1");
             yield return new WaitForSeconds(1f);
             
             // Пытаемся назначить задачи
             if (availableLogists.Count > 0 && (taskQueue.Count > 0))
             {
+                Debug.Log("Check2");
                 TryAssignTask();
             }
+
+            yield return null;
         }
     }
 
@@ -55,9 +59,6 @@ public class LogisticsManager : MonoBehaviour
     public void AddTask(TransportTask task)
     {
         taskQueue.Enqueue(task);
-        Debug.Log($"✅ В LogisticsManager Добавлена задача: {task.productType} -> " +
-                 $"{(task.destinationMachine != null ? task.destinationMachine.machineType.displayName : "СКЛАД")} " +
-                 $"(очередь: {taskQueue.Count})");
 
         TryAssignTask();
     }
