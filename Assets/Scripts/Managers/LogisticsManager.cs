@@ -34,8 +34,17 @@ public class LogisticsManager : MonoBehaviour
         availableLogists = new List<Logist>(allLogists);
     }
 
+    void Update
+
 
 // Пересотреть добавление задачи, когда логист свободен, проверка через Update свободен логист или нет
+    private void CheckAvailableLogist()
+    {
+        if (availableLogists.Count > 0)
+        {
+            TryAssingTask();
+        }
+    }
 
 
     // ДОБАВЛЕНИЕ задачи в очередь
