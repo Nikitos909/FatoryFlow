@@ -24,22 +24,25 @@ public class Logist : MonoBehaviour
 
     void Update()
     {
-        if (isEmployed)
+        if (!isEmployed) return;        
+        MoveToTarget();
+    }
+    
+    private void MoveToTarget()
+    {
+        transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
+        
+        if (carriedProduct != null)
         {
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
-
-            if (carriedProduct != null)
-            {
-                carriedProduct.transform.position = transform.position + Vector3.up * 1.1f;
-            }
-
-            if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
-            {
-                if (!isDelivering)
-                    PickUpProduct();
-                else
-                    DeliverProduct();
-            }
+            carriedProduct.transform.position = transform.position + Vector3.up * 1.1f;
+        }
+        
+        if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
+        {
+            if (!isDelivering)
+                PickUpProduct();
+            else
+                DeliverProduct();
         }
     }
 
