@@ -32,20 +32,23 @@ public class LogisticsManager : MonoBehaviour
         // Находим всех логистов на сцене
         allLogists = new List<Logist>(FindObjectsOfType<Logist>());
         availableLogists = new List<Logist>(allLogists);
+        
+        StartCoroutine(CheckAvailableLogist());
     }
 
-    void Update
-
-
-// Пересотреть добавление задачи, когда логист свободен, проверка через Update свободен логист или нет
-    private void CheckAvailableLogist()
+    private IEnumerator CheckAvailableLogist()
     {
-        if (availableLogists.Count > 0)
+        while (true)
         {
-            TryAssingTask();
+            yield return new WaitForSeconds(1f);
+            
+            // Пытаемся назначить задачи
+            if (availableLogists.Count > 0 && (taskQueue.Count > 0))
+            {
+                TryAssignTask();
+            }
         }
     }
-
 
     // ДОБАВЛЕНИЕ задачи в очередь
     public void AddTask(TransportTask task)
