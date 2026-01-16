@@ -33,29 +33,13 @@ public class LogisticsManager : MonoBehaviour
         // Находим всех логистов на сцене
         allLogists = new List<Logist>(FindObjectsOfType<Logist>());
         availableLogists = new List<Logist>(allLogists);
-        
-        StartCoroutine(CheckAvailableLogist());
     }
 
-    private IEnumerator CheckAvailableLogist()
+    private void Update()
     {
-        while (true)
+        if (availableLogists.Count > 0 && (taskQueue.Count > 0))
         {
-            Debug.Log(availableLogists.Count);
-            Debug.Log(taskQueue.Count);
-            foreach (task in taskQueue)            
-            { Debug.Log(task);}
-            
-            yield return new WaitForSeconds(1f);
-            
-            // Пытаемся назначить задачи
-            if (availableLogists.Count > 0 && (taskQueue.Count > 0))
-            {
-                Debug.Log("Check2");
-                TryAssignTask();
-            }
-
-            yield return null;
+            TryAssignTask();
         }
     }
 
