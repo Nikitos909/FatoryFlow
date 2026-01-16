@@ -47,7 +47,6 @@ public class LogisticsManager : MonoBehaviour
     public void AddTask(TransportTask task)
     {
         taskQueue.Enqueue(task);
-
         TryAssignTask();
     }
 
