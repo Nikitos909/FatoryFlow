@@ -41,13 +41,13 @@ public class LogisticsManager : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(1f);
-            
             Debug.Log(availableLogists.Count);
             
-            foreach (task in taskQueue)
-            
+            foreach (task in taskQueue)            
             { Debug.Log(task);}
+            
+            yield return new WaitForSeconds(1f);
+            
             // Пытаемся назначить задачи
             if (availableLogists.Count > 0 && (taskQueue.Count > 0))
             {
