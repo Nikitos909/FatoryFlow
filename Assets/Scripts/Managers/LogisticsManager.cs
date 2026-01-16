@@ -42,7 +42,7 @@ public class LogisticsManager : MonoBehaviour
         while (true)
         {
             Debug.Log(availableLogists.Count);
-            
+            Debug.Log(taskQueue.Count);
             foreach (task in taskQueue)            
             { Debug.Log(task);}
             
