@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class ProductSellPoint : MonoBehaviour
 {
+    public Transform sellPosition;
+
     void OnTriggerEnter2D(Collider2D other)
     {
         Product product = other.GetComponent<Product>();
