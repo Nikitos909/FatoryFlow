@@ -89,6 +89,11 @@ public class Logist : MonoBehaviour
         isDelivering = true;
     }
 
+    private Vector3 FindFreeMachineForProduct(carriedProduct.type)
+    {
+        return Vector3.zero;
+    }
+
     private Vector3 GetRawMaterialPosition()
     {
         return Vector3.zero;
