@@ -110,7 +110,7 @@ public class Logist : MonoBehaviour
                 {
                     carriedProduct.UnlockAfterDelivery(); // Разблокировка перед отдачей на склад для отгрузки
                     carriedProduct.transform.SetParent(null);
-                    deliveryMachine.PutInputProduct(carriedProduct);
+                    currentTask.destinationMachine.PutInputProduct(carriedProduct);
                     carriedProduct = null;
                     success = true;
                     Debug.Log($"📤 Логист {name} доставил на {currentTask.destinationMachine.machineType.displayName}");
