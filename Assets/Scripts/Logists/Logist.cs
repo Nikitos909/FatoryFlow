@@ -83,29 +83,25 @@ public class Logist : MonoBehaviour
         
         // Устанавливаем цель доставки
         targetPosition = currentTask.destinationMachine != null ? 
-                currentTask.destinationMachine.inputSlot.position : 
+                FindFreeMachineForProduct(currentTask) : 
                 GetRawMaterialPosition();
     
         isDelivering = true;
     }
 
-    private Vector3 FindFreeMachineForProduct(currentTask)
+    private Vector3 FindFreeMachineForProduct(TransportTask task)
     {
         List<Machine> allMachines = new List<Machine>(FindObjectsOfType<Machine>());
-        List<Machine> suitableMachines = new List<Machine>();
         
         // Ищем все станки, которые могут принять этот тип продукта
         foreach (Machine machine in allMachines)
         {
             // Пропускаем станок-источник
-            if (machine == currentTask.destinationMachine && currentTask.destinationMachine.CanAcceptInput())
+            if (machine == task.destinationMachine && task.destinationMachine.CanAcceptInput(task.sourceMachine.currentOutput))
             {
-                
+                Debug.Log("Find Machine");
+                return machine.inputSlot.position;
             }
-                
-         
-
-        return Vector3.zero;
     }
 
     private Vector3 GetRawMaterialPosition()
@@ -115,6 +111,10 @@ public class Logist : MonoBehaviour
 
     private void DeliverProduct()
     {
+        List<Machine> allMachines = new List<Machine>(FindObjectsOfType<Machine>());
+        
+        // Ищем все станки, которые могут принять этот тип продукта
+        foreach (Machine machine in allMachines)
         bool success = false;
 
         if (carriedProduct != null)
