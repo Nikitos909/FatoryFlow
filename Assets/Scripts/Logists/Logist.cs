@@ -83,13 +83,13 @@ public class Logist : MonoBehaviour
         
         // Устанавливаем цель доставки
         targetPosition = currentTask.destinationMachine != null ? 
-                FindFreeMachineForProduct(currentTask) : 
+                FindFreeMachineForProduct(currentTask).inputSlot.position : 
                 GetRawMaterialPosition();
     
         isDelivering = true;
     }
 
-    private Vector3 FindFreeMachineForProduct(TransportTask task)
+    private Machine FindFreeMachineForProduct(TransportTask task)
     {
         List<Machine> allMachines = new List<Machine>(FindObjectsOfType<Machine>());
         
@@ -100,8 +100,11 @@ public class Logist : MonoBehaviour
             if (machine == task.destinationMachine && task.destinationMachine.CanAcceptInput(carriedProduct.type))
             {
                 Debug.Log("Find Machine");
-                return machine.inputSlot.position;
+                return machine;
             }
+        }
+
+        return;
     }
 
     private Vector3 GetRawMaterialPosition()
@@ -110,27 +113,24 @@ public class Logist : MonoBehaviour
     }
 
     private void DeliverProduct()
-    {
-        List<Machine> allMachines = new List<Machine>(FindObjectsOfType<Machine>());
-        
-        // Ищем все станки, которые могут принять этот тип продукта
-        foreach (Machine machine in allMachines)
+    {        
         bool success = false;
+        Machine deliveryMachine = FindFreeMachineForProduct(currentTask);
 
         if (carriedProduct != null)
         {
-            if (currentTask.destinationMachine != null)
+            if (deliveryMachine != null)
             {
                 // Доставляем на станок
-                if (currentTask.destinationMachine.CanAcceptInput(carriedProduct.type))
+                if (deliveryMachine.CanAcceptInput(carriedProduct.type))
                 {
                     carriedProduct.UnlockAfterDelivery(); // Разблокировка перед отдачей на склад для отгрузки
                     carriedProduct.transform.SetParent(null);
-                    currentTask.destinationMachine.PutInputProduct(carriedProduct);
+                    deliveryMachine.PutInputProduct(carriedProduct);
                     carriedProduct = null;
                     success = true;
                     Debug.Log($"📤 Логист {name} доставил на {currentTask.destinationMachine.machineType.displayName}");
-                }
+                }                
             }
             else
             {
