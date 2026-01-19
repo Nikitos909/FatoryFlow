@@ -98,22 +98,12 @@ public class Logist : MonoBehaviour
         foreach (Machine machine in allMachines)
         {
             // Пропускаем станок-источник
-            if (machine == currentTask.sourceMachine)
-                continue;
-                
-            // Проверяем, что станок может принимать этот тип продукта
-            if (machine.machineType.inputProductType == productType)
+            if (machine == currentTask.destinationMachine && currentTask.destinationMachine.CanAcceptInput())
             {
-                // Проверяем, свободен ли станок (не занят работой и нет входного продукта)
-                if (machine.CanAcceptInput(productType))
-                {
-                    // Дополнительная проверка: нет ли уже логиста, который везет продукт на этот станок
-                    if (!IsMachineReserved(machine))
-                    {
-                        suitableMachines.Add(machine);
-                    }
-                }
+                
             }
+                
+         
 
         return Vector3.zero;
     }
