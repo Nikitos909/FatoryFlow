@@ -11,7 +11,6 @@ public class Logist : MonoBehaviour
     private bool isEmployed = false;
     private bool isDelivering = false;
     private Vector3 spawnPosition;
-    private Machine deliveryMachine;
 
     void Start()
     {
@@ -82,30 +81,15 @@ public class Logist : MonoBehaviour
         currentTask.sourceMachine.currentOutput = null;
         carriedProduct.transform.SetParent(null);
 
-        FindFreeMachineForProduct(currentTask);
         // Устанавливаем цель доставки
-        targetPosition = currentTask.destinationMachine != null ? 
-                deliveryMachine.inputSlot.position : 
+        targetPosition = currentTask.destinationMachine != null ?
+                currentTask.destinationMachine.inputSlot.position : 
                 GetRawMaterialPosition();
     
         isDelivering = true;
     }
 
-    private void FindFreeMachineForProduct(TransportTask task)
-    {
-        List<Machine> allMachines = new List<Machine>(FindObjectsOfType<Machine>());
-        
-        // Ищем все станки, которые могут принять этот тип продукта
-        foreach (Machine machine in allMachines)
-        {
-            // Пропускаем станок-источник
-            if (machine == task.destinationMachine && task.destinationMachine.CanAcceptInput(carriedProduct.type))
-            {
-                Debug.Log("Find Machine");
-                deliveryMachine = machine;
-            }
-        }
-    }
+    
 
     private Vector3 GetRawMaterialPosition()
     {
@@ -119,10 +103,10 @@ public class Logist : MonoBehaviour
 
         if (carriedProduct != null)
         {
-            if (deliveryMachine != null)
+            if (currentTask.destinationMachine != null)
             {
                 // Доставляем на станок
-                if (deliveryMachine.CanAcceptInput(carriedProduct.type))
+                if (currentTask.destinationMachine.CanAcceptInput(carriedProduct.type))
                 {
                     carriedProduct.UnlockAfterDelivery(); // Разблокировка перед отдачей на склад для отгрузки
                     carriedProduct.transform.SetParent(null);
