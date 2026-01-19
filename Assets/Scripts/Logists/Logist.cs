@@ -1,5 +1,5 @@
 using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class Logist : MonoBehaviour
 {
@@ -11,6 +11,7 @@ public class Logist : MonoBehaviour
     private bool isEmployed = false;
     private bool isDelivering = false;
     private Vector3 spawnPosition;
+    private Machine deliveryMachine;
 
     void Start()
     {
@@ -80,16 +81,17 @@ public class Logist : MonoBehaviour
         carriedProduct = currentTask.sourceMachine.currentOutput;
         currentTask.sourceMachine.currentOutput = null;
         carriedProduct.transform.SetParent(null);
-        
+
+        FindFreeMachineForProduct(currentTask);
         // Устанавливаем цель доставки
         targetPosition = currentTask.destinationMachine != null ? 
-                FindFreeMachineForProduct(currentTask).inputSlot.position : 
+                deliveryMachine.inputSlot.position : 
                 GetRawMaterialPosition();
     
         isDelivering = true;
     }
 
-    private Machine FindFreeMachineForProduct(TransportTask task)
+    private void FindFreeMachineForProduct(TransportTask task)
     {
         List<Machine> allMachines = new List<Machine>(FindObjectsOfType<Machine>());
         
@@ -100,11 +102,9 @@ public class Logist : MonoBehaviour
             if (machine == task.destinationMachine && task.destinationMachine.CanAcceptInput(carriedProduct.type))
             {
                 Debug.Log("Find Machine");
-                return machine;
+                deliveryMachine = machine;
             }
         }
-
-        return;
     }
 
     private Vector3 GetRawMaterialPosition()
@@ -115,7 +115,7 @@ public class Logist : MonoBehaviour
     private void DeliverProduct()
     {        
         bool success = false;
-        Machine deliveryMachine = FindFreeMachineForProduct(currentTask);
+        //FindFreeMachineForProduct(currentTask);
 
         if (carriedProduct != null)
         {
