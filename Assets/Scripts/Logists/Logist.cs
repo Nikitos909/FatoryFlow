@@ -97,7 +97,7 @@ public class Logist : MonoBehaviour
         foreach (Machine machine in allMachines)
         {
             // Пропускаем станок-источник
-            if (machine == task.destinationMachine && task.destinationMachine.CanAcceptInput(task.sourceMachine.currentOutput))
+            if (machine == task.destinationMachine && task.destinationMachine.CanAcceptInput(carriedProduct.type))
             {
                 Debug.Log("Find Machine");
                 return machine.inputSlot.position;
