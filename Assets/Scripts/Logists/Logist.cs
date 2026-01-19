@@ -89,8 +89,32 @@ public class Logist : MonoBehaviour
         isDelivering = true;
     }
 
-    private Vector3 FindFreeMachineForProduct(carriedProduct.type)
+    private Vector3 FindFreeMachineForProduct(currentTask)
     {
+        List<Machine> allMachines = new List<Machine>(FindObjectsOfType<Machine>());
+        List<Machine> suitableMachines = new List<Machine>();
+        
+        // Ищем все станки, которые могут принять этот тип продукта
+        foreach (Machine machine in allMachines)
+        {
+            // Пропускаем станок-источник
+            if (machine == currentTask.sourceMachine)
+                continue;
+                
+            // Проверяем, что станок может принимать этот тип продукта
+            if (machine.machineType.inputProductType == productType)
+            {
+                // Проверяем, свободен ли станок (не занят работой и нет входного продукта)
+                if (machine.CanAcceptInput(productType))
+                {
+                    // Дополнительная проверка: нет ли уже логиста, который везет продукт на этот станок
+                    if (!IsMachineReserved(machine))
+                    {
+                        suitableMachines.Add(machine);
+                    }
+                }
+            }
+
         return Vector3.zero;
     }
 
