@@ -87,9 +87,7 @@ public class Logist : MonoBehaviour
                 GetRawMaterialPosition();
     
         isDelivering = true;
-    }
-
-    
+    }    
 
     private Vector3 GetRawMaterialPosition()
     {
