@@ -105,6 +105,11 @@ public class Logist : MonoBehaviour
             currentTask.destinationMachine = freeMachine;
             Debug.Log($"🔄 Логист {name}: перенаправлен на свободный станок {freeMachine.machineType.displayName}");
         }
+        else if (originalDestination != null)
+        {
+            // Возвращаем оригинальный destination, если не нашли свободный
+            currentTask.destinationMachine = originalDestination;
+        }
         
         // Устанавливаем цель доставки
         targetPosition = currentTask.destinationMachine != null ?
