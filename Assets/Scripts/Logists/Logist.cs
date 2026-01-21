@@ -87,7 +87,7 @@ public class Logist : MonoBehaviour
                 GetRawMaterialPosition();
     
         isDelivering = true;
-        //===============
+        /*=========
         if (currentTask == null || currentTask.sourceMachine == null)
         {
             CompleteTask();
@@ -130,7 +130,7 @@ public class Logist : MonoBehaviour
                 GetRawMaterialPosition();
     
         isDelivering = true;
-        //===============        
+        //===============   */     
     }    
 
     private Vector3 GetRawMaterialPosition()
