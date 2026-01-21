@@ -11,6 +11,7 @@ public class Logist : MonoBehaviour
     private bool isEmployed = false;
     private bool isDelivering = false;
     private Vector3 spawnPosition;
+    private Machine originalDestination; 
 
     void Start()
     {
@@ -64,6 +65,7 @@ public class Logist : MonoBehaviour
     public void AssignTask(TransportTask task)
     {
         currentTask = task;
+        originalDestination = task.destinationMachine; 
         isEmployed = true;
         
         // Начинаем с подбора изделия
