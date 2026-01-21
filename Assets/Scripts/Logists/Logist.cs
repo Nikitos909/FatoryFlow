@@ -119,7 +119,6 @@ public class Logist : MonoBehaviour
         isDelivering = true; 
     }
 
-    /*
     private Machine FindFreeMachineForProduct(ProductType productType)
     {
         if (currentTask == null)
@@ -159,11 +158,32 @@ public class Logist : MonoBehaviour
         
         return null;
     }
-    */
 
     private Vector3 GetRawMaterialPosition()
     {
         return Vector3.zero;
+    }
+
+    // Нахождение ближайшего станка
+    private Machine GetClosestMachine(List<Machine> machines)
+    {
+        if (machines == null || machines.Count == 0)
+            return null;
+            
+        Machine closest = machines[0];
+        float closestDistance = Vector3.Distance(transform.position, closest.transform.position);
+        
+        for (int i = 1; i < machines.Count; i++)
+        {
+            float distance = Vector3.Distance(transform.position, machines[i].transform.position);
+            if (distance < closestDistance)
+            {
+                closestDistance = distance;
+                closest = machines[i];
+            }
+        }
+        
+        return closest;
     }
 
     private void DeliverProduct()
