@@ -77,17 +77,6 @@ public class Logist : MonoBehaviour
     private void PickUpProduct()
     {
         // Забираем продукт у станка
-        carriedProduct = currentTask.sourceMachine.currentOutput;
-        currentTask.sourceMachine.currentOutput = null;
-        carriedProduct.transform.SetParent(null);
-
-        // Устанавливаем цель доставки
-        targetPosition = currentTask.destinationMachine != null ?
-                currentTask.destinationMachine.inputSlot.position : 
-                GetRawMaterialPosition();
-    
-        isDelivering = true;
-        /*=========
         if (currentTask == null || currentTask.sourceMachine == null)
         {
             CompleteTask();
@@ -105,12 +94,8 @@ public class Logist : MonoBehaviour
         
         currentTask.sourceMachine.currentOutput = null;
         carriedProduct.transform.SetParent(null);
-       
-        // ВАРИАНТ 1: Ищем свободные станки того же типа, что и исходный станок
-        Machine freeMachine = FindFreeMachineSameType(currentTask.sourceMachine);
-        
-        // ВАРИАНТ 2: Или ищем станки, которые могут принять данный продукт
-        // Machine freeMachine = FindFreeMachineForProduct(carriedProduct.type);
+
+        Machine freeMachine = FindFreeMachineForProduct(carriedProduct.type);
         
         if (freeMachine != null)
         {
@@ -129,8 +114,7 @@ public class Logist : MonoBehaviour
                 currentTask.destinationMachine.inputSlot.position :
                 GetRawMaterialPosition();
     
-        isDelivering = true;
-        //===============   */     
+        isDelivering = true; 
     }    
 
     private Vector3 GetRawMaterialPosition()
