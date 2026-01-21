@@ -115,7 +115,49 @@ public class Logist : MonoBehaviour
                 GetRawMaterialPosition();
     
         isDelivering = true; 
-    }    
+    }
+
+    /*
+    private Machine FindFreeMachineForProduct(ProductType productType)
+    {
+        if (currentTask == null)
+            return null;
+        
+        List<Machine> allMachines = new List<Machine>(FindObjectsOfType<Machine>());
+        List<Machine> suitableMachines = new List<Machine>();
+        
+        // Получаем тип продукта из currentTask
+        ProductType targetProductType = currentTask.productType;
+        
+        foreach (Machine machine in allMachines)
+        {
+            // Пропускаем станок-источник
+            if (machine == currentTask.sourceMachine)
+                continue;
+                
+            // Проверяем, что станок может принимать этот тип продукта
+            if (machine.machineType.inputProductType == targetProductType)
+            {
+                // Проверяем, свободен ли станок
+                if (machine.CanAcceptInput(targetProductType))
+                {
+                    // Проверяем, не зарезервирован ли станок
+                    if (!IsMachineReserved(machine))
+                    {
+                        suitableMachines.Add(machine);
+                    }
+                }
+            }
+        }
+        
+        if (suitableMachines.Count > 0)
+        {
+            return GetClosestMachine(suitableMachines);
+        }
+        
+        return null;
+    }
+    */
 
     private Vector3 GetRawMaterialPosition()
     {
