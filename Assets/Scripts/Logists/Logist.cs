@@ -11,7 +11,7 @@ public class Logist : MonoBehaviour
     private bool isEmployed = false;
     private bool isDelivering = false;
     private Vector3 spawnPosition;
-    private Machine originalDestination; 
+    private Machine originalDestination;
 
     void Start()
     {
@@ -233,32 +233,62 @@ public class Logist : MonoBehaviour
             CompleteTask();
         }
     }
-    /*============================================================   
-    private Product FindRawMaterialOnWarehouse()
+
+    // Дополнительный метод: проверка, зарезервирован ли станок другой задачей
+    private bool IsMachineReserved(Machine machine)
     {
-        if (GameManager.Instance != null && GameManager.Instance.warehouse != null)
+        // Проверяем очередь задач LogisticsManager
+        if (LogisticsManager.Instance != null)
         {
-            return GameManager.Instance.warehouse.GetAvailableRawMaterial();
-        }
-        // Резервный поиск
-        Product[] rawProducts = FindObjectsOfType<Product>();
-        foreach (Product product in rawProducts)
-        {
-            if (product.type == ProductType.RawPipe && product.producedAt == null)
+            // Получаем доступ к taskQueue через рефлексию или добавляем публичный метод
+            // В данном случае предположим, что у нас есть метод для проверки
+            var field = typeof(LogisticsManager).GetField("taskQueue",
+                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
+            if (field != null)
             {
-                // Проверяем, находится ли продукт в зоне склада
-                if (GameManager.Instance != null && GameManager.Instance.warehouse != null)
+                var taskQueue = field.GetValue(LogisticsManager.Instance) as Queue<TransportTask>;
+                if (taskQueue != null)
                 {
-                    float distance = Vector3.Distance(product.transform.position,
-                        GameManager.Instance.warehouse.spawnPoint.position);
-                    if (distance < 3f) // Продукт находится рядом со складом
+                    foreach (var task in taskQueue)
                     {
-                        return product;
+                        if (task.destinationMachine == machine)
+                        {
+                            return true;
+                        }
                     }
                 }
             }
         }
-        return null;
+
+        return false;
     }
-    =============================================================*/
-}
+        /*============================================================   
+        private Product FindRawMaterialOnWarehouse()
+        {
+            if (GameManager.Instance != null && GameManager.Instance.warehouse != null)
+            {
+                return GameManager.Instance.warehouse.GetAvailableRawMaterial();
+            }
+            // Резервный поиск
+            Product[] rawProducts = FindObjectsOfType<Product>();
+            foreach (Product product in rawProducts)
+            {
+                if (product.type == ProductType.RawPipe && product.producedAt == null)
+                {
+                    // Проверяем, находится ли продукт в зоне склада
+                    if (GameManager.Instance != null && GameManager.Instance.warehouse != null)
+                    {
+                        float distance = Vector3.Distance(product.transform.position,
+                            GameManager.Instance.warehouse.spawnPoint.position);
+                        if (distance < 3f) // Продукт находится рядом со складом
+                        {
+                            return product;
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+        =============================================================*/
+    }
