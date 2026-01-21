@@ -87,6 +87,50 @@ public class Logist : MonoBehaviour
                 GetRawMaterialPosition();
     
         isDelivering = true;
+        //===============
+        if (currentTask == null || currentTask.sourceMachine == null)
+        {
+            CompleteTask();
+            return;
+        }
+    
+        // Забираем продукт у станка
+        carriedProduct = currentTask.sourceMachine.currentOutput;
+        if (carriedProduct == null)
+        {
+            Debug.LogError($"❌ Логист {name}: не смог забрать продукт - currentOutput пуст!");
+            CompleteTask();
+            return;
+        }
+        
+        currentTask.sourceMachine.currentOutput = null;
+        carriedProduct.transform.SetParent(null);
+       
+        // ВАРИАНТ 1: Ищем свободные станки того же типа, что и исходный станок
+        Machine freeMachine = FindFreeMachineSameType(currentTask.sourceMachine);
+        
+        // ВАРИАНТ 2: Или ищем станки, которые могут принять данный продукт
+        // Machine freeMachine = FindFreeMachineForProduct(carriedProduct.type);
+        
+        if (freeMachine != null)
+        {
+            // Обновляем задачу с новым свободным станком
+            currentTask.destinationMachine = freeMachine;
+            Debug.Log($"🔄 Логист {name}: перенаправлен на свободный станок {freeMachine.machineType.displayName}");
+        }
+        else if (originalDestination != null)
+        {
+            // Возвращаем оригинальный destination, если не нашли свободный
+            currentTask.destinationMachine = originalDestination;
+        }
+        
+        // Устанавливаем цель доставки
+        targetPosition = currentTask.destinationMachine != null ?
+                currentTask.destinationMachine.inputSlot.position :
+                GetRawMaterialPosition();
+    
+        isDelivering = true;
+        //===============        
     }    
 
     private Vector3 GetRawMaterialPosition()
