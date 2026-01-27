@@ -88,6 +88,31 @@ public class Logist : MonoBehaviour
         isDelivering = true;
     }
 
+    private Machine FindFreeMachineForProduct(ProductType productType)
+    {
+        List<Machine> allMachines = new List<Machine>(FindObjectsOfType<Machine>());
+        List<Machine> suitableMachines = new List<Machine>();
+        
+        // Ищем все станки, которые могут принять этот тип продукта
+        foreach (Machine machine in allMachines)
+        {
+            // Пропускаем станок-источник
+            if (machine == currentTask.sourceMachine)
+                continue;
+                
+            // Проверяем, что станок может принимать этот тип продукта
+            if (machine.machineType.inputProductType == productType)
+            {
+                Debug.Log($"{machine.name} check productType");
+                // Проверяем, свободен ли станок (не занят работой и нет входного продукта)
+                if (machine.CanAcceptInput(productType))
+                {
+                    Debug.Log($"{machine.name} are free");
+                }
+            }
+        }
+    }
+
     private Vector3 GetRawMaterialPosition()
     {
         return Vector3.zero;
