@@ -11,7 +11,6 @@ public class Logist : MonoBehaviour
     private bool isEmployed = false;
     private bool isDelivering = false;
     private Vector3 spawnPosition;
-    private Machine originalDestination;
 
     void Start()
     {
@@ -65,7 +64,6 @@ public class Logist : MonoBehaviour
     public void AssignTask(TransportTask task)
     {
         currentTask = task;
-        originalDestination = task.destinationMachine; 
         isEmployed = true;
         
         // Начинаем с подбора изделия
@@ -162,28 +160,6 @@ public class Logist : MonoBehaviour
     private Vector3 GetRawMaterialPosition()
     {
         return Vector3.zero;
-    }
-
-    // Нахождение ближайшего станка
-    private Machine GetClosestMachine(List<Machine> machines)
-    {
-        if (machines == null || machines.Count == 0)
-            return null;
-            
-        Machine closest = machines[0];
-        float closestDistance = Vector3.Distance(transform.position, closest.transform.position);
-        
-        for (int i = 1; i < machines.Count; i++)
-        {
-            float distance = Vector3.Distance(transform.position, machines[i].transform.position);
-            if (distance < closestDistance)
-            {
-                closestDistance = distance;
-                closest = machines[i];
-            }
-        }
-        
-        return closest;
     }
 
     private void DeliverProduct()
