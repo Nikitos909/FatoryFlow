@@ -96,7 +96,6 @@ public class Logist : MonoBehaviour
     private void DeliverProduct()
     {        
         bool success = false;
-        //FindFreeMachineForProduct(currentTask);
 
         if (carriedProduct != null)
         {
@@ -139,36 +138,6 @@ public class Logist : MonoBehaviour
         {
             CompleteTask();
         }
-    }
-
-    // Дополнительный метод: проверка, зарезервирован ли станок другой задачей
-    private bool IsMachineReserved(Machine machine)
-    {
-        // Проверяем очередь задач LogisticsManager
-        if (LogisticsManager.Instance != null)
-        {
-            // Получаем доступ к taskQueue через рефлексию или добавляем публичный метод
-            // В данном случае предположим, что у нас есть метод для проверки
-            var field = typeof(LogisticsManager).GetField("taskQueue",
-                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-
-            if (field != null)
-            {
-                var taskQueue = field.GetValue(LogisticsManager.Instance) as Queue<TransportTask>;
-                if (taskQueue != null)
-                {
-                    foreach (var task in taskQueue)
-                    {
-                        if (task.destinationMachine == machine)
-                        {
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-
-        return false;
     }
         /*============================================================   
         private Product FindRawMaterialOnWarehouse()
