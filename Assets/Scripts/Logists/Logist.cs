@@ -76,9 +76,11 @@ public class Logist : MonoBehaviour
 
     private void PickUpProduct()
     {
-         carriedProduct = currentTask.sourceMachine.currentOutput;
+        carriedProduct = currentTask.sourceMachine.currentOutput;
         currentTask.sourceMachine.currentOutput = null;
         carriedProduct.transform.SetParent(null);
+
+        currentTask.destinationMachine = FindFreeMachineForProduct(carriedProduct.type);
 
         // Устанавливаем цель доставки
         targetPosition = currentTask.destinationMachine != null ?
