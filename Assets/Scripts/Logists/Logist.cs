@@ -76,40 +76,16 @@ public class Logist : MonoBehaviour
 
     private void PickUpProduct()
     {
-        // Забираем продукт у станка
-        if (currentTask == null || currentTask.sourceMachine == null)
-        {
-            CompleteTask();
-            return;
-        }
-    
-        // Забираем продукт у станка
-        carriedProduct = currentTask.sourceMachine.currentOutput;
-        if (carriedProduct == null)
-        {
-            Debug.LogError($"❌ Логист {name}: не смог забрать продукт - currentOutput пуст!");
-            CompleteTask();
-            return;
-        }
-        
+         carriedProduct = currentTask.sourceMachine.currentOutput;
         currentTask.sourceMachine.currentOutput = null;
         carriedProduct.transform.SetParent(null);
 
-        Machine freeMachine = FindFreeMachineForProduct(carriedProduct.type);
-        
-        if (freeMachine != null)
-        {
-            // Обновляем задачу с новым свободным станком
-            currentTask.destinationMachine = freeMachine;
-            Debug.Log($"🔄 Логист {name}: перенаправлен на свободный станок {freeMachine.machineType.displayName}");
-        }
-        
         // Устанавливаем цель доставки
         targetPosition = currentTask.destinationMachine != null ?
-                currentTask.destinationMachine.inputSlot.position :
+                currentTask.destinationMachine.inputSlot.position : 
                 GetRawMaterialPosition();
     
-        isDelivering = true; 
+        isDelivering = true;
     }
 
     private Machine FindFreeMachineForProduct(ProductType productType)
