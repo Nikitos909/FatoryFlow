@@ -117,9 +117,10 @@ public class Logist : MonoBehaviour
         // Если нашли подходящие свободные станки
         if (suitableMachines.Count > 0)
         {
-            return suitable[0];
+            return suitableMachines[0];
         }
 
+        return null;
     }
 
     private Vector3 GetRawMaterialPosition()
