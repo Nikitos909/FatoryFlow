@@ -110,10 +110,11 @@ public class Logist : MonoBehaviour
                 if (machine.CanAcceptInput(productType))
                 {
                     Debug.Log($"{machine.name} are free");
+                    suitableMachines.Add(machine);
                 }
             }
         }
-
+        Debug.Log(suitableMachines.Count);
         // Если нашли подходящие свободные станки
         if (suitableMachines.Count > 0)
         {
