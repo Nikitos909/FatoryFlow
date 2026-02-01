@@ -105,16 +105,14 @@ public class Logist : MonoBehaviour
             // Проверяем, что станок может принимать этот тип продукта
             if (machine.machineType.inputProductType == productType)
             {
-                Debug.Log($"{machine.name} check productType");
                 // Проверяем, свободен ли станок (не занят работой и нет входного продукта)
                 if (machine.CanAcceptInput(productType))
                 {
-                    Debug.Log($"{machine.name} are free");
                     suitableMachines.Add(machine);
                 }
             }
         }
-        Debug.Log(suitableMachines.Count);
+
         // Если нашли подходящие свободные станки
         if (suitableMachines.Count > 0)
         {
