@@ -130,12 +130,8 @@ public class LogisticsManager : MonoBehaviour
     {
         GUI.Label(new Rect(20, 40, 280, 20), $"Очередь задач: {taskQueue.Count}");
         GUI.Label(new Rect(20, 60, 280, 20), $"Свободных логистов: {availableLogists.Count}");
-        int startX = 20;
-        int startY = 40;
-        int lineHeight = 20;
-        
         // Заголовок
-        GUI.Label(new Rect(startX, startY, 280, lineHeight), $"Очередь задач ({taskQueue.Count}):");
+        GUI.Label(new Rect(20, 80, 280, 20), $"Очередь задач ({taskQueue.Count}):");
         
         // Выводим все элементы очереди
         int index = 0;
