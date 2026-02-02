@@ -65,13 +65,6 @@ public class LogisticsManager : MonoBehaviour
         taskQueue.Dequeue();
         
         logist.AssignTask(task);
-        
-        // Пробуем назначить следующую задачу (если есть свободные логисты)
-        if (availableLogists.Count > 0 && taskQueue.Count > 0)
-        {
-            Debug.Log("Пробуем назначить задачу снова и снова");
-            TryAssignTask();
-        }
     }
 //======= Thinking about this method
     private bool IsTaskValid(TransportTask task)
