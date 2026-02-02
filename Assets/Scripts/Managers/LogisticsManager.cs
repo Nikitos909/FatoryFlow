@@ -47,19 +47,8 @@ public class LogisticsManager : MonoBehaviour
     // ДОБАВЛЕНИЕ задачи в очередь
     public void AddTask(TransportTask task)
     {
-        Debug.Log(taskQueue.Count + "До получения задания в список");
         taskQueue.Enqueue(task);
-        Debug.Log(taskQueue.Count + "После добавления");
         TryAssignTask();
-    }
-
-    private void CheckTaskMachines()
-    {
-        foreach (i in taskQueue)
-        {
-            Debug.Log(i);
-            Debug.Log(i.destinationMachine.name);
-        }
     }
 
     // ПОПЫТКА назначить задачу свободному логисту
@@ -137,7 +126,7 @@ public class LogisticsManager : MonoBehaviour
         int index = 0;
         foreach (var task in taskQueue)
         {
-            GUI.Label(new Rect(startX, startY + (index + 1) * lineHeight, 500, lineHeight), 
+            GUI.Label(new Rect(20, 100 + (index + 1) * 20, 500, 20), 
                      $"{index + 1}. {task}");
             index++;
         }

@@ -118,7 +118,6 @@ public class Machine : MonoBehaviour
     }
     public void PutInputProduct(Product product)
     {
-        Debug.Log("Put product");
         // Проверяем, можем ли принять продукт
         if (!CanAcceptInput(product.type))
         {
