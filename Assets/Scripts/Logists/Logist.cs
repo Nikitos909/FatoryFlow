@@ -143,7 +143,7 @@ public class Logist : MonoBehaviour
                     currentTask.destinationMachine.PutInputProduct(carriedProduct);
                     carriedProduct = null;
                     success = true;
-                    Debug.Log($"📤 Логист {name} доставил на {currentTask.destinationMachine.machineType.displayName}");
+                    //Debug.Log($"📤 Логист {name} доставил на {currentTask.destinationMachine.machineType.displayName}");
                 }                
             }
             else
@@ -157,7 +157,7 @@ public class Logist : MonoBehaviour
 
                     carriedProduct = null;
                     success = true;
-                    Debug.Log($"💰 Логист {name} доставил на склад продажи");
+                    //Debug.Log($"💰 Логист {name} доставил на склад продажи");
                 }
             }
         }

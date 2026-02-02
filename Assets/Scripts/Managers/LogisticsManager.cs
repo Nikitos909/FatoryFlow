@@ -103,7 +103,6 @@ public class LogisticsManager : MonoBehaviour
         if (!availableLogists.Contains(logist))
         {
             availableLogists.Add(logist);
-            Debug.Log($"✅ Логист {logist.name} свободен");
         }
         
         // Пытаемся дать ему новую задачу
