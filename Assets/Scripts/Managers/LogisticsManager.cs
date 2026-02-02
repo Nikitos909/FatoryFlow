@@ -41,6 +41,7 @@ public class LogisticsManager : MonoBehaviour
         {
             TryAssignTask();
         }
+        Debug.Log(taskQueue.Count);
     }
 
     // ДОБАВЛЕНИЕ задачи в очередь
