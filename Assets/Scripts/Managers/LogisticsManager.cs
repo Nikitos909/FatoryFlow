@@ -47,7 +47,9 @@ public class LogisticsManager : MonoBehaviour
     // ДОБАВЛЕНИЕ задачи в очередь
     public void AddTask(TransportTask task)
     {
+        Debug.Log(taskQueue.Count + "До получения задания в список");
         taskQueue.Enqueue(task);
+        Debug.Log(taskQueue.Count + "После добавления");
         TryAssignTask();
     }
 
