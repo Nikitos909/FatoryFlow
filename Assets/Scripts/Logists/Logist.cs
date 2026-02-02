@@ -24,7 +24,11 @@ public class Logist : MonoBehaviour
 
     void Update()
     {
-        if (!isEmployed) return;        
+        if (!isEmployed) 
+        {
+            Debug.Log("logist is free");
+            return;
+        }
         MoveToTarget();
     }
     
