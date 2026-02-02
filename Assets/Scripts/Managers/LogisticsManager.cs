@@ -53,6 +53,15 @@ public class LogisticsManager : MonoBehaviour
         TryAssignTask();
     }
 
+    private void CheckTaskMachines()
+    {
+        foreach (i in taskQueue)
+        {
+            Debug.Log(i);
+            Debug.Log(i.destinationMachine.name);
+        }
+    }
+
     // ПОПЫТКА назначить задачу свободному логисту
     private void TryAssignTask()
     {
