@@ -35,7 +35,7 @@ public class LogisticsManager : MonoBehaviour
         availableLogists = new List<Logist>(allLogists);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (availableLogists.Count > 0 && (taskQueue.Count > 0))
         {
@@ -48,6 +48,13 @@ public class LogisticsManager : MonoBehaviour
     public void AddTask(TransportTask task)
     {
         taskQueue.Enqueue(task);
+        // Небольшая задержка для синхронизации
+        StartCoroutine(DelayedTryAssignTask());
+    }
+
+    private IEnumerator DelayedTryAssignTask()
+    {
+        yield return new WaitForEndOfFrame();
         TryAssignTask();
     }
 

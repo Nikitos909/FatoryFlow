@@ -22,7 +22,7 @@ public class Logist : MonoBehaviour
         }
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (!isEmployed) return;
         MoveToTarget();

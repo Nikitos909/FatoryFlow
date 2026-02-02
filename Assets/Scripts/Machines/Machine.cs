@@ -113,6 +113,7 @@ public class Machine : MonoBehaviour
                     type: machineType.outputProductType
                 );
                 LogisticsManager.Instance.AddTask(task);
+                Debug.Log("Task added from machine");
             }
         }
     }
