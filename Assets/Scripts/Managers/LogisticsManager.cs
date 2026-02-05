@@ -55,7 +55,10 @@ public class LogisticsManager : MonoBehaviour
     private IEnumerator DelayedTryAssignTask()
     {
         yield return new WaitForEndOfFrame();
-        TryAssignTask();
+         if (availableLogists.Count > 0)
+        {
+            TryAssignTask();
+        }
     }
 
     // ПОПЫТКА назначить задачу свободному логисту
