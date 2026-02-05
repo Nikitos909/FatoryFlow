@@ -74,6 +74,8 @@ public class LogisticsManager : MonoBehaviour
         
         logist.AssignTask(task);
     }
+
+    
 //======= Thinking about this method
     private bool IsTaskValid(TransportTask task)
     {
