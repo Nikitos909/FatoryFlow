@@ -35,7 +35,7 @@ public class LogisticsManager : MonoBehaviour
         availableLogists = new List<Logist>(allLogists);
     }
 
-    private void FixedUpdate()
+    private void LateUpdate()
     {
         if (availableLogists.Count > 0 && (taskQueue.Count > 0))
         {
