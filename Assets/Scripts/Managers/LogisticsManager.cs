@@ -39,6 +39,7 @@ public class LogisticsManager : MonoBehaviour
     {
         if (availableLogists.Count > 0 && (taskQueue.Count > 0))
         {
+            Debug.Log("TryAssignTask()");
             TryAssignTask();
         }
         Debug.Log(taskQueue.Count);
