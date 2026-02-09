@@ -76,11 +76,36 @@ public class Logist : MonoBehaviour
 
     private void PickUpProduct()
     {
+        // Проверяем, что источник существует
+        if (currentTask.sourceMachine == null)
+        {
+            Debug.LogError("❌ Источник задачи null!");
+            CompleteTask();
+            return;
+        }
+        
+        // Проверяем, что продукт существует
+        if (currentTask.sourceMachine.currentOutput == null)
+        {
+            Debug.LogError($"❌ На станке {currentTask.sourceMachine.machineType.displayName} нет продукта для подбора!");
+            
+            // Ждем немного и проверяем снова
+            StartCoroutine(WaitAndRetryPickup());
+            return;
+        }
+        
         carriedProduct = currentTask.sourceMachine.currentOutput;
         currentTask.sourceMachine.currentOutput = null;
         carriedProduct.transform.SetParent(null);
 
         currentTask.destinationMachine = FindFreeMachineForProduct(carriedProduct.type);
+
+        if (currentTask.destinationMachine == null && currentTask.type != ProductType.FinalProduct)
+        {
+            Debug.LogWarning($"⚠️ Не найден свободный станок для {carriedProduct.type}");
+            // Можно вернуть продукт обратно или ждать
+        }
+
 
         // Устанавливаем цель доставки
         targetPosition = currentTask.destinationMachine != null ?
@@ -89,6 +114,22 @@ public class Logist : MonoBehaviour
     
         isDelivering = true;
     }
+
+    private IEnumerator WaitAndRetryPickup()
+    {
+        yield return new WaitForSeconds(0.5f);
+        
+        if (currentTask.sourceMachine.currentOutput != null)
+        {
+            PickUpProduct();
+        }
+        else
+        {
+            Debug.LogError("❌ Продукт так и не появился, отменяем задачу");
+            CompleteTask();
+        }
+    }
+
 
     private Machine FindFreeMachineForProduct(ProductType productType)
     {
