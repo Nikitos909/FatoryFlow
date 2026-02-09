@@ -35,7 +35,7 @@ public class LogisticsManager : MonoBehaviour
         availableLogists = new List<Logist>(allLogists);
     }
 
-    private void LateUpdate()
+    private void Update()
     {
         if (availableLogists.Count > 0 && (taskQueue.Count > 0))
         {
@@ -71,7 +71,15 @@ public class LogisticsManager : MonoBehaviour
         // Берем первую задачу из очереди
         TransportTask task = taskQueue.Peek();
         Debug.Log("task" + task + taskQueue.Count);
-        
+
+        // Проверяем, что источник задачи существует и у него есть продукт
+        if (task.sourceMachine == null)
+        {
+            Debug.LogError("❌ Задача с null источником!");
+            taskQueue.Dequeue();
+            return;
+        }
+
         // Назначаем задачу первому свободному логисту
         Logist logist = availableLogists[0];
         Debug.Log("logist" + logist);
