@@ -48,7 +48,7 @@ public class LogisticsManager : MonoBehaviour
     public void AddTask(TransportTask task)
     {
         taskQueue.Enqueue(task);
-        Debug.Log("Add TASK");
+        TryAssignTask();
     }
 
     // ПОПЫТКА назначить задачу свободному логисту
