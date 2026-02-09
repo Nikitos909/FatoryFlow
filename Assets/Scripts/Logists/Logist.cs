@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 public class Logist : MonoBehaviour
@@ -9,7 +10,7 @@ public class Logist : MonoBehaviour
     private Vector3 targetPosition;
     private TransportTask currentTask;
     private bool isEmployed = false;
-    private bool isDelivering = false;
+    public bool isDelivering = false;
     private Vector3 spawnPosition;
 
     void Start()
@@ -100,7 +101,7 @@ public class Logist : MonoBehaviour
 
         currentTask.destinationMachine = FindFreeMachineForProduct(carriedProduct.type);
 
-        if (currentTask.destinationMachine == null && currentTask.type != ProductType.FinalProduct)
+        if (currentTask.destinationMachine == null && currentTask.productType != ProductType.FinalProduct)
         {
             Debug.LogWarning($"⚠️ Не найден свободный станок для {carriedProduct.type}");
             // Можно вернуть продукт обратно или ждать

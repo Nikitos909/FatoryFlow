@@ -42,24 +42,13 @@ public class LogisticsManager : MonoBehaviour
             Debug.Log("TryAssignTask()");
             TryAssignTask();
         }
-        Debug.Log(taskQueue.Count);
     }
 
     // ДОБАВЛЕНИЕ задачи в очередь
     public void AddTask(TransportTask task)
     {
         taskQueue.Enqueue(task);
-        // Небольшая задержка для синхронизации
-        StartCoroutine(DelayedTryAssignTask());
-    }
-
-    private IEnumerator DelayedTryAssignTask()
-    {
-        yield return new WaitForEndOfFrame();
-         if (availableLogists.Count > 0)
-        {
-            TryAssignTask();
-        }
+        Debug.Log("Add TASK");
     }
 
     // ПОПЫТКА назначить задачу свободному логисту
@@ -82,10 +71,11 @@ public class LogisticsManager : MonoBehaviour
 
         // Назначаем задачу первому свободному логисту
         Logist logist = availableLogists[0];
-        Debug.Log("logist" + logist);
+
         availableLogists.RemoveAt(0);
+
         taskQueue.Dequeue();
-        Debug.Log("taskQueue.Dequeue()" + taskQueue.Count);
+
         logist.AssignTask(task);
     }
 
