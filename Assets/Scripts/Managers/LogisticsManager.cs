@@ -70,12 +70,14 @@ public class LogisticsManager : MonoBehaviour
 
         // Берем первую задачу из очереди
         TransportTask task = taskQueue.Peek();
+        Debug.Log("task" + task + taskQueue.Count);
         
         // Назначаем задачу первому свободному логисту
         Logist logist = availableLogists[0];
+        Debug.Log("logist" + logist);
         availableLogists.RemoveAt(0);
         taskQueue.Dequeue();
-        
+        Debug.Log("taskQueue.Dequeue()" + taskQueue.Count);
         logist.AssignTask(task);
     }
 
