@@ -39,7 +39,18 @@ public class Machine : MonoBehaviour
 
         isWorking = false; // Важно: сбросить флаг работы
 
-        CreateTransportTask();
+        // Ждем один кадр, чтобы убедиться, что продукт создан
+        yield return new WaitForEndOfFrame();
+        
+        // Проверяем, что продукт действительно создан
+        if (currentOutput != null)
+        {
+            CreateTransportTask();
+        }
+        else
+        {
+            Debug.LogError($"Продукт не создался на станке {machineType.displayName}");
+        }
     }
 
     // Вспомогательный метод- после отработки удалить
@@ -95,7 +106,7 @@ public class Machine : MonoBehaviour
         {
             TransportTask task = new TransportTask(
                 sourceMachine: this,
-                dest: null, // null = склад продажи
+                dest: null, 
                 type: machineType.outputProductType
             );
             LogisticsManager.Instance.AddTask(task);
