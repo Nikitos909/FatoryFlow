@@ -116,7 +116,7 @@ public class Machine : MonoBehaviour
             // Для промежуточных продуктов ищем следующий станок
             destinationMachine = FindNextMachine();
 
-            if (destinationMachine != null && destinationMachine.CanAcceptInput(machineType.outputProductType))
+            if (destinationMachine != null && destinationMachine.CanAcceptInput(machineType.inputProductType))
             {
                 TransportTask task = new TransportTask(
                     sourceMachine: this,
@@ -158,9 +158,11 @@ public class Machine : MonoBehaviour
         {
             if (machine.machineType.inputProductType == machineType.outputProductType)
             {
+                Debug.Log(machine);
                 return machine;
             }
         }
+        Debug.Log("null");
         return null;
     }
 
