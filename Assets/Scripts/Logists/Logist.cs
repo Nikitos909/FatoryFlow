@@ -160,7 +160,6 @@ public class Logist : MonoBehaviour
         {
             return suitableMachines[0];
         }
-
         return null;
     }
 
