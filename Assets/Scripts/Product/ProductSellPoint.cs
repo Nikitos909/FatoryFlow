@@ -32,7 +32,6 @@ public class ProductSellPoint : MonoBehaviour
             // Увеличиваем счетчики
             soldItemsCount++;
             totalItemsSold++;
-            quantityItem = soldItemsCount; // Обновляем публичное поле для доступа из других скриптов
             
             // Обновляем отображение счетчика
             UpdateCounterDisplay();
