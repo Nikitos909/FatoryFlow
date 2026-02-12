@@ -30,13 +30,4 @@ public class ProductSellPoint : MonoBehaviour
             }
         }
     }
-
-    // Визуализация для отладки
-    void OnDrawGizmos()
-    {
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawWireCube(transform.position, Vector3.one);
-        Gizmos.color = Color.blue;
-        Gizmos.DrawCube(transform.position, Vector3.one * 0.8f);
-    }
 }
