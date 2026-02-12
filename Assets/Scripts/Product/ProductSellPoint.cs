@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using TMPro;
 
 public class ProductSellPoint : MonoBehaviour
 {
@@ -15,7 +16,7 @@ public class ProductSellPoint : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        StartCoroutine(SellfProducts(other.gameObject));
+        StartCoroutine(SellProduct(other.gameObject));
     }
     
         private IEnumerator SellProduct(GameObject productObject)
