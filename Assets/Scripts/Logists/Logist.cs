@@ -131,7 +131,6 @@ public class Logist : MonoBehaviour
         }
     }
 
-
     private Machine FindFreeMachineForProduct(ProductType productType)
     {
         List<Machine> allMachines = new List<Machine>(FindObjectsOfType<Machine>());
