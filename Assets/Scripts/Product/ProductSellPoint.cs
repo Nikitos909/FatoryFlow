@@ -3,9 +3,17 @@ using UnityEngine;
 public class ProductSellPoint : MonoBehaviour
 {
     public Transform sellPosition;
+    public int quantityItem;
 
     void OnTriggerEnter2D(Collider2D other)
     {
+        StartCoroutine(SellfProducts());
+    }
+    
+    private IEnumerator SellProducts()
+    {
+        yield return new WaitForSeconds(2f);
+        
         Product product = other.GetComponent<Product>();
 
         if (product != null && product.type == ProductType.FinalProduct)
