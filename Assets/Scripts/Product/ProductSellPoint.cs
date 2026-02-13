@@ -40,22 +40,4 @@ public class ProductSellPoint : MonoBehaviour
             }
         }
     }
-
-    // Метод для обновления отображения счетчика
-    private void UpdateCounterDisplay()
-    {
-        string counterTextValue = $"Продано: {soldItemsCount}";
-        
-        // Обновляем UI текст
-        if (counterText != null)
-        {
-            counterText.text = counterTextValue;
-        }
-        
-        // Обновляем World Space текст
-        if (counterWorldText != null)
-        {
-            counterWorldText.text = counterTextValue;
-        }
-    }
 }
