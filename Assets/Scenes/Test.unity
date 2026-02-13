@@ -2907,9 +2907,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sellPosition: {fileID: 1434855570}
-  counterText: {fileID: 1091318545}
-  counterWorldText: {fileID: 0}
-  counterPanel: {fileID: 0}
+  quantityItem: 0
 --- !u!61 &1882857556
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2939,7 +2937,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
