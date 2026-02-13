@@ -5,6 +5,7 @@ using TMPro;
 public class ProductSellPoint : MonoBehaviour
 {
     public Transform sellPosition;
+    public int quantityItem;  
 
     // Добавляем UI компоненты для отображения счетчика
     public TextMeshProUGUI counterText; // Для UI Canvas
@@ -12,7 +13,6 @@ public class ProductSellPoint : MonoBehaviour
     public GameObject counterPanel;     // Панель для отображения счетчика
     
     private int soldItemsCount = 0;
-    private int totalItemsSold = 0;     // Общее количество проданных предметов за всю игру
 
     void OnTriggerEnter2D(Collider2D other)
     {
