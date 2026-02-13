@@ -29,7 +29,7 @@ public class ProductSellPoint : MonoBehaviour
             soldItemsCount++;
             quantityItem = soldItemsCount;  
             
-           Debug.Log($"✅ Продукт продан! Всего продано: {soldItemsCount}");
+            Debug.Log($"✅ Продукт продан! Всего продано: {soldItemsCount}");
             
             Destroy(productObject);
             
