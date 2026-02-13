@@ -183,7 +183,6 @@ public class Logist : MonoBehaviour
                     currentTask.destinationMachine.PutInputProduct(carriedProduct);
                     carriedProduct = null;
                     success = true;
-                    //Debug.Log($"📤 Логист {name} доставил на {currentTask.destinationMachine.machineType.displayName}");
                 }                
             }
             else
@@ -194,10 +193,11 @@ public class Logist : MonoBehaviour
                     carriedProduct.UnlockAfterDelivery();
                     carriedProduct.transform.SetParent(null);
                     carriedProduct.transform.position = LogisticsManager.Instance.sellPoint.transform.position;
+                    //carriedProduct.transform.position = LogisticsManager.Instance.sellPoint.sellPosition.position;
 
                     carriedProduct = null;
                     success = true;
-                    //Debug.Log($"💰 Логист {name} доставил на склад продажи");
+                    Debug.Log($"💰 Логист {name} доставил на склад продажи");
                 }
             }
         }
