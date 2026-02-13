@@ -6,11 +6,6 @@ public class ProductSellPoint : MonoBehaviour
 {
     public Transform sellPosition;
     public int quantityItem;  
-
-    // Добавляем UI компоненты для отображения счетчика
-    public TextMeshProUGUI counterText; // Для UI Canvas
-    public TextMesh counterWorldText;   // Для World Space текста (3D Text)
-    public GameObject counterPanel;     // Панель для отображения счетчика
     
     private int soldItemsCount = 0;
 
