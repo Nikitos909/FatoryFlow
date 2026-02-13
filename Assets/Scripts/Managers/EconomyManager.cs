@@ -68,6 +68,10 @@ public class EconomyManager : MonoBehaviour
         
         int logistCount = FindObjectsOfType<Logist>().Length;
         int totalSalary = config.workerSalary * logistCount;
+        if (SpendMoney(totalSalary))
+        {
+            Debug.Log($"Выплачена зарплата {logistCount} логистам: {totalSalary}₽");
+        }
     }
 
     private void UpdateMoneyUI()
