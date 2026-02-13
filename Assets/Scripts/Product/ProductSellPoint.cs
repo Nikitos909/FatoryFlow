@@ -11,10 +11,10 @@ public class ProductSellPoint : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        StartCoroutine(SellProduct(other.gameObject));
+        StartCoroutine(SellProducts(other.gameObject));
     }
     
-        private IEnumerator SellProduct(GameObject productObject)
+        private IEnumerator SellProducts(GameObject productObject)
     {
         yield return new WaitForSeconds(2f);
         
@@ -27,13 +27,11 @@ public class ProductSellPoint : MonoBehaviour
             
             // Увеличиваем счетчики
             soldItemsCount++;
-            totalItemsSold++;
+            quantityItem = soldItemsCount;  
             
-            // Обновляем отображение счетчика
-            UpdateCounterDisplay();
+           Debug.Log($"✅ Продукт продан! Всего продано: {soldItemsCount}");
             
             Destroy(productObject);
-            Debug.Log($"✅ Продукт продан! Всего продано: {soldItemsCount}");
             
             // Обновляем статистику
             if (GameManager.Instance != null)
