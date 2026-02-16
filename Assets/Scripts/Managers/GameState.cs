@@ -23,7 +23,7 @@ public class GameState
 
     public GameState()
     {
-        currentMoney = 1000;
+        currentMoney = 100;
     }
 
     public void UpdateEfficiencyMetrics()
