@@ -43,13 +43,15 @@ public class LogisticsManager : MonoBehaviour
         }
     }
 
-    // ДОБАВЛЕНИЕ задачи в очередь
     public void AddTask(TransportTask task)
     {
-        taskQueue.Enqueue(task);
+        if (IsTaskValid(task))
+        {
+            taskQueue.Enqueue(task);
+        }
     }
 
-    // ПОПЫТКА назначить задачу свободному логисту
+    // ПОПЫТКА назначить задачу
     private void TryAssignTask()
     {
         if (taskQueue.Count == 0 || availableLogists.Count == 0) { return; }
