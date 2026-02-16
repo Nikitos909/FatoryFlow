@@ -75,7 +75,6 @@ public class LogisticsManager : MonoBehaviour
 
         logist.AssignTask(task);
     }
-
     
 //======= Thinking about this method
     private bool IsTaskValid(TransportTask task)
@@ -126,7 +125,6 @@ public class LogisticsManager : MonoBehaviour
 
     void OnGUI()
     {
-        GUI.Label(new Rect(20, 40, 280, 20), $"Очередь задач: {taskQueue.Count}");
         GUI.Label(new Rect(20, 60, 280, 20), $"Свободных логистов: {availableLogists.Count}");
         // Заголовок
         GUI.Label(new Rect(20, 80, 280, 20), $"Очередь задач ({taskQueue.Count}):");
@@ -139,6 +137,5 @@ public class LogisticsManager : MonoBehaviour
                      $"{index + 1}. {task}");
             index++;
         }
-
     }
 }
