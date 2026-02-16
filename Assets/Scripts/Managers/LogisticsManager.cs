@@ -39,7 +39,6 @@ public class LogisticsManager : MonoBehaviour
     {
         if (availableLogists.Count > 0 && (taskQueue.Count > 0))
         {
-            Debug.Log("TryAssignTask()");
             TryAssignTask();
         }
     }
@@ -48,7 +47,6 @@ public class LogisticsManager : MonoBehaviour
     public void AddTask(TransportTask task)
     {
         taskQueue.Enqueue(task);
-        Debug.Log("taskQueue.Count" + taskQueue.Count);
     }
 
     // ПОПЫТКА назначить задачу свободному логисту
@@ -59,7 +57,6 @@ public class LogisticsManager : MonoBehaviour
 
         // Берем первую задачу из очереди
         TransportTask task = taskQueue.Peek();
-        Debug.Log("task" + task + taskQueue.Count);
 
         // Проверяем, что источник задачи существует и у него есть продукт
         if (task.sourceMachine == null)
