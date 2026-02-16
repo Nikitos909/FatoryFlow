@@ -99,11 +99,7 @@ public class Machine : MonoBehaviour
     private void CreateTransportTask()
     {
         // Важная проверка: есть ли продукт?
-        if (currentOutput == null)
-        {
-            Debug.LogError($"🚫 Нельзя создать задачу: станок {machineType.displayName} не имеет продукта!");
-            return;
-        }
+        if (currentOutput == null) { return; }
         
         // Проверяем, есть ли уже задача для этого станка
         if (LogisticsManager.Instance.HasTaskForMachine(this))
@@ -138,7 +134,6 @@ public class Machine : MonoBehaviour
                     type: machineType.outputProductType
                 );
                 LogisticsManager.Instance.AddTask(task);
-                Debug.Log("Task added from machine");
             }
         }
     }
