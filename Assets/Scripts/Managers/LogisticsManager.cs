@@ -52,31 +52,26 @@ public class LogisticsManager : MonoBehaviour
     // ПОПЫТКА назначить задачу свободному логисту
     private void TryAssignTask()
     {
-        if (taskQueue.Count == 0 || availableLogists.Count == 0) 
-            return;
+        if (taskQueue.Count == 0 || availableLogists.Count == 0) { return; }
 
         // Берем первую задачу из очереди
         TransportTask task = taskQueue.Peek();
 
-        // Проверяем, что источник задачи существует и у него есть продукт
-        if (task.sourceMachine == null)
+        // Проверяем валидность задачи
+        if (!IsTaskValid(task))
         {
-            Debug.LogError("❌ Задача с null источником!");
-            taskQueue.Dequeue();
+            Debug.Log($"❌ Задача {task} невалидна, удаляем из очереди");
+            taskQueue.Dequeue(); // убираем плохую задачу
             return;
         }
 
         // Назначаем задачу первому свободному логисту
         Logist logist = availableLogists[0];
-
         availableLogists.RemoveAt(0);
-
         taskQueue.Dequeue();
-
         logist.AssignTask(task);
     }
     
-//======= Thinking about this method
     private bool IsTaskValid(TransportTask task)
     {
         // Для задач со складом сырья (source = null) - проверяем наличие сырья
@@ -91,18 +86,14 @@ public class LogisticsManager : MonoBehaviour
         }
 
         // Проверяем существование станка-источника
-        if (task.sourceMachine == null)
-            return false;
+        if (task.sourceMachine == null) { return false; }
 
         // Проверяем наличие продукта
-        if (task.sourceMachine.currentOutput == null)
-            return false;
+        if (task.sourceMachine.currentOutput == null) { return false; }
 
         // Для задач на продажу проверяем только наличие продукта
-        if (task.destinationMachine == null)
-            return true;
+        if (task.destinationMachine == null) { return true; }
 
-        // Для обычных задач проверяем, что приемник может принять продукт
         return task.destinationMachine.CanAcceptInput(task.productType);
     }
 
