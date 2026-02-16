@@ -80,7 +80,6 @@ public class Logist : MonoBehaviour
         // Проверяем, что источник существует
         if (currentTask.sourceMachine == null)
         {
-            Debug.LogError("❌ Источник задачи null!");
             CompleteTask();
             return;
         }
@@ -203,7 +202,6 @@ public class Logist : MonoBehaviour
         }
         else
         {
-            Debug.LogError($"❌ Логист {name}: пытается доставить null продукт!");
             CompleteTask();
             return;
         }
