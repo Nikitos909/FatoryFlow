@@ -1426,7 +1426,7 @@ MonoBehaviour:
   currentInput: {fileID: 0}
   currentOutput: {fileID: 0}
   isWorking: 0
-  workTimer: 1.5
+  workTimer: 1
 --- !u!212 &1065010887
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2691,7 +2691,7 @@ MonoBehaviour:
   currentInput: {fileID: 0}
   currentOutput: {fileID: 0}
   isWorking: 0
-  workTimer: 1.5
+  workTimer: 1
 --- !u!4 &1854645823
 Transform:
   m_ObjectHideFlags: 0
