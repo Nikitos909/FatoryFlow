@@ -46,7 +46,9 @@ public class LogisticsManager : MonoBehaviour
     public void AddTask(TransportTask task)
     {
         if (IsTaskValid(task))
+        {
             taskQueue.Enqueue(task);
+        }
     }
 
     // ПОПЫТКА назначить задачу
@@ -94,14 +96,12 @@ public class LogisticsManager : MonoBehaviour
         return true;
     }
 
-    // ЛОГИСТ освободился
-    public void OnLogistAvailable(Logist logist)
+    public void OnLogistAvailable(Logist logist) // ЛОГИСТ освободился
     {
         if (!availableLogists.Contains(logist))
         {
             availableLogists.Add(logist);
-        }
-        
+        }        
         TryAssignTask();
     }
 
@@ -118,8 +118,7 @@ public class LogisticsManager : MonoBehaviour
         int index = 0;
         foreach (var task in taskQueue)
         {
-            GUI.Label(new Rect(20, 100 + (index + 1) * 20, 500, 20), 
-                     $"{index + 1}. {task}");
+            GUI.Label(new Rect(20, 100 + (index + 1) * 20, 500, 20), $"{index + 1}. {task}");
             index++;
         }
     }
