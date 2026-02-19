@@ -46,9 +46,7 @@ public class LogisticsManager : MonoBehaviour
     public void AddTask(TransportTask task)
     {
         if (IsTaskValid(task))
-        {
             taskQueue.Enqueue(task);
-        }
     }
 
     // ПОПЫТКА назначить задачу
@@ -104,7 +102,6 @@ public class LogisticsManager : MonoBehaviour
             availableLogists.Add(logist);
         }
         
-        // Пытаемся дать ему новую задачу
         TryAssignTask();
     }
 
@@ -116,10 +113,8 @@ public class LogisticsManager : MonoBehaviour
     void OnGUI()
     {
         GUI.Label(new Rect(20, 60, 280, 20), $"Свободных логистов: {availableLogists.Count}");
-        // Заголовок
         GUI.Label(new Rect(20, 80, 280, 20), $"Очередь задач ({taskQueue.Count}):");
         
-        // Выводим все элементы очереди
         int index = 0;
         foreach (var task in taskQueue)
         {
