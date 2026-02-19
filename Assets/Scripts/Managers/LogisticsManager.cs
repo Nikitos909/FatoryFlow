@@ -93,10 +93,7 @@ public class LogisticsManager : MonoBehaviour
         // Проверяем наличие продукта
         if (task.sourceMachine.currentOutput == null) { return false; }
 
-        // Для задач на продажу проверяем только наличие продукта
-        if (task.destinationMachine == null) { return true; }
-
-        return task.destinationMachine.CanAcceptInput(task.productType);
+        return true;
     }
 
     // ЛОГИСТ освободился
