@@ -14,7 +14,7 @@ public class ProductSellPoint : MonoBehaviour
         StartCoroutine(SellProducts(other.gameObject));
     }
     
-        private IEnumerator SellProducts(GameObject productObject)
+    private IEnumerator SellProducts(GameObject productObject)
     {
         yield return new WaitForSeconds(2f);
         
