@@ -11,12 +11,16 @@ public class ProductSellPoint : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
+        Debug.Log("ВЫзов корутины");
         StartCoroutine(SellProducts(other.gameObject));
     }
     
     private IEnumerator SellProducts(GameObject productObject)
     {
+        Debug.Log("Ожидание");
         yield return new WaitForSeconds(2f);
+
+        Debug.Log("Продажа");
         
         Product product = productObject.GetComponent<Product>();
         
