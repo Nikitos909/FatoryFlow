@@ -163,7 +163,8 @@ public class Logist : MonoBehaviour
 
     private Vector3 GetRawMaterialPosition()
     {
-        return Vector3.zero;
+        Transform sellPoint = FindObjectOfType<ProductSellPoint>().sellPoint;
+        return sellPoint.position;
     }
 
     private void DeliverProduct()
