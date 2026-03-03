@@ -212,6 +212,10 @@ public class Logist : MonoBehaviour
         {
             CompleteTask();
         }
+        else
+        {
+            //currentTask.destinationMachine = FindFreeMachineForProduct(carriedProduct.type);
+        }
     }
         /*============================================================   
         private Product FindRawMaterialOnWarehouse()
