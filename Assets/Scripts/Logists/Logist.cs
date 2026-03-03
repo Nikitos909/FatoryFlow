@@ -207,7 +207,7 @@ public class Logist : MonoBehaviour
             CompleteTask();
             return;
         }
-
+        Debug.Log(success);
         if (success)
         {
             CompleteTask();
