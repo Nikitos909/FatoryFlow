@@ -183,32 +183,4 @@ public class Logist : MonoBehaviour
             CompleteTask();
         }
     }
-        /*============================================================   
-        private Product FindRawMaterialOnWarehouse()
-        {
-            if (GameManager.Instance != null && GameManager.Instance.warehouse != null)
-            {
-                return GameManager.Instance.warehouse.GetAvailableRawMaterial();
-            }
-            // Резервный поиск
-            Product[] rawProducts = FindObjectsOfType<Product>();
-            foreach (Product product in rawProducts)
-            {
-                if (product.type == ProductType.RawPipe && product.producedAt == null)
-                {
-                    // Проверяем, находится ли продукт в зоне склада
-                    if (GameManager.Instance != null && GameManager.Instance.warehouse != null)
-                    {
-                        float distance = Vector3.Distance(product.transform.position,
-                            GameManager.Instance.warehouse.spawnPoint.position);
-                        if (distance < 3f) // Продукт находится рядом со складом
-                        {
-                            return product;
-                        }
-                    }
-                }
-            }
-            return null;
-        }
-        =============================================================*/
-    }
+}
