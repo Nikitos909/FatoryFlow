@@ -28,7 +28,7 @@ public class Logist : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!isEmployed || isSearchingForMachine) return;
+        if (!isEmployed) return;
         MoveToTarget();
     }
     
