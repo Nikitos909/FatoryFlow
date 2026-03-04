@@ -107,21 +107,6 @@ public class Logist : MonoBehaviour
         isDelivering = true;
     }
 
-    private IEnumerator WaitAndRetryPickup()
-    {
-        yield return new WaitForSeconds(0.5f);
-        
-        if (currentTask.sourceMachine.currentOutput != null)
-        {
-            PickUpProduct();
-        }
-        else
-        {
-            Debug.LogError("❌ Продукт так и не появился, отменяем задачу");
-            CompleteTask();
-        }
-    }
-
     private Machine FindFreeMachineForProduct(ProductType productType)
     {
         List<Machine> allMachines = new List<Machine>(FindObjectsOfType<Machine>());
