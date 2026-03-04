@@ -101,9 +101,9 @@ public class Logist : MonoBehaviour
 
         // Устанавливаем цель доставки
         targetPosition = currentTask.destinationMachine != null ?
-                currentTask.destinationMachine.inputSlot.position : 
-                GetRawMaterialPosition();
-    
+                currentTask.destinationMachine.inputSlot.position :
+                FindObjectOfType<ProductSellPoint>().sellPosition.position;
+
         isDelivering = true;
     }
 
@@ -143,7 +143,7 @@ public class Logist : MonoBehaviour
         // Устанавливаем цель доставки
         targetPosition = currentTask.destinationMachine != null ?
                 currentTask.destinationMachine.inputSlot.position :
-                GetRawMaterialPosition();
+                FindObjectOfType<ProductSellPoint>().sellPosition.position;
    
         isDelivering = true;
     }
