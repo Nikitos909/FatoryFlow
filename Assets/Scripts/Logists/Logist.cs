@@ -14,6 +14,8 @@ public class Logist : MonoBehaviour
     public bool isDelivering = false;
     private Vector3 spawnPosition;
 
+    private bool isSearchingForMachine = false;
+
     void Start()
     {
         spawnPosition = transform.position;
