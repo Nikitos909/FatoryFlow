@@ -73,7 +73,7 @@ public class Logist : MonoBehaviour
         // Начинаем с подбора изделия
         targetPosition = task.sourceMachine != null ? 
            task.sourceMachine.outputSlot.position : 
-           GetRawMaterialPosition();
+           FindObjectOfType<ProductSellPoint>().sellPosition.position;
         
         isDelivering = false;
     }
