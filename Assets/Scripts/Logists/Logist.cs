@@ -138,12 +138,6 @@ public class Logist : MonoBehaviour
         return null;
     }
 
-    private Vector3 GetRawMaterialPosition()
-    {
-        Transform sellPoint = FindObjectOfType<ProductSellPoint>().sellPosition;
-        return sellPoint.position;
-    }
-
     private void DeliverProduct()
     {        
         bool success = false;
@@ -187,10 +181,6 @@ public class Logist : MonoBehaviour
         if (success)
         {
             CompleteTask();
-        }
-        else
-        {
-            //currentTask.destinationMachine = FindFreeMachineForProduct(carriedProduct.type);
         }
     }
         /*============================================================   
