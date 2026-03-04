@@ -28,7 +28,7 @@ public class Logist : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!isEmployed) return;
+        if (!isEmployed || isSearchingForMachine) return;
         MoveToTarget();
     }
     
@@ -87,16 +87,6 @@ public class Logist : MonoBehaviour
             return;
         }
         
-        // Проверяем, что продукт существует
-        if (currentTask.sourceMachine.currentOutput == null)
-        {
-            Debug.LogError($"❌ На станке {currentTask.sourceMachine.machineType.displayName} нет продукта для подбора!");
-            
-            // Ждем немного и проверяем снова
-            StartCoroutine(WaitAndRetryPickup());
-            return;
-        }
-        
         carriedProduct = currentTask.sourceMachine.currentOutput;
         currentTask.sourceMachine.currentOutput = null;
         carriedProduct.transform.SetParent(null);
@@ -108,7 +98,6 @@ public class Logist : MonoBehaviour
             Debug.LogWarning($"⚠️ Не найден свободный станок для {carriedProduct.type}");
             // Можно вернуть продукт обратно или ждать
         }
-
 
         // Устанавливаем цель доставки
         targetPosition = currentTask.destinationMachine != null ?
