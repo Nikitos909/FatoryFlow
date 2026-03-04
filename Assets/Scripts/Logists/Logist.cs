@@ -138,6 +138,16 @@ public class Logist : MonoBehaviour
         return null;
     }
 
+    private void SetDeliveryTarget()
+    {
+        // Устанавливаем цель доставки
+        targetPosition = currentTask.destinationMachine != null ?
+                currentTask.destinationMachine.inputSlot.position :
+                GetRawMaterialPosition();
+   
+        isDelivering = true;
+    }
+
     private void DeliverProduct()
     {        
         bool success = false;
@@ -154,7 +164,31 @@ public class Logist : MonoBehaviour
                     currentTask.destinationMachine.PutInputProduct(carriedProduct);
                     carriedProduct = null;
                     success = true;
-                }                
+                }
+                else
+                {
+                    Debug.Log($"🔍 Логист {name} подошел к станку {currentTask.destinationMachine.name}, но он занят. Ищу другой...");
+                
+                    // Станок занят - ищем другой свободный
+                    Machine alternativeMachine = FindFreeMachineForProduct(carriedProduct.type);
+
+                    if (alternativeMachine != null)
+                    {
+                        // Нашли альтернативный станок
+                        Debug.Log($"✅ Логист {name} нашел альтернативный станок {alternativeMachine.name}");
+                        currentTask.destinationMachine = alternativeMachine;
+                        SetDeliveryTarget();
+                        return; // Отправляемся к новому станку
+                    }
+                    else
+                    {
+                        // Нет свободных станков - начинаем поиск
+                        Debug.Log($"⚠️ Логист {name} не нашел альтернативный станок, начинаю поиск...");
+                        StartCoroutine(SearchForFreeMachine());
+                        return;
+                    }
+
+                }
             }
             else
             {
