@@ -217,4 +217,50 @@ public class Logist : MonoBehaviour
             CompleteTask();
         }
     }
+
+    // НОВАЯ КОРУТИНА: поиск свободного станка
+    private IEnumerator SearchForFreeMachine()
+    {
+        isSearchingForMachine = true;
+        
+        float searchTime = 0f;
+        float maxSearchTime = 10f; // Максимальное время поиска (чтобы не зависнуть навсегда)
+        float checkInterval = 0.5f; // Проверяем каждые 0.5 секунды
+        
+        Debug.Log($"🔍 Логист {name} начал поиск свободного станка для {carriedProduct.type}");
+        
+        while (searchTime < maxSearchTime)
+        {
+            // Ищем свободный станок
+            Machine freeMachine = FindFreeMachineForProduct(carriedProduct.type);
+            
+            if (freeMachine != null)
+            {
+                Debug.Log($"✅ Логист {name} нашел свободный станок {freeMachine.name} после {searchTime:F1} сек");
+                currentTask.destinationMachine = freeMachine;
+                isSearchingForMachine = false;
+                SetDeliveryTarget();
+                yield break;
+            }
+            
+            // Ждем перед следующей проверкой
+            searchTime += checkInterval;
+            yield return new WaitForSeconds(checkInterval);
+        }
+        
+        // Если время поиска истекло, а станок не найден
+        Debug.LogWarning($"⚠️ Логист {name} не нашел свободный станок за {maxSearchTime} сек. Отмена задачи.");
+        
+        // Возвращаем продукт обратно на исходный станок
+        if (carriedProduct != null)
+        {
+            currentTask.sourceMachine.currentOutput = carriedProduct;
+            carriedProduct.transform.SetParent(null);
+            carriedProduct.transform.position = currentTask.sourceMachine.outputSlot.position;
+            carriedProduct = null;
+        }
+        
+        isSearchingForMachine = false;
+        CompleteTask();
+    }
 }
