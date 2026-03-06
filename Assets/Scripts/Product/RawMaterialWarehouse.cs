@@ -49,7 +49,7 @@ public class RawMaterialWarehouse : MonoBehaviour
         {
             if (newMaterial != null)
             {
-                CreateRawProduct();
+                CreateRawProduct(rawProductType);
                 CreateTransportTask();
                 return true;
             }
