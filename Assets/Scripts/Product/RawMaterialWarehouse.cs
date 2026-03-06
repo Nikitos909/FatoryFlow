@@ -24,8 +24,6 @@ public class RawMaterialWarehouse : MonoBehaviour
             GameManager.Instance.warehouse = this;
         }
     }
-
-
 //==============
     private void CreateRawProduct(ProductType type)
     {
@@ -51,7 +49,7 @@ public class RawMaterialWarehouse : MonoBehaviour
         {
             if (newMaterial != null)
             {
-                availableRawMaterials.Add(newMaterial);
+                CreateRawProduct();
                 CreateTransportTask();
                 return true;
             }
