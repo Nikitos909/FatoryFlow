@@ -149,16 +149,6 @@ public class RawMaterialWarehouse : MonoBehaviour
         return null;
     }
 
-    private Sprite CreateDefaultSprite()
-    {
-        Texture2D texture = new Texture2D(16, 16);
-        for (int x = 0; x < 16; x++)
-            for (int y = 0; y < 16; y++)
-                texture.SetPixel(x, y, Color.white);
-        texture.Apply();
-        return Sprite.Create(texture, new Rect(0, 0, 16, 16), Vector2.one * 0.5f);
-    }
-
     public bool HasRawMaterialAvailable()
     {
         // Проверяем есть ли сырье на складе
