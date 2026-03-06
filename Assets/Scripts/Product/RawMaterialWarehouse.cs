@@ -24,13 +24,31 @@ public class RawMaterialWarehouse : MonoBehaviour
             GameManager.Instance.warehouse = this;
         }
     }
+
+
+//==============
+    private void CreateRawProduct(ProductType type)
+    {
+        // Создаем объект из префаба
+        GameObject productObj = Instantiate(machineType.inputProductPrefab, inputSlot.position, Quaternion.identity);
+        productObj.name = $"Product_{type}";
+
+        // Получаем компонент Product
+        Product product = productObj.GetComponent<Product>();
+
+        if (product != null)
+        {
+            product.Initialize(type, this);
+            currentInput = product;
+        }
+    }
+//=============
     
     // Вызывается по кнопке UI
     public bool BuyRawMaterial()
     {
         if (EconomyManager.Instance != null && EconomyManager.Instance.SpendMoney(rawPipePrice))
         {
-            Product newMaterial = SpawnRawMaterial();
             if (newMaterial != null)
             {
                 availableRawMaterials.Add(newMaterial);
@@ -43,27 +61,6 @@ public class RawMaterialWarehouse : MonoBehaviour
             Debug.Log("❌ Недостаточно денег для покупки сырья!");
         }
         return false;
-    }
-
-    private Product SpawnRawMaterial()
-    {
-        GameObject rawMaterialObj = new GameObject($"RawMaterial_{System.DateTime.Now.Ticks}");
-        rawMaterialObj.transform.position = spawnPoint.position;
-
-        Product product = rawMaterialObj.AddComponent<Product>();
-        product.Initialize(rawProductType, null);
-
-        SpriteRenderer sr = rawMaterialObj.AddComponent<SpriteRenderer>();
-        sr.sprite = CreateDefaultSprite();
-        sr.color = Color.gray;
-        sr.sortingOrder = 1;
-
-        // Добавляем коллайдер для логиста
-        BoxCollider2D collider = rawMaterialObj.AddComponent<BoxCollider2D>();
-        collider.isTrigger = true;
-
-        Debug.Log("📦 Создано сырье на складе");
-        return product;
     }
 
     private void CreateTransportTask()
